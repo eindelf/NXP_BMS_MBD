@@ -1,0 +1,455 @@
+%function com_serial_init(fmDevice, linBaudRate, systemClock) Output
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Generate Freemaster LINFlex UART0 Configuration Code File  linflex_init.c 
+%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%assign fname = LibCreateSourceFile("Source", "Custom", "linflex_init")
+%%openfile tmpFcnBuf 
+
+
+
+    LINFLEX_%<fmDevice>.LINCR1.B.INIT = 1;
+        /*Initialization Request: Set */
+
+    LINFLEX_%<fmDevice>.LINCR1.B.SLEEP = 0;
+        /*Sleep Request: Clear */
+
+    LINFLEX_%<fmDevice>.UARTCR.B.UART= 1;
+        /* UART Mode: Enabled */
+/*----------------------------------------------------------- */
+/*        LIN control register 2   (LINFLEX_X_LINCR2)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINCR2.R = 0x0000;
+        /* Idle on Bit Error: Disabled*/
+        /* Idle on Identifier Parity Error: Disabled*/
+
+%if( linBaudRate==57600) 
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0056;
+        /* Integer Baud Rate Factor: 86*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x000D;
+        /* Fractional Baud Rate Factor: 13*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0082;
+        /* Integer Baud Rate Factor: 130*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0003;
+        /* Fractional Baud Rate Factor: 3*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0041;
+        /* Integer Baud Rate Factor: 65*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0002;
+        /* Fractional Baud Rate Factor: 2*/
+  %endif
+  
+%elseif(linBaudRate==19200)
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0104;
+        /* Integer Baud Rate Factor: 260*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0007;
+        /* Fractional Baud Rate Factor: 7*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0186;
+        /* Integer Baud Rate Factor: 390*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x000A;
+        /* Fractional Baud Rate Factor: 10*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x00C3;
+        /* Integer Baud Rate Factor: 195*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0005;
+        /* Fractional Baud Rate Factor: 5*/
+  %endif
+  
+%elseif(linBaudRate==38400)
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0082;
+        /* Integer Baud Rate Factor: 130*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0003;
+        /* Fractional Baud Rate Factor: 3*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x00C3;
+        /* Integer Baud Rate Factor: 195*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0005;
+        /* Fractional Baud Rate Factor: 5*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0061;
+        /* Integer Baud Rate Factor: 97*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x000A;
+        /* Fractional Baud Rate Factor: 10*/
+  %endif
+  
+%elseif(linBaudRate==115200)
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x002B;
+        /* Integer Baud Rate Factor: 43*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0006;
+        /* Fractional Baud Rate Factor: 6*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0041;
+        /* Integer Baud Rate Factor: 65*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0002;
+        /* Fractional Baud Rate Factor: 2*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0020;
+        /* Integer Baud Rate Factor: 32*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0009;
+        /* Fractional Baud Rate Factor: 9*/
+  %endif
+
+%elseif(linBaudRate==230400)
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0015;
+        /* Integer Baud Rate Factor: 21*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x000B;
+        /* Fractional Baud Rate Factor: 11*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0020;
+        /* Integer Baud Rate Factor: 32*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0009;
+        /* Fractional Baud Rate Factor: 9*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0010;
+        /* Integer Baud Rate Factor: 16*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0004;
+        /* Fractional Baud Rate Factor: 4*/
+  %endif
+%endif 
+
+/*----------------------------------------------------------- */
+/*        Identifier filter mode register  (LINFLEX_X_IFMR)         */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.IFMR.R = 0x0000;
+        /* Filters 0:identifier list mode    */
+        /* Filters 1:identifier list mode    */
+        /* Filters 2:identifier list mode    */
+        /* Filters 3:identifier list mode    */
+        /* Filters 4:identifier list mode    */
+        /* Filters 5:identifier list mode    */
+        /* Filters 6:identifier list mode    */
+        /* Filters 7:identifier list mode    */
+
+/*----------------------------------------------------------- */
+/*        Identifier filter enable register  (LINFLEX_X_IFER)         */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.IFER.R = 0x0000;
+        /* Activate Filter 0:Disabled    */
+        /* Activate Filter 1:Disabled    */
+        /* Activate Filter 2:Disabled    */
+        /* Activate Filter 3:Disabled    */
+        /* Activate Filter 4:Disabled    */
+        /* Activate Filter 5:Disabled    */
+        /* Activate Filter 6:Disabled    */
+        /* Activate Filter 7:Disabled    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR0)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR0.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR1)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR1.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR2)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR2.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR3)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR3.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR4)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR4.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR5)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR5.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR6)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR6.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR7)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR7.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*        UART mode control register  (LINFLEX_X_UARTCR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.UARTCR.R = 0x0033;
+        /* UART Mode: Enable*/
+        /* Parity transmit/check: Disable*/
+        /* Sent parity: Even*/
+        /* Word Length in UART mode: 8 bit data (9 bit if PCE is set)*/
+        /* Transmitter Data Field Length (Bytes): 1*/
+        /* Receiver Data Field Length (Bytes): 1*/
+        /* Transmitter : Enable*/
+        /* Receiver : Enable*/
+
+
+/*----------------------------------------------------------- */
+/*        LIN timeout control status register  (LINFLEX_X_LINTCSR)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINTCSR.R = 0x0000;
+        /* LIN timeout mode: Disabled*/
+        /* Idle on Timeout: Disabled*/
+        /* Timeout Counter: Disabled*/
+
+
+/*----------------------------------------------------------- */
+/*        LIN output compare register  (LINFLEX_X_LINOCR)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINOCR.R = 0xFFFF;
+        /* Output compare Value 1: 255*/
+        /* Output compare Value 2: 255*/
+
+/*----------------------------------------------------------- */
+/*        LIN timeout control register  (LINFLEX_X_LINTOCR)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINTOCR.R = 0x0E2C;
+        /* Header Timeout (Bit Time): 44*/
+        /* Response Timeout Timeout: 14*/
+
+/*----------------------------------------------------------- */
+/*        LIN interrupt enable register  (LINFLEX_X_LINIER)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINIER.R = 0x0000;
+
+        /* Header Received Interrupt: Disabled    */
+        /* Data Transmitted Interrupt: Disabled    */
+        /* Data Reception Complete Interrupt: Disabled    */
+        /* Data Buffer Empty Interrupt: Disabled    */
+        /* Data Buffer Full Interrupt: Disabled    */
+        /* Wakeup Interrupt: Disabled    */
+        /* LIN State Interrupt: Disabled    */
+        /* Buffer Overrun Error Interrupt: Disabled    */
+        /* Frame Error Interrupt:Disabled    */
+        /* Header Error Interrupt:Disabled    */
+        /* Checksum Error Interrupt:Disabled    */
+        /* Bit Error Interrupt:Disabled    */
+        /* Output Compare Interrupt:Disabled    */
+        /* Stuck at Zero Interrupt:Disabled    */
+
+/*----------------------------------------------------------- */
+/*        LIN control register 1   (LINFLEX_X_LINCR1)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINCR1.R = 0x0081;
+        /* Initialization Request: Set  */
+        /* Master Mode Enable: Slave*/
+        /* Receiver Buffer: Not Locked*/
+        /* Loopback Mode: Disabled*/
+        /* Self Test Mode: Disabled*/
+        /* LIN Master Break Length: 10 bits*/
+        /* Slave Mode Break Detection Threshold: 11 bits*/
+        /* Bypass Filter: Enabled*/
+        /* Automatic Wake-Up Mode: Disabled*/
+        /* Checksum field: Enabled*/
+        /* Checksum Calculation: Disabled*/
+        /* LIN Slave Automatic Resynchronization: Disabled*/
+
+
+    LINFLEX_%<fmDevice>.LINCR1.B.INIT = 0;
+        /*Initialization Request: Clear */
+
+%%}
+
+
+%%endif
+%%endif
+
+
+%assign pilEnabled = FEVAL("rappid_564xl_pil_status")
+%assign fmRxTx = FEVAL("rappid_564xl_fmaster_rx_pin",pilEnabled) 
+
+
+%%void linflex_siu_init_%<fmDevice>(void)
+%% 	{ 
+%if( FEVAL("strcmp", fmRxTx.Tx_PCR, "0") == 0)
+          /* ----------------------------------------------------------------------- */
+          /*      Pad Configuration Register PCR[%<fmRxTx.Tx_PCR>]  LIN_TXD */
+          /* ----------------------------------------------------------------------- */
+           SIU.PCR[%<fmRxTx.Tx_PCR>].R = %<fmRxTx.Tx_PCR_VAL>;
+             /*	Selected Function : LIN_TXD_0        */
+             /*	Output Buffers : Enabled          */
+             /*	Input Buffers : Disabled          */
+             /*	Output Drain : Disabled           */
+             /*	Slew Rate Control : Minimum       */
+             /*	Weak Pull Up/Down : Disabled      */
+             /*	Weak Pull Up/Down Select : Down   */
+%endif
+%if( FEVAL("strcmp", fmRxTx.Rx_PCR, "0") == 0)
+          /* ----------------------------------------------------------- */
+          /*      Pad Configuration Register PCR[%<fmRxTx.Rx_PCR>]  LIN_RXD */
+          /* ----------------------------------------------------------- */
+           SIU.PCR[%<fmRxTx.Rx_PCR>].R = 0x0100;
+             /*	Selected Function : PB[3] I        */
+             /*	Output Buffers : Disabled         */
+             /*	Input Buffers : Enabled           */
+             /*	Output Drain : Disabled           */
+             /*	Slew Rate Control : Minimum       */
+             /*	Weak Pull Up/Down : Disabled      */
+             /*	Weak Pull Up/Down Select : Down   */     
+           SIU.PSMI[%<fmRxTx.Rx_PSMI>].B.PADSEL = %<fmRxTx.Rx_PADSEL>;  
+%endif
+%%	}
+%%closefile tmpFcnBuf
+%%<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)> 
+
+
+%endfunction

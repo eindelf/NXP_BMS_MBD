@@ -1,0 +1,72 @@
+%% SYSTLC: RAppID Toolbox MPC564xL Code Generation Target (rappid)\
+%%    TMF: rappid_564xl_default_tmf MAKE: rappid_564xl_make_rtw EXTMODE: no_ext_comm
+%%
+%%
+%% Copyright 2010
+%% Freescale Semiconductor Inc
+%% All Rights Reserved 
+%%
+%%
+
+%selectfile NULL_FILE
+
+%% Standard (required) Real-Time Workshop settings
+
+%assign CodeFormat         = "Embedded-C"
+%assign AutoBuildProcedure = 0
+%assign TargetType         = "RT"
+%assign Language           = "C"
+%assign GenRTModel         = TLC_TRUE
+%assign ERTCustomFileTest  = TLC_TRUE
+%assign GenerateASAP2 = 0
+%assign isERT = FEVAL("detectTarget")
+
+
+%% Tie-in custom target option to Real-Time Workshop options
+
+
+%% Generate ISO_C math code whenever possible
+%if(isERT==1)
+%if GenFloatMathFcnCalls == "ISO_C"
+  %include "mathlib.tlc"
+  %<LibRegisterISOCMathFcnPrototypes()>
+%endif
+%endif
+
+
+%% Generate the model code with RTW-EC but generate a target
+%% specific main.c
+
+%assign ERTCustomFileTemplate = "rappidtargettemplate.tlc"
+%include "rappidtargetmainlib564xl.tlc"
+
+%assign MATLABROOT = FEVAL("matlabroot")
+%assign modelname = FEVAL("bdroot")
+%assign hooksfound = FEVAL("find_hook_routines")
+
+%% Add user defined cache here
+
+
+%assign copyfiles = FEVAL("rappid_564xl_copy_required_files")
+
+%assign dofixup = FEVAL("fixup_alignment","clear")
+
+%include "codegenentry.tlc"
+
+%assign dofixup = FEVAL("fixup_alignment","dofixup","%<modelname>.h")
+
+
+%% Custom RTW dialog options
+
+/%
+  BEGIN_RTW_OPTIONS
+
+  % Inherit ERT options
+  rtwgensettings.DerivedFrom = 'ert.tlc';
+
+  % Specify the RTW build directory name (failure to do so results
+  % in the code generating into the current MATLAB directory)
+  
+  rtwgensettings.BuildDirSuffix = '_rappid_rtw';
+  END_RTW_OPTIONS 
+%/			       

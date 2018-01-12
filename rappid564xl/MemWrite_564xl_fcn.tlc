@@ -1,0 +1,72 @@
+%%
+%% Abstract:
+%%   Block target file for malfunction
+%%
+%% Copyright Freescale Semiconductor Inc
+%% 2006 All Rights Reserved 
+%%
+%% $Log: SFunc_MemWrite.tlc,v $
+%% Revision 1.4  2013/02/25 14:41:32  B37386
+%% Issue:00??
+%% updated to support memory addresses greater than 0x7FFFFFFF
+%%
+%% Revision 1.3  2009/05/15 22:09:26  B12383
+%% Issue:0021
+%% updated per customer issues
+%%
+%% Revision 1.2  2009/03/04 20:18:58  r61406
+%% Issue: 1240
+%% Update Correct data read/Write issue with hex offsets.
+%%
+%% Revision 1.1  2009/01/29 17:12:12  r61406
+%% Issue: 1244
+%% Update Memory Read Write  Blocks for mem access support.
+%%
+%% Revision 1.5  2009/01/19 18:36:47  r61406
+%% Issue: 1243
+%% Update WatchDog Blocks for core watchdog support.
+%%
+
+%implements MemWrite_564xl_fcn "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+
+%function BlockTypeSetup(block, system) void
+
+	
+%endfunction 
+  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%function Start(block, system) Output
+ 
+
+%endfunction            %% Start
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%assign write_mem_addressUP	= FEVAL("dec2hex", CAST("Number",Parameter[0].Value[0]),4)
+%assign write_mem_addressLW	= FEVAL("dec2hex", CAST("Number",Parameter[1].Value[0]),4)
+
+/* Memory Address Write          */
+/* Memory Address : Base Address + Offset    */ 
+/* Memory Address : 0x%<write_mem_addressUP>%<write_mem_addressLW>;              */
+{
+ uint32_T * (write_mem_address);
+  write_mem_address = (uint32_T *)0x%<write_mem_addressUP>%<write_mem_addressLW>;
+*(write_mem_address) = %<LibBlockInputSignal(0, "", "", 0)>;
+}
+ 
+%endfunction
+

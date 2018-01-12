@@ -1,0 +1,54 @@
+
+%implements GFLIB_IntegratorTR_SF_FLT "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+   %if !EXISTS("GFLIB_INCLUDED")
+      %assign ::GFLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gflib.h\"" + "\n")>
+   %endif 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+   %assign s32C1 = CAST("Real32",Parameter[0].Value[0])
+
+   %assign x = LibBlockInputSignal(0, "", "", 0)
+   %assign x1= LibBlockInputSignal(1, "", "", 0)
+   %assign x2 = LibBlockInputSignal(2, "", "", 0)
+   %assign y = LibBlockOutputSignal(0, "", "", 0)
+   %assign y1= LibBlockOutputSignal(1, "", "", 0)
+   %assign y2 = LibBlockOutputSignal(2, "", "", 0)
+   
+   {  
+	 static GFLIB_INTEGRATOR_TR_T param = { 0, 0, %<s32C1> };
+     param.s32State = %<x1>;
+     param.s32InK1 = %<x2>;	 
+     %<y> = GFLIB_IntegratorTR (%<x>,&param);
+     %<y1> = param.s32State;
+     %<y2> = param.s32InK1;	 
+   }
+
+%endfunction

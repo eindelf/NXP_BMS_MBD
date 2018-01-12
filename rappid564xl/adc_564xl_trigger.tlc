@@ -1,0 +1,84 @@
+%implements adc_564xl_trigger "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %if !EXISTS("ADC_564xL_INCLUDED")
+    %assign ::ADC_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"adc_564xl_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+ %assign adcNum	= CAST("Number",Parameter[0].Value[0])
+ %assign adcMode	= CAST("Number",Parameter[1].Value[0])
+ 
+ %assign adcNum = adcNum - 1
+
+/*break all conversions*/
+adc_normal_stop( %<adcNum>);
+
+/*reconfigure to oneshot mode*/
+adc_singleshot_set( %<adcNum> );
+
+/*start conversion*/
+ %if (%<adcMode> == 1)
+	adc_normal_start( %<adcNum> );
+ %endif
+
+ %if (%<adcMode> == 2)
+	adc_injected_start( %<adcNum> );
+ %endif
+	
+/*read value*/
+ %foreach fcnCallIdx = NumSFcnSysOutputCalls
+%% call the downstream system
+  %with SFcnSystemOutputCall[fcnCallIdx]
+%% skip unconnected function call outputs
+    %if ISEQUAL(BlockToCall, "unconnected")
+      %continue
+    %endif
+    %assign sysIdx = BlockToCall[0]
+    %assign blkIdx = BlockToCall[1]
+    %assign ssBlock = System[sysIdx].Block[blkIdx]
+    %<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+         ParamSettings.SampleTimesToSet[0][1])>\
+  %endwith
+ %endforeach
+
+ /*scan mode and start*/
+ adc_scanmode_set( %<adcNum> );
+ adc_normal_start( %<adcNum> );
+%endif 
+
+%endfunction
+;

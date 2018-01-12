@@ -1,0 +1,45 @@
+*********************************************************************
+*                 RAppID Boot Tool Configuration File
+*********************************************************************
+[FORMAT_VERSION]
+4
+
+*********************************************************************
+* COMMUNICATION_SETUP - Specifies the specifics of the network HW 
+*		        and settings that are going to be used.
+*	1. Hardware Type    (Vector CANcaseXL, (Vector CANCardXL, IXXAT USBtoCAN, Serial Port)
+*	2. Channel	    (1, 2,...,13)
+*	3. Baud Rate	    (500K, 9600, ...)
+*********************************************************************
+[COMMUNICATION_SETUP]
+Serial Port, COM1, 115200
+
+*********************************************************************
+* MCU_SETUP - Specifies the specifics of the ID of the MCU & the
+*	      location, size and content of the software to be flashed 
+*	1. MCU Part Number 	(MPC5604P, MPC5604B, MPC5604S, .....)
+*	2. Crystal Freq	(8, 16, ....) Crystal frequency value into MCU in MHz
+*********************************************************************
+[MCU_SETUP]
+MPC564xL
+*********************************************************************
+* BAM_SETUP - Specifies the specifics of the ID of the MCU & the
+*	      location, size and content of the software to be flashed
+*	1. BAM Status 	(Enabled, Disabled) Is the BAM going to be used
+*	2. Password   	(0xXXXXXXXX) Password required for BAM to unlock MCU
+*	3. Check Box	(If checked then use default password for MCU)
+*	4. Skip Prompt	If checked then do not prompt user to reset/POR MCU
+*********************************************************************
+[BAM_SETUP]
+Enabled, 0xFEEDFACECAFEBEEF, Checked, Checked
+*********************************************************************
+* FILE_INFO - Specifies the file that contains software to be flashed 
+*	1. File		    (The file that contains the hex info)
+*	2. Start Address (Start Address of the area to be programmed)	
+*	3. Size		     (Size of code to flash in bytes)
+*	4. Check Box	(If checked then auto determine start address and size to be programmed.
+*********************************************************************
+[FILE_INFO]
+C:\MCToolbox\rappid564xl\dspi_block_bu1130_rappid_rtw\dspi_block_bu1130.mot, 0x0, 0x0, Checked
+
+

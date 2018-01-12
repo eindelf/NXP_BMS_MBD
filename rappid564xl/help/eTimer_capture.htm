@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>eTimer Capture Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">eTimer Capture Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">The main functionality of the block is to read eTimer Capture FIFOs.</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="eTimer_capture_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>Number of words in CAPT1 FIFO (uint16)</li>
+		<li>CAPT1 FIFO (uint16(8))</li>
+		<li>Number of words in CAPT2 FIFO (uint16)</li>
+		<li>CAPT2 FIFO (uint16(8))</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="110">Names</td>
+			<th width="120">Selection Types</td>
+			<th width="110">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Submodule</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 2</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Channel</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 5</td>
+			<td></td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="eTimer_capture_files/image_param.jpg">
+	<h3>Block Dependency</h3>
+	<div>Please do the following:
+		<ol>
+			<li>Configure related eTimer submodule and channel via eTimer Configuration Block</li>
+		</ol>
+	</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

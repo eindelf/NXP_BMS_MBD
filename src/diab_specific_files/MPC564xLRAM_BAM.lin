@@ -1,0 +1,70 @@
+/*
+ *                                RAppID
+ *                         Freescale Semiconductor Inc.
+ * Target Compiler        : DIAB
+ * Target Part            : MPC5643L
+*/
+
+MEMORY
+{
+	/*Memory range from 0x4000000 to 0x40005000 is reserved for boot loader*/
+    exception_handlers:             org=0x40005000, len=0x00002000
+    vector_table:                   org=0x40007000, len=0x00001000
+    int_sram:                       org=0x40008000, len=0x00007800
+    stack_ram:                      org=0x4000F800, len=0x00000800
+}
+
+SECTIONS
+{
+    GROUP : 
+    { 
+      .exec_vect : {}
+      .exec_vect_vle LOAD(0x40005000): { *(.exec_vect) *(.exec_vect_vle) }
+    } > exception_handlers
+
+    GROUP : 
+    { 
+      .ivor4_vector_table LOAD(0x40007000): {}
+    } > vector_table
+
+    GROUP : 
+    { 
+      __argv=.;
+      __env=.;
+
+      .init : {}
+      .init_vle : { *(.init) *(.init_vle) }
+
+      .text : {}
+      .text_vle : { *(.text_vle) *(.text) }
+
+      .rodata (CONST): { *(.rdata) *(.rodata) }
+      .ctors  ALIGN (0x4): { *(.ctors) }
+      .dtors  ALIGN (0x4): { *(.dtors) }
+      extab      : {}
+      extabindex : {}
+      .sdata2 : {}
+      .sbss2 : {} 
+
+      .data : { *(.data) }
+      .j_pdata : { *(.j_pdata) }
+      .sdata : { *(.sdata) }
+      
+__BSS_START=.;
+     .sbss : { *(.sbss) }
+      .bss : { *(.bss) }
+      .tibss : {}
+__BSS_END=.;
+        
+      .tidata : {}
+      
+__HEAP_START =.;
+    } > int_sram
+}
+
+__SP_INIT=ADDR(stack_ram)+SIZEOF(stack_ram);
+__SP_END=ADDR(stack_ram);
+__HEAP_END=__SP_END;
+__IVPR_VALUE = ADDR(exception_handlers);
+__BSS_SIZE       = __BSS_END - __BSS_START;
+

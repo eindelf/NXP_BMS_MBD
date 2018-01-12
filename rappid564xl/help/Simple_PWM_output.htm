@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>Simple FlexPWM Output Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">Simple FlexPWM Output Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">The main functionality of the block is to generate a simple center-aligned, edge-aligned,
+phase-shifted or double-switching PWM output signals on A and B outputs of the selected FlexPWM module.
+Plase see Block Miscellaneous Details for other information on using this block.
+	</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="Simple_PWM_output_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>Frequency (uint32)</li>
+		<li>Duty Cycle A (uint32)</li>
+		<li>Duty Cycle B (uint32)</li>
+		<li>Phase Shift A (uint32) - if "PWM signals" is "A - edge aligned B - phase shifted" or "A B - phase shifted"</li>
+		<li>Phase Shift B (uint32) - if "PWM signals" is "A B - phase shifted"</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>Duty Cycle A (double) - if "Duty Cycle Simulation Output" is On</li>
+		<li>Duty Cycle B (double) - if "Duty Cycle Simulation Output" is On</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<div class="shifted">The block dialog consists of the following tabs:</div>
+	<ul class="shifted">
+		<li><a href="#General_tab">General</a></li>
+		<li><a href="#Output_signal_tab">Output Signals</a></li>
+		<li><a href="#Output_trigger_tab">Output Triggers</a></li>
+	</ul>
+	<ul>
+		<a name="General_tab">	
+			<li>The General tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="140">Names</td>
+			<th width="100">Selection Types</td>
+			<th width="140">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Module</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 1</td>
+			<td>FlexPWM module</td>
+		</tr>
+		<tr>
+			<td>Submodule (0-3)</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 3</td>
+			<td>FlexPWM channel</td>
+		</tr>
+		<tr>
+			<td>Initial Frequency Hz</td>
+			<td>Text-box</td>
+			<td>Depends on Motor Control Clock value</td>
+			<td>Initial frequency of PWM output signals</td>
+		</tr>
+		<tr>
+			<td>Resolution</td>
+			<td>Pop-up</td>
+			<td>1 %<br>0.1 %<br>0.01 %<br>0.001 %</td>
+			<td>Duty cycle resolution: actual Duty cycle is equal to Duty cycle parameter or input value multiplied by resolution</td>
+		</tr>
+		<tr>
+			<td>PWM23: initial DutyCycle A</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 100/resolution</td>
+			<td>Initial Duty Cycle of channel A output signals</td>
+		</tr>
+		<tr>
+			<td>PWM45: initial DutyCycle B</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 100/resolution</td>
+			<td>Initial Duty Cycle of channel B output signals</td>
+		</tr>
+		<tr>
+			<td>PWM signals</td>
+			<td>Pop-up</td>
+			<td>A - edge aligned B - phase shifted<br>
+				A B - center aligned<br>
+				A B - edge aligned<br>
+				A B - phase shifted	
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>PWM23: initial phase shift A</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 100/resolution</td>
+			<td>Initial Phase Shift of channels A output signals<br>
+				(applicable if "PWM signals" is "A - edge aligned B - phase shifted" or "A B - phase shifted" only)
+			</td>
+		</tr>
+		<tr>
+			<td>PWM45: initial phase shift B</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 100/resolution</td>
+			<td>Initial Phase Shift of channels B output signals<br>
+				(applicable if "PWM signals" is "A B - phase shifted" only)
+			</td>
+		</tr>
+		<tr>
+			<td>Double Switching</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Double switching PWM behavior</td>
+		</tr>
+		<tr>
+			<td>Duty Cycle Simulation Output</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>If DutyCycle simulation output is used</td>
+		</tr>
+		<tr>
+			<td>Counter synchronization from Submodule 0</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>If Master Sync is used for counter synchronization (not applicable for Submodule 0)</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Simple_PWM_output_files/image_param_1.jpg">
+	<ul>
+		<a name="Output_signal_tab">	
+			<li>The Output Signals tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="210">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="200">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>A[n] output pin (where n is the number of the selected submodule)</td>
+			<td>Pop-up</td>
+			<td>The list of available pins depends on the selected module.</td>
+			<td>Channel A pin selection</td>
+		</tr>
+		<tr>
+			<td>B[n] output pin (where n is the number of the selected submodule)</td>
+			<td>Pop-up</td>
+			<td>The list of available pins depends on the selected module.</td>
+			<td>Channel B pin selection</td>
+		</tr>
+		<tr>
+			<td>X[n] output pin (where n is the number of the selected submodule)</td>
+			<td>Pop-up</td>
+			<td>The list of available pins depends on the selected module.</td>
+			<td>X output pin selection</td>
+		</tr>
+		<tr>
+			<td>Invert PWMA Output Polarity</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>  </td>
+		</tr>
+		<tr>
+			<td>Invert PWMB Output Polarity</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>  </td>
+		</tr>
+		<tr>
+			<td>Invert PWMX Output Polarity</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>  </td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Simple_PWM_output_files/image_param_2.jpg">
+	<ul>
+		<a name="Output_trigger_tab">	
+			<li>The Output Triggers tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="160">Names</td>
+			<th width="100">Selection Types</td>
+			<th width="100">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>VAL<i>n</i><br>
+				<i>n</i> is 0 &ndash; 5
+			</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable generation of Output Trigger signal based on the counter value matching
+				VAL<i>n</i> register value
+			</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Simple_PWM_output_files/image_param_3.jpg">
+	<h3>Block Dependency</h3>
+	<div>None</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<ol type="1">
+	<li>Duty Cycle output signal needed for simulation purpose only.</li>
+	<li>If it is desired to only use one of the output pair than select None for the pin selection 
+	of the unused output and tie the block input for the unused output to a constant value or tie it 
+	to the same input as the other output that is used.</li>
+	</ol>
+</body>
+</html>

@@ -1,0 +1,146 @@
+%implements dspi_564xl_isr "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign dspiNum =  CAST("Number",Parameter[0].Value[0])
+  %assign dspiISRNum = CAST("Number",Parameter[0].Value[5])
+  
+  %<LibCacheIncludes("#include \"dspi%<dspiNum>_%<dspiISRNum>_isr.h\"" + "\n")>
+  
+  %if !EXISTS("DSPI_564xL_INCLUDED")
+    %assign ::ADC_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"dspi_564xl_library.h\"" + "\n")>
+  %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign dspiNum =  CAST("Number",Parameter[0].Value[0])
+  %assign dspiPri = CAST("Number",Parameter[0].Value[1])
+  %assign dspiTFUF = CAST("Number",Parameter[0].Value[2])
+  %assign dspiRFOF = CAST("Number",Parameter[0].Value[3])
+  %assign dspiISRNum = CAST("Number",Parameter[0].Value[5])
+  
+{
+	uint32_t flag = 0U;
+	%if (dspiISRNum == 1)
+		%if (dspiTFUF == 1)
+			flag |= DSPI_ISR_TFUF_RE;
+		%endif
+		%if (dspiRFOF == 1)
+			flag |= DSPI_ISR_RFOF_RE;
+		%endif
+	%endif
+	%if (dspiISRNum == 2)
+		flag |= DSPI_ISR_EOQF_RE;
+	%endif
+	%if (dspiISRNum == 3)
+		flag |= DSPI_ISR_TFFF_RE;
+	%endif
+	%if (dspiISRNum == 4)
+		flag |= DSPI_ISR_TCF_RE;
+	%endif
+	%if (dspiISRNum == 5)
+		flag |= DSPI_ISR_RFDF_RE;
+	%endif
+	
+	%if(dspiISRNum != 0)
+		dspi_564xl_interrupt_set(%<dspiNum>, flag); 
+	%endif
+}
+
+%openfile isr_c = "dspi%<dspiNum>_%<dspiISRNum>_isr.c"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+
+void dspi%<dspiNum>_%<dspiISRNum>_isr(void)
+{
+%if (dspiISRNum == 1)
+	%<LibBlockOutputSignal(1,"","",0)> = dspi_564xl_get_status(%<dspiNum>);
+%endif
+     
+%foreach fcnCallIdx = NumSFcnSysOutputCalls
+%% call the downstream system
+  %with SFcnSystemOutputCall[fcnCallIdx]
+%% skip unconnected function call outputs
+    %if ISEQUAL(BlockToCall, "unconnected")
+      %continue
+    %endif
+    %assign sysIdx = BlockToCall[0]
+    %assign blkIdx = BlockToCall[1]
+    %assign ssBlock = System[sysIdx].Block[blkIdx]
+    %<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+         ParamSettings.SampleTimesToSet[0][1])>\
+  %endwith
+%endforeach
+
+{
+	uint32_t flag = 0U;
+	%if (dspiISRNum == 1)
+		%if (dspiTFUF == 1)
+			flag |= DSPI_ISR_TFUF_RE;
+		%endif
+		%if (dspiRFOF == 1)
+			flag |= DSPI_ISR_RFOF_RE;
+		%endif
+	%endif
+	%if (dspiISRNum == 2)
+		flag |= DSPI_ISR_EOQF_RE;
+	%endif
+	%if (dspiISRNum == 3)
+		flag |= DSPI_ISR_TFFF_RE;
+	%endif
+	%if (dspiISRNum == 4)
+		flag |= DSPI_ISR_TCF_RE;
+	%endif
+	%if (dspiISRNum == 5)
+		flag |= DSPI_ISR_RFDF_RE;
+	%endif
+	
+	DSPI_%<dspiNum>.SR.R = flag; //clear flag
+}
+}
+
+%closefile isr_c
+
+%openfile isr_h = "dspi%<dspiNum>_%<dspiISRNum>_isr.h"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+extern void dspi%<dspiNum>_%<dspiISRNum>_isr(void);
+
+%closefile isr_h
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+;

@@ -1,0 +1,117 @@
+%implements adc_564xl_interrupt "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign adcNum =  CAST("Number",Parameter[0].Value[0])
+  %assign adcNum = adcNum - 1
+
+  %<LibCacheIncludes("#include \"adc%<adcNum>_EOC_isr.h\"" + "\n")>
+  
+  %if !EXISTS("ADC_564xL_INCLUDED")
+    %assign ::ADC_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"adc_564xl_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+%assign adcNum =  CAST("Number",Parameter[0].Value[0])
+%assign isrPrio= CAST("Number", Parameter[1].Value[0])
+%assign ech= CAST("Number", Parameter[2].Value[2])
+%assign eoc= CAST("Number", Parameter[2].Value[3])
+%assign jech= CAST("Number", Parameter[2].Value[4])
+%assign jeoc= CAST("Number", Parameter[2].Value[5])
+%assign eoctu= CAST("Number", Parameter[2].Value[6])
+
+%assign adcNum = adcNum - 1
+
+{
+	uint32_t mask = 0U;
+	%if(ech==1)
+		mask |= ADC_ISR_IMR_MSKECH;
+	%endif
+	%if(eoc==1)
+		mask |= ADC_ISR_IMR_MSKEOC;
+	%endif
+	%if(jech==1)
+		mask |= ADC_ISR_IMR_MSKJECH;
+	%endif
+	%if(jeoc==1)
+		mask |= ADC_ISR_IMR_MSKJEOC;
+	%endif
+	%if(eoctu==1)
+		mask |= ADC_ISR_IMR_MSKEOCTU;
+	%endif
+	adc_interrupt_set_imr(%<adcNum>, mask);
+
+%%ADC_ISR_IMR_MSKJEOC | ADC_ISR_IMR_MSKJECH | ADC_ISR_IMR_MSKEOC | ADC_ISR_IMR_MSKECH | ADC_ISR_IMR_MSKEOCTU); 
+}
+
+%openfile isr_c = "adc%<adcNum>_EOC_isr.c"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+void ADC%<adcNum>_EOC_ISR(void)
+{
+%<LibBlockOutputSignal(1, "", "", 0)> = ADC_%<adcNum>.ISR.R;
+     
+%foreach fcnCallIdx = NumSFcnSysOutputCalls
+%% call the downstream system
+  %with SFcnSystemOutputCall[fcnCallIdx]
+%% skip unconnected function call outputs
+    %if ISEQUAL(BlockToCall, "unconnected")
+      %continue
+    %endif
+    %assign sysIdx = BlockToCall[0]
+    %assign blkIdx = BlockToCall[1]
+    %assign ssBlock = System[sysIdx].Block[blkIdx]
+    %<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+         ParamSettings.SampleTimesToSet[0][1])>\
+  %endwith
+%endforeach
+
+ADC_%<adcNum>.ISR.R = 0x101F; //clear all flags
+}
+
+%closefile isr_c
+
+%openfile isr_h = "adc%<adcNum>_EOC_isr.h"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+extern void ADC%<adcNum>_EOC_ISR(void);
+
+%closefile isr_h
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+;

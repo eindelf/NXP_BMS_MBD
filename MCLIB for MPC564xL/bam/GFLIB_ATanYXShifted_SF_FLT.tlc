@@ -1,0 +1,49 @@
+
+%implements GFLIB_AtanYXShifted_SF_FLT "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+   %if !EXISTS("GFLIB_INCLUDED")
+      %assign ::GFLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gflib.h\"" + "\n")>
+   %endif 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+   %assign Ky   = CAST("Real32",Parameter[0].Value[0])
+   %assign Kx	= CAST("Real32",Parameter[1].Value[0])
+   %assign ThetaAdj = CAST("Real32",Parameter[2].Value[0])
+
+   %assign y = LibBlockInputSignal(0, "", "", 0)
+   %assign x = LibBlockInputSignal(1, "", "", 0)
+   %assign t = LibBlockOutputSignal(0, "", "", 0)
+   
+   {  
+	 static const GFLIB_ATANYXSHIFTED_T param = { %<Ky>, %<Kx>, %<ThetaAdj> };
+     %<t> = GFLIB_AtanYXShifted (%<y>,%<x>,&param);
+   }
+
+%endfunction

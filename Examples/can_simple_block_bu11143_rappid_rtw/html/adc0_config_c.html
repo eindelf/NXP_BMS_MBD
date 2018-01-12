@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="./js/coder_app.js"></script>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="./rtwreport_utils.js"></script>
+<script type="text/javascript" src="./rtwannotate.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/coder_app.css"/>
+</head>
+<body onload="srcFileOnload();">
+<pre id="code">
+<table class="code" id="codeTbl">
+<tr name="1" id="1">
+<td><a id="l1" class='ln'>1</a></td><td><span class="pp">#include "can_simple_block_bu11143.h"</span></td></tr>
+<tr name="2" id="2">
+<td><a id="l2" class='ln'>2</a></td><td><span class="pp">#include "can_simple_block_bu11143_private.h"</span></td></tr>
+<tr name="3" id="3">
+<td><a id="l3" class='ln'>3</a></td><td></td></tr>
+<tr name="4" id="4">
+<td><a id="l4" class='ln'>4</a></td><td><span class="kw">void</span> <a id="4c6" class="tk">adc0_config</a>(<span class="kw">void</span>)</td></tr>
+<tr name="5" id="5">
+<td><a id="l5" class='ln'>5</a></td><td><span class="br">{</span></td></tr>
+<tr name="6" id="6">
+<td><a id="l6" class='ln'>6</a></td><td>  <a id="6c3" class="tk">ADC_0</a>.<a id="6c9" class="tk">MCR</a>.<a id="6c13" class="tk">B</a>.<a id="6c15" class="tk">OWREN</a> = 1;</td></tr>
+<tr name="7" id="7">
+<td><a id="l7" class='ln'>7</a></td><td>  <a id="7c3" class="tk">ADC_0</a>.<a id="7c9" class="tk">MCR</a>.<a id="7c13" class="tk">B</a>.<a id="7c15" class="tk">WLSIDE</a> = 0;</td></tr>
+<tr name="8" id="8">
+<td><a id="l8" class='ln'>8</a></td><td>  <a id="8c3" class="tk">ADC_0</a>.<a id="8c9" class="tk">MCR</a>.<a id="8c13" class="tk">B</a>.<a id="8c15" class="tk">ADCLKSEL</a> = 1;</td></tr>
+<tr name="9" id="9">
+<td><a id="l9" class='ln'>9</a></td><td>  <a id="9c3" class="tk">ADC_0</a>.<a id="9c9" class="tk">MCR</a>.<a id="9c13" class="tk">B</a>.<a id="9c15" class="tk">ACKO</a> = 1;</td></tr>
+<tr name="10" id="10">
+<td><a id="l10" class='ln'>10</a></td><td>  <a id="10c3" class="tk">ADC_0</a>.<a id="10c9" class="tk">CTR0</a>.<a id="10c14" class="tk">B</a>.<a id="10c16" class="tk">INPLATCH</a> = 0;</td></tr>
+<tr name="11" id="11">
+<td><a id="l11" class='ln'>11</a></td><td>  <a id="11c3" class="tk">ADC_0</a>.<a id="11c9" class="tk">CTR0</a>.<a id="11c14" class="tk">B</a>.<a id="11c16" class="tk">OFFSHIFT</a> = 2;</td></tr>
+<tr name="12" id="12">
+<td><a id="l12" class='ln'>12</a></td><td>  <a id="12c3" class="tk">ADC_0</a>.<a id="12c9" class="tk">CTR0</a>.<a id="12c14" class="tk">B</a>.<a id="12c16" class="tk">INPCMP</a> = 1;</td></tr>
+<tr name="13" id="13">
+<td><a id="l13" class='ln'>13</a></td><td>  <a id="13c3" class="tk">ADC_0</a>.<a id="13c9" class="tk">CTR0</a>.<a id="13c14" class="tk">B</a>.<a id="13c16" class="tk">INSAMP</a> = 3;</td></tr>
+<tr name="14" id="14">
+<td><a id="l14" class='ln'>14</a></td><td>  <a id="14c3" class="tk">ADC_0</a>.<a id="14c9" class="tk">MCR</a>.<a id="14c13" class="tk">B</a>.<a id="14c15" class="tk">CTUEN</a> = 0;</td></tr>
+<tr name="15" id="15">
+<td><a id="l15" class='ln'>15</a></td><td>  <a id="15c3" class="tk">ADC_0</a>.<a id="15c9" class="tk">CTR1</a>.<a id="15c14" class="tk">B</a>.<a id="15c16" class="tk">INPLATCH</a> = 0;</td></tr>
+<tr name="16" id="16">
+<td><a id="l16" class='ln'>16</a></td><td>  <a id="16c3" class="tk">ADC_0</a>.<a id="16c9" class="tk">CTR1</a>.<a id="16c14" class="tk">B</a>.<a id="16c16" class="tk">INPCMP</a> = 1;</td></tr>
+<tr name="17" id="17">
+<td><a id="l17" class='ln'>17</a></td><td>  <a id="17c3" class="tk">ADC_0</a>.<a id="17c9" class="tk">CTR1</a>.<a id="17c14" class="tk">B</a>.<a id="17c16" class="tk">INSAMP</a> = 1;</td></tr>
+<tr name="18" id="18">
+<td><a id="l18" class='ln'>18</a></td><td>  <a id="18c3" class="tk">ADC_0</a>.<a id="18c9" class="tk">CTR1</a>.<a id="18c14" class="tk">B</a>.<a id="18c16" class="tk">TSENS</a> = 0;</td></tr>
+<tr name="19" id="19">
+<td><a id="l19" class='ln'>19</a></td><td>  <a id="19c3" class="tk">ADC_0</a>.<a id="19c9" class="tk">PSCR</a>.<a id="19c14" class="tk">B</a>.<a id="19c16" class="tk">PREVAL0</a> = 0;</td></tr>
+<tr name="20" id="20">
+<td><a id="l20" class='ln'>20</a></td><td>  <a id="20c3" class="tk">ADC_0</a>.<a id="20c9" class="tk">PSCR</a>.<a id="20c14" class="tk">B</a>.<a id="20c16" class="tk">PRECONV</a> = 0;</td></tr>
+<tr name="21" id="21">
+<td><a id="l21" class='ln'>21</a></td><td>  <span class="kw">return</span>;</td></tr>
+<tr name="22" id="22">
+<td><a id="l22" class='ln'>22</a></td><td><span class="br">}</span></td></tr>
+<tr name="23" id="23">
+<td><a id="l23" class='ln'>23</a></td><td></td></tr>
+</table>
+</pre>
+</body>
+</html>

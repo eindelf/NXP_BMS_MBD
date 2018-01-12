@@ -1,0 +1,72 @@
+%implements can_564xl_disable_isr "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+  
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output
+
+	
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign canNum 	=  CAST("Number",Parameter[0].Value[0])
+  %assign canTxWrn  =  CAST("Number",Parameter[1].Value[0])
+  %assign canRxWrn  =  CAST("Number",Parameter[1].Value[1])
+  %assign canErrInt =  CAST("Number",Parameter[1].Value[2])
+
+  %assign canNum = %<canNum> - 1
+    %%setup CTR and MCR registers
+        %if (canErrInt == 1) %%Erros
+            CAN_%<canNum>.CTRL.B.ERR_MSK = 1;            
+        %endif
+        %if (canErrInt == 0) %%Erros
+            CAN_%<canNum>.CTRL.B.ERR_MSK = 0;            
+        %endif
+
+        %if (canTxWrn == 1) || (canRxWrn == 1)
+            CAN_%<canNum>.MCR.B.WRN_EN = 1;
+                %if (canTxWrn == 1)
+                    CAN_%<canNum>.CTRL.B.TWRN_MSK = 1;
+                %endif
+                %if (canTxWrn == 0)
+                    CAN_%<canNum>.CTRL.B.TWRN_MSK = 0;
+                %endif
+                %if (canRxWrn == 1)
+                    CAN_%<canNum>.CTRL.B.RWRN_MSK = 1;
+                %endif
+                %if (canRxWrn == 0)
+                    CAN_%<canNum>.CTRL.B.RWRN_MSK = 0;
+                %endif	
+         %endif
+        %if (canTxWrn == 0) && (canRxWrn == 0)
+            CAN_%<canNum>.MCR.B.WRN_EN = 0;
+            CAN_%<canNum>.CTRL.B.TWRN_MSK = 0;
+            CAN_%<canNum>.CTRL.B.RWRN_MSK = 0;
+        %endif
+  %endif
+%endfunction
+;

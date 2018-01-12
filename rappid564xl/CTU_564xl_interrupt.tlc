@@ -1,0 +1,170 @@
+%implements CTU_564xl_interrupt "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign ctuir   =  CAST("Number",Parameter[1].Value[0])
+  
+  %if ctuir == 16384
+	%<LibCacheIncludes("#include \"CTU_msr_isr.h\"" + "\n")>
+  
+  %elseif ctuir == 32768
+	%<LibCacheIncludes("#include \"CTU_error_isr.h\"" + "\n")>
+
+  %elseif ctuir == 1
+	%<LibCacheIncludes("#include \"CTU_trigger7_isr.h\"" + "\n")>
+  %elseif ctuir == 2
+	%<LibCacheIncludes("#include \"CTU_trigger6_isr.h\"" + "\n")>
+  %elseif ctuir == 4
+	%<LibCacheIncludes("#include \"CTU_trigger5_isr.h\"" + "\n")>
+  %elseif ctuir == 8
+	%<LibCacheIncludes("#include \"CTU_trigger4_isr.h\"" + "\n")>
+  %elseif ctuir == 16
+	%<LibCacheIncludes("#include \"CTU_trigger3_isr.h\"" + "\n")>
+  %elseif ctuir == 32
+	%<LibCacheIncludes("#include \"CTU_trigger2_isr.h\"" + "\n")>
+  %elseif ctuir == 64
+	%<LibCacheIncludes("#include \"CTU_trigger1_isr.h\"" + "\n")>
+  %elseif ctuir == 128
+	%<LibCacheIncludes("#include \"CTU_trigger0_isr.h\"" + "\n")>
+  
+  %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign secondInput  =  CAST("Number",Parameter[0].Value[0])
+  %assign ctuir        =  CAST("Number",Parameter[1].Value[0])
+  
+  %% ----- MSR interrupt --------------------------------
+  %if ctuir == 16384
+     %assign isr_c = "CTU_msr_isr.c"
+     %assign isr_h = "CTU_msr_isr.h"
+     %assign isr_func = "CTU_msr_ISR"
+     %assign isr_flag = "CTU.CTUIFR.B.MRS_I"
+     %assign isr_flag_clear = "1"
+     %assign isr_ie_flag = "MRS_IE"
+  
+  %% ----- Error interrupt ------------------------------
+  %elseif ctuir == 32768
+	%<LibCacheIncludes("#include \"CTU_error_isr.h\"" + "\n")>
+     %assign isr_c = "CTU_error_isr.c"
+     %assign isr_h = "CTU_error_isr.h"
+     %assign isr_func = "CTU_error_ISR"
+     %assign isr_flag = "CTU.CTUEFR.R"
+     %assign isr_flag_clear = "0xFFF0"
+     %assign isr_ie_flag = "IEE"
+  
+  %% ----- ADC command interrupt ------------------------------
+  %elseif ctuir == 0
+     %assign isr_c = "CTU_adc_isr.c"
+     %assign isr_h = "CTU_adc_isr.h"
+     %assign isr_func = "CTU_adc_ISR"
+     %assign isr_flag = "CTU.CTUIFR.B.ADC_I"
+     %assign isr_flag_clear = "1"
+
+  %% ----- Trigger interrupt ----------------------------
+  %else
+    %if ctuir == 1
+     %assign trigNum = "7"
+    %elseif ctuir == 2
+     %assign trigNum = "6"
+    %elseif ctuir == 4
+     %assign trigNum = "5"
+    %elseif ctuir == 8
+     %assign trigNum = "4"
+    %elseif ctuir == 16
+     %assign trigNum = "3"
+    %elseif ctuir == 32
+     %assign trigNum = "2"
+    %elseif ctuir == 64
+     %assign trigNum = "1"
+    %elseif ctuir == 128
+     %assign trigNum = "0"
+    %endif 
+	 
+    %assign isr_c = "CTU_trigger%<trigNum>_isr.c"
+    %assign isr_h = "CTU_trigger%<trigNum>_isr.h"
+    %assign isr_func = "CTU_trigger%<trigNum>_ISR"
+    %assign isr_flag = "CTU.CTUIFR.B.T%<trigNum>_I"
+    %assign isr_flag_clear = "1"
+    %assign isr_ie_flag = "T%<trigNum>_I"
+  
+  %endif 
+ 
+/* enable interrupt source */
+%if ctuir != 0
+CTU.CTUIR.B.%<isr_ie_flag> = 1;
+%endif 
+  
+%openfile isr_c = "%<isr_c>"
+  
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+void %<isr_func>(void)
+{
+%if secondInput != 0
+	%<LibBlockOutputSignal(1, "", "", 0)> = %<isr_flag>;
+%endif
+     
+%foreach fcnCallIdx = NumSFcnSysOutputCalls
+%% call the downstream system
+  %with SFcnSystemOutputCall[fcnCallIdx]
+%% skip unconnected function call outputs
+    %if ISEQUAL(BlockToCall, "unconnected")
+      %continue
+    %endif
+    %assign sysIdx = BlockToCall[0]
+    %assign blkIdx = BlockToCall[1]
+    %assign ssBlock = System[sysIdx].Block[blkIdx]
+    %<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+         ParamSettings.SampleTimesToSet[0][1])>\
+  %endwith
+%endforeach
+
+%<isr_flag> = %<isr_flag_clear>;   //clear flags
+}
+
+%closefile isr_c
+
+%openfile isr_h = "%<isr_h>"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+extern void %<isr_func>(void);
+
+%closefile isr_h
+
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+;

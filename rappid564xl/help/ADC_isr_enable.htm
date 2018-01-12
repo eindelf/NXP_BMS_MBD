@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>ADC Interrupt Enable/Disable Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">ADC Interrupt Enable/Disable Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">The main functionality of the block is to enable/disable ADC interrupts</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="ADC_isr_enable_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<div class="shifted">The block dialog consists of the following tabs:</div>
+	<ul class="shifted">
+		<li><a href="#ADC_ISR_tab">ADC ISR</a></li>
+		<li><a href="#WDG_CH_0_7_tab">WDG CH(0-7)</a></li>
+		<li><a href="#WDG_CH_8_15_tab">WDG CH(8-15)</a></li>
+		<li><a href="#ADC_Channels_tab">ADC Channels</a></li>
+	</ul>
+	<ul>
+		<a name="ADC_ISR_tab">	
+			<li>The ADC ISR tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="160">Names</td>
+			<th width="90">Selection Types</td>
+			<th width="80">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>ADC converter (0 - 1)</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 1</td>
+			<td>Select the ADC converter number</td>
+		</tr>
+		<tr>
+			<td>Enable EOCTU interrupt</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable EOCTU interrupt</td>
+		</tr>
+		<tr>
+			<td>Enable JEOC interrupt</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable JEOC interrupt</td>
+		</tr>
+		<tr>
+			<td>Enable JEGH interrupt</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable JEGH interrupt</td>
+		</tr>
+		<tr>
+			<td>Enable EOC interrupt</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable EOC interrupt</td>
+		</tr>
+		<tr>
+			<td>Enable EGH interrupt</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable EGH interrupt</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="ADC_isr_enable_files/image_param_1.jpg">
+	<ul>
+		<a name="WDG_CH_0_7_tab">	
+			<li>The WDG CH(0-7) tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="160">Names</td>
+			<th width="90">Selection Types</td>
+			<th width="80">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Enable WDG CH<i>n</i> Low</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable WDG CH<i>n</i> Low interrupt (<i>n</i> is 0 &ndash; 7)</td>
+		</tr>
+		<tr>
+			<td>Enable WDG CH<i>n</i> High</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable WDG CH<i>n</i> High interrupt (<i>n</i> is 0 &ndash; 7)</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="ADC_isr_enable_files/image_param_2.jpg">
+	<ul>
+		<a name="WDG_CH_8_15_tab">	
+			<li>The WDG CH(8-15) tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="160">Names</td>
+			<th width="90">Selection Types</td>
+			<th width="80">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Enable WDG CH<i>n</i> Low</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable WDG CH<i>n</i> Low interrupt (<i>n</i> is 8 &ndash; 15)</td>
+		</tr>
+		<tr>
+			<td>Enable WDG CH<i>n</i> High</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable WDG CH<i>n</i> High interrupt (<i>n</i> is 8 &ndash; 15)</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="ADC_isr_enable_files/image_param_3.jpg">
+	<ul>
+		<a name="ADC_Channels_tab">	
+			<li>The ADC Channels tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="120">Names</td>
+			<th width="90">Selection Types</td>
+			<th width="80">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Enable CH<i>n</i></td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/Disable CH<i>n</i> interrupt (<i>n</i> is 0 &ndash; 15)</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="ADC_isr_enable_files/image_param_4.jpg">
+	<h3>Block Dependency</h3>
+	<div>Please do the following:
+		<ol>
+			<li>Configure related ADC chanel and its interrupts</li>
+		</ol>
+	</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

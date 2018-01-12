@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>CTU Configuration Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">CTU Configuration Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">The main functionality of the block is to configure CTU mode and its 
+		interfaces with other peripherals.
+	</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="CTU_output_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<div class="shifted">The block dialog consists of the following tabs:</div>
+	<ul class="shifted">
+		<li><a href="#General_tab">General</a></li>
+		<li><a href="#InputSelection_tab">Input Selection</a></li>
+		<li><a href="#TriggerN_tab">Trigger (0-7)</a></li>
+		<li><a href="#ADCcommands_tab">ADC Commands</a></li>
+	</ul>
+	<ul>
+		<a name="General_tab">	
+			<li>The General tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="100">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="220">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Trigger Generation mode</td>
+			<td>Pop-up</td>
+			<td>Triggered<br>Sequential</td>
+			<td>Trigger Generation mode</td>
+		</tr>
+		<tr>
+			<td>Master Reload Selection</td>
+			<td>Pop-up</td>
+			<td>PWM reload Rising edge<br>
+				PWM reload Falling edge<br>
+				PWM channel <i>N</i> odd Rising edge<br>
+				PWM channel <i>N</i> odd Falling edge<br>
+				PWM channel <i>N</i> even Rising edge<br>
+				PWM channel <i>N</i> even Falling edge<br>
+				Real PWM channel <i>M</i> Rising edge<br>
+				Real PWM channel <i>M</i> Falling edge<br>
+				eTimer <i>T</i> Rising edge<br>
+				eTimer <i>T</i> Falling edge<br>
+				External signal Rising edge<br>
+				External signal Falling edge
+			</td>
+			<td><i>N</i> is 0 &ndash; 3, specifies the PWM channel number<br>
+				<i>M</i> is 0 &ndash; 3, specifies the Real PWM channel number<br>
+				<i>T</i> is 1 &ndash; 2, specifies the eTimer
+			</td>
+		</tr>
+		<tr>
+			<td>Counter Stop Delay (mks)</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>Defines period when TGS Counter loaded with TGS Counter Reload Value reaches 
+				TSG Counter Compare Value
+			</td>
+		</tr>
+		<tr>
+			<td>External trigger pin selection</td>
+			<td>Pop-up</td>
+			<td>The list of available pins depends on the selected module.</td>
+			<td>External trigger pin</td>
+		</tr>
+		<tr>
+			<td>External input pin selection</td>
+			<td>Pop-up</td>
+			<td>The list of available pins depends on the selected module.</td>
+			<td>External input pin</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="CTU_output_files/image_param_1.jpg">
+	<ul>
+		<a name="InputSelection_tab">	
+			<li>The Input Selection tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="140">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="120">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>PWM reload</td>
+			<td>Pop-up</td>
+			<td>Disabled<br>
+				Rising<br>
+				Falling<br>
+				Rising and Falling
+			</td>
+			<td>I0_FE, I0_RE bits of TGSISR</td>
+		</tr>
+		<tr>
+			<td>PWM channel <i>n</i> odd<br>
+				<i>n</i> is 0 &ndash; 3
+			</td>
+			<td>Pop-up</td>
+			<td>Disabled<br>
+				Rising<br>
+				Falling<br>
+				Rising and Falling
+			</td>
+			<td>I<i>(n+1)</i>_FE, I<i>(n+1)</i>_RE bits of TGSISR</td>
+		</tr>
+		<tr>
+			<td>PWM channel <i>n</i> even<br>
+				<i>n</i> is 0 &ndash; 3
+			</td>
+			<td>Pop-up</td>
+			<td>Disabled<br>
+				Rising<br>
+				Falling<br>
+				Rising and Falling
+			</td>
+			<td>I<i>(n+5)</i>_FE, I<i>(n+5)</i>_RE bits of TGSISR</td>
+		</tr>
+		<tr>
+			<td>Real PWM channel <i>n</i><br>
+				<i>n</i> is 0 &ndash; 3
+			</td>
+			<td>Pop-up</td>
+			<td>Disabled<br>
+				Rising<br>
+				Falling<br>
+				Rising and Falling
+			</td>
+			<td>I<i>(n+9)</i>_FE, I<i>(n+9)</i>_RE bits of TGSISR</td>
+		</tr>
+		<tr>
+			<td>eTimer <i>n</i><br>
+				<i>n</i> is 1 &ndash; 2
+			</td>
+			<td>Pop-up</td>
+			<td>Disabled<br>
+				Rising<br>
+				Falling<br>
+				Rising and Falling
+			</td>
+			<td>I<i>(n+12)</i>_FE, I<i>(n+12)</i>_RE bits of TGSISR</td>
+		</tr>
+		<tr>
+			<td>External</td>
+			<td>Pop-up</td>
+			<td>Disabled<br>
+				Rising<br>
+				Falling<br>
+				Rising and Falling
+			</td>
+			<td>I15_FE, I15_RE bits of TGSISR</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="CTU_output_files/image_param_2.jpg">
+	<ul>
+		<a name="TriggerN_tab">	
+			<li>The Trigger <i>N</i> tabs (<i>N</i> is 0 &ndash; 7) contain the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="210">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="70">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Trigger <i>n</i> enable<br>
+				<i>n</i> is trigger number
+			</td>
+			<td>Check-box</td>
+			<td>Enable<br>Disable</td>
+			<td>Respective T<i>n</i>_E value of THCR1 and THCR2 registers</td>
+		</tr>
+		<tr>
+			<td>Trigger <i>n</i> External output enable<br>
+				<i>n</i> is trigger number
+			</td>
+			<td>Check-box</td>
+			<td>Enable<br>Disable</td>
+			<td>Respective T<i>n</i>_ETE value of THCR1 and THCR2 registers</td>
+		</tr>
+		<tr>
+			<td>Trigger <i>n</i> Timer <i>m</i> output enable<br>
+				<i>n</i> is trigger number<br>
+				<i>m</i> is 0 &ndash; 2
+			</td>
+			<td>Check-box</td>
+			<td>Enable<br>Disable</td>
+			<td>Respective T<i>n</i>_T<i>m</i>E value of THCR1 and THCR2 registers</td>
+		</tr>
+		<tr>
+			<td>Trigger <i>n</i> ADC command enable<br>
+				<i>n</i> is trigger number
+			</td>
+			<td>Check-box</td>
+			<td>Enable<br>Disable</td>
+			<td>Respective T<i>n</i>_ADCE value of THCR1 and THCR2 registers</td>
+		</tr>
+		<tr>
+			<td>Trigger <i>n</i> Delay (mks)<br>
+				<i>n</i> is trigger number
+			</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>Defines period when TGS Counter loaded with TGS Counter Reload Value reaches 
+				Trigger <i>n</i> Compare Value
+			</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="CTU_output_files/image_param_3.jpg">
+	<ul>
+		<a name="ADCcommands_tab">	
+			<li>The ADC Commands tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="220">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="140">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Trigger <i>n</i> ADC Commands number<br>
+				(for each Trigger <i>n</i> where ADC Command is enabled)
+			</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 24</td>
+			<td>Total number of ADC Commands for all Triggers is 24</td>
+		</tr>
+		<tr>
+			<td>Command <i>m</i>: Conversion mode selection</td>
+			<td>Pop-up</td>
+			<td>&ndash; Single-conversion mode: ADC unit A<br>
+				&ndash; Single-conversion mode: ADC unit B<br>
+				&ndash; Dual-conversion mode
+			</td>
+			<td>for each Command <i>m</i> of Trigger <i>n</i></td>
+		</tr>
+		<tr>
+			<td>Command <i>m</i>: Command Interrupt Request</td>
+			<td>Pop-up</td>
+			<td>Enabled<br>Disabled</td>
+			<td>for each Command <i>m</i> of Trigger <i>n</i></td>
+		</tr>
+		<tr>
+			<td>Command <i>m</i>: FIFO for ADC unit A/B<br>
+			</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 7</td>
+			<td>for each Command <i>m</i> of Trigger <i>n</i></td>
+		</tr>
+		<tr>
+			<td>Command <i>m</i>: ADC unit A channel number<br>
+			</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 15</td>
+			<td>for each Command <i>m</i> of Trigger <i>n</i></td>
+		</tr>
+		<tr>
+			<td>Command <i>m</i>: ADC unit B channel number<br>
+			</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 15</td>
+			<td>for each Command <i>m</i> of Trigger <i>n</i></td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="CTU_output_files/image_param_4.jpg">
+	<h3>Block Dependency</h3>
+	<div>None</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>
+		ATTENTION: The CTU model block has been updated such that a dummy command is no longer required. 
+		Please immediately remove any dummy commands that was inserted so that your command list is compatible with the updated block.<br />
+	<ol type="1">
+	 <li>If LC bit is set in the trigger index command - The command will be executed upon the trigger. This is not recognized 
+	 as the last command. So, next commands in the command list are executed till a command with LC bit set is found.
+	</li>
+	<li>The command with LC bit set, if not a trigger index command, will not get executed.
+	 <ol type="a">
+	    <li>a.	In a case where there is just one trigger enabled, and single ADC channel conversion required on the trigger - we 
+		 need a dummy command with LC bit set after the required ADC command.
+		</li> 
+		<li>b.	In a case where there are two triggers, one command on first trigger, two commands on the second trigger - we need 
+		total four commands(one dummy command at the last with LC bit set). First trigger's commands LC bit may or may not be set. 
+		Second trigger's first command LC bit has to be set so that first trigger commands list will stop at this point. Second 
+		trigger's second command will not have LC bit set. Second trigger's third command(last command in the commands list and the 
+		dummy command) will have LC bit set. This command will not be executed. If the second trigger's first command LC bit is not 
+		set -  Three commands will be executed on first trigger and stops at the dummy command with LC bit set. On the second trigger 
+		two commands will be executed and stops at the last dummy command whose LC bit is set. 
+		</li> 
+	 </ol>
+	</li>
+	</ol>
+	</div>
+	<img vspace="15" src="CTU_output_files/details.jpg">
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="./js/coder_app.js"></script>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="./rtwreport_utils.js"></script>
+<script type="text/javascript" src="./rtwannotate.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/coder_app.css"/>
+</head>
+<body onload="srcFileOnload();">
+<pre id="code">
+<table class="code" id="codeTbl">
+<tr name="1" id="1">
+<td><a id="l1" class='ln'>1</a></td><td><span class="ct">/*</span></td></tr>
+<tr name="2" id="2">
+<td><a id="l2" class='ln'>2</a></td><td><span class="ct"> * BMU_Driver.h</span></td></tr>
+<tr name="3" id="3">
+<td><a id="l3" class='ln'>3</a></td><td><span class="ct"> *</span></td></tr>
+<tr name="4" id="4">
+<td><a id="l4" class='ln'>4</a></td><td><span class="ct"> *  Created on: June 28, 2017</span></td></tr>
+<tr name="5" id="5">
+<td><a id="l5" class='ln'>5</a></td><td><span class="ct"> *      Author: deepak.agarwal</span></td></tr>
+<tr name="6" id="6">
+<td><a id="l6" class='ln'>6</a></td><td><span class="ct"> */</span></td></tr>
+<tr name="7" id="7">
+<td><a id="l7" class='ln'>7</a></td><td></td></tr>
+<tr name="8" id="8">
+<td><a id="l8" class='ln'>8</a></td><td><span class="pp">#ifndef</span> <a id="8c9" class="tk">BMU_DRIVER_H_</a></td></tr>
+<tr name="9" id="9">
+<td><a id="l9" class='ln'>9</a></td><td><span class="pp">#define</span> <a id="9c9" class="tk">BMU_DRIVER_H_</a></td></tr>
+<tr name="10" id="10">
+<td><a id="l10" class='ln'>10</a></td><td><span class="pp">#include "dspi_564xL_library.h"</span></td></tr>
+<tr name="11" id="11">
+<td><a id="l11" class='ln'>11</a></td><td></td></tr>
+<tr name="12" id="12">
+<td><a id="l12" class='ln'>12</a></td><td><span class="kw">static</span> <span class="kw">const</span> <a id="12c14" class="tk">uint16_t</a> <a id="12c23" class="tk">PEC15Table</a>[256] = <span class="br">{</span> 0x0, 0xc599, 0xceab, 0xb32, 0xd8cf,</td></tr>
+<tr name="13" id="13">
+<td><a id="l13" class='ln'>13</a></td><td>  0x1d56, 0x1664, 0xd3fd, 0xf407, 0x319e, 0x3aac, 0xff35, 0x2cc8, 0xe951, 0xe263,</td></tr>
+<tr name="14" id="14">
+<td><a id="l14" class='ln'>14</a></td><td>  0x27fa,</td></tr>
+<tr name="15" id="15">
+<td><a id="l15" class='ln'>15</a></td><td>  0xad97, 0x680e, 0x633c, 0xa6a5, 0x7558, 0xb0c1, 0xbbf3, 0x7e6a, 0x5990, 0x9c09,</td></tr>
+<tr name="16" id="16">
+<td><a id="l16" class='ln'>16</a></td><td>  0x973b, 0x52a2, 0x815f, 0x44c6, 0x4ff4, 0x8a6d,</td></tr>
+<tr name="17" id="17">
+<td><a id="l17" class='ln'>17</a></td><td>  0x5b2e, 0x9eb7, 0x9585, 0x501c, 0x83e1, 0x4678, 0x4d4a, 0x88d3, 0xaf29, 0x6ab0,</td></tr>
+<tr name="18" id="18">
+<td><a id="l18" class='ln'>18</a></td><td>  0x6182, 0xa41b, 0x77e6, 0xb27f, 0xb94d, 0x7cd4,</td></tr>
+<tr name="19" id="19">
+<td><a id="l19" class='ln'>19</a></td><td>  0xf6b9, 0x3320, 0x3812, 0xfd8b, 0x2e76, 0xebef, 0xe0dd, 0x2544, 0x2be, 0xc727,</td></tr>
+<tr name="20" id="20">
+<td><a id="l20" class='ln'>20</a></td><td>  0xcc15, 0x98c, 0xda71, 0x1fe8, 0x14da, 0xd143,</td></tr>
+<tr name="21" id="21">
+<td><a id="l21" class='ln'>21</a></td><td>  0xf3c5, 0x365c, 0x3d6e, 0xf8f7, 0x2b0a, 0xee93, 0xe5a1, 0x2038, 0x7c2, 0xc25b,</td></tr>
+<tr name="22" id="22">
+<td><a id="l22" class='ln'>22</a></td><td>  0xc969, 0xcf0, 0xdf0d, 0x1a94, 0x11a6, 0xd43f,</td></tr>
+<tr name="23" id="23">
+<td><a id="l23" class='ln'>23</a></td><td>  0x5e52, 0x9bcb, 0x90f9, 0x5560, 0x869d, 0x4304, 0x4836, 0x8daf, 0xaa55, 0x6fcc,</td></tr>
+<tr name="24" id="24">
+<td><a id="l24" class='ln'>24</a></td><td>  0x64fe, 0xa167, 0x729a, 0xb703, 0xbc31, 0x79a8,</td></tr>
+<tr name="25" id="25">
+<td><a id="l25" class='ln'>25</a></td><td>  0xa8eb, 0x6d72, 0x6640, 0xa3d9, 0x7024, 0xb5bd, 0xbe8f, 0x7b16, 0x5cec, 0x9975,</td></tr>
+<tr name="26" id="26">
+<td><a id="l26" class='ln'>26</a></td><td>  0x9247, 0x57de, 0x8423, 0x41ba, 0x4a88, 0x8f11,</td></tr>
+<tr name="27" id="27">
+<td><a id="l27" class='ln'>27</a></td><td>  0x57c, 0xc0e5, 0xcbd7, 0xe4e, 0xddb3, 0x182a, 0x1318, 0xd681, 0xf17b, 0x34e2,</td></tr>
+<tr name="28" id="28">
+<td><a id="l28" class='ln'>28</a></td><td>  0x3fd0, 0xfa49, 0x29b4, 0xec2d, 0xe71f, 0x2286,</td></tr>
+<tr name="29" id="29">
+<td><a id="l29" class='ln'>29</a></td><td>  0xa213, 0x678a, 0x6cb8, 0xa921, 0x7adc, 0xbf45, 0xb477, 0x71ee, 0x5614, 0x938d,</td></tr>
+<tr name="30" id="30">
+<td><a id="l30" class='ln'>30</a></td><td>  0x98bf, 0x5d26, 0x8edb, 0x4b42, 0x4070, 0x85e9,</td></tr>
+<tr name="31" id="31">
+<td><a id="l31" class='ln'>31</a></td><td>  0xf84, 0xca1d, 0xc12f, 0x4b6, 0xd74b, 0x12d2, 0x19e0, 0xdc79, 0xfb83, 0x3e1a,</td></tr>
+<tr name="32" id="32">
+<td><a id="l32" class='ln'>32</a></td><td>  0x3528, 0xf0b1, 0x234c, 0xe6d5, 0xede7, 0x287e,</td></tr>
+<tr name="33" id="33">
+<td><a id="l33" class='ln'>33</a></td><td>  0xf93d, 0x3ca4, 0x3796, 0xf20f, 0x21f2, 0xe46b, 0xef59, 0x2ac0, 0xd3a, 0xc8a3,</td></tr>
+<tr name="34" id="34">
+<td><a id="l34" class='ln'>34</a></td><td>  0xc391, 0x608, 0xd5f5, 0x106c, 0x1b5e, 0xdec7,</td></tr>
+<tr name="35" id="35">
+<td><a id="l35" class='ln'>35</a></td><td>  0x54aa, 0x9133, 0x9a01, 0x5f98, 0x8c65, 0x49fc, 0x42ce, 0x8757, 0xa0ad, 0x6534,</td></tr>
+<tr name="36" id="36">
+<td><a id="l36" class='ln'>36</a></td><td>  0x6e06, 0xab9f, 0x7862, 0xbdfb, 0xb6c9, 0x7350,</td></tr>
+<tr name="37" id="37">
+<td><a id="l37" class='ln'>37</a></td><td>  0x51d6, 0x944f, 0x9f7d, 0x5ae4, 0x8919, 0x4c80, 0x47b2, 0x822b, 0xa5d1, 0x6048,</td></tr>
+<tr name="38" id="38">
+<td><a id="l38" class='ln'>38</a></td><td>  0x6b7a, 0xaee3, 0x7d1e, 0xb887, 0xb3b5, 0x762c,</td></tr>
+<tr name="39" id="39">
+<td><a id="l39" class='ln'>39</a></td><td>  0xfc41, 0x39d8, 0x32ea, 0xf773, 0x248e, 0xe117, 0xea25, 0x2fbc, 0x846, 0xcddf,</td></tr>
+<tr name="40" id="40">
+<td><a id="l40" class='ln'>40</a></td><td>  0xc6ed, 0x374, 0xd089, 0x1510, 0x1e22, 0xdbbb,</td></tr>
+<tr name="41" id="41">
+<td><a id="l41" class='ln'>41</a></td><td>  0xaf8, 0xcf61, 0xc453, 0x1ca, 0xd237, 0x17ae, 0x1c9c, 0xd905, 0xfeff, 0x3b66,</td></tr>
+<tr name="42" id="42">
+<td><a id="l42" class='ln'>42</a></td><td>  0x3054, 0xf5cd, 0x2630, 0xe3a9, 0xe89b, 0x2d02,</td></tr>
+<tr name="43" id="43">
+<td><a id="l43" class='ln'>43</a></td><td>  0xa76f, 0x62f6, 0x69c4, 0xac5d, 0x7fa0, 0xba39, 0xb10b, 0x7492, 0x5368, 0x96f1,</td></tr>
+<tr name="44" id="44">
+<td><a id="l44" class='ln'>44</a></td><td>  0x9dc3, 0x585a, 0x8ba7, 0x4e3e, 0x450c, 0x8095 <span class="br">}</span>;</td></tr>
+<tr name="45" id="45">
+<td><a id="l45" class='ln'>45</a></td><td></td></tr>
+<tr name="46" id="46">
+<td><a id="l46" class='ln'>46</a></td><td><span class="kw">extern</span> <span class="kw">void</span> <a id="46c13" class="tk">BMU_Process</a>(<span class="kw">const</span> <a id="46c31" class="tk">uint8_t</a> <a id="46c39" class="tk">*</a><a id="46c40" class="tk">CMD32</a>, <a id="46c47" class="tk">uint8_t</a> <a id="46c55" class="tk">*</a><a id="46c56" class="tk">rcv_data</a>, <a id="46c66" class="tk">uint8_t</a> <a id="46c74" class="tk">*</a><a id="46c75" class="tk">PecChk</a>);</td></tr>
+<tr name="47" id="47">
+<td><a id="l47" class='ln'>47</a></td><td><span class="kw">extern</span> <span class="kw">void</span> <a id="47c13" class="tk">BMU_Process2</a>(<span class="kw">const</span> <a id="47c32" class="tk">uint8_t</a> <a id="47c40" class="tk">*</a><a id="47c41" class="tk">CMD32</a>, <a id="47c48" class="tk">uint8_t</a> <a id="47c56" class="tk">*</a><a id="47c57" class="tk">rcv_data</a>, <a id="47c67" class="tk">uint8_t</a></td></tr>
+<tr name="48" id="48">
+<td><a id="l48" class='ln'>48</a></td><td>  <a id="48c3" class="tk">*</a><a id="48c4" class="tk">PecChk</a>);</td></tr>
+<tr name="49" id="49">
+<td><a id="l49" class='ln'>49</a></td><td><span class="kw">extern</span> <span class="kw">void</span> <a id="49c13" class="tk">BMU_Process_test</a>(<span class="kw">void</span>);</td></tr>
+<tr name="50" id="50">
+<td><a id="l50" class='ln'>50</a></td><td><span class="kw">extern</span> <span class="kw">void</span> <a id="50c13" class="tk">SPI_Read_Master_Onecell</a>(<span class="kw">unsigned</span> <span class="kw">int</span><a id="50c49" class="tk">*</a> <a id="50c51" class="tk">ret</a>);</td></tr>
+<tr name="51" id="51">
+<td><a id="l51" class='ln'>51</a></td><td><span class="kw">extern</span> <span class="kw">void</span> <a id="51c13" class="tk">SPI_Read_Master_PEC</a>(<span class="kw">unsigned</span> <span class="kw">int</span><a id="51c45" class="tk">*</a> <a id="51c47" class="tk">ret</a>);</td></tr>
+<tr name="52" id="52">
+<td><a id="l52" class='ln'>52</a></td><td><span class="kw">extern</span> <span class="kw">void</span> <a id="52c13" class="tk">Calculate_PEC15_SFun</a>(<a id="52c34" class="tk">uint8_t</a> <a id="52c42" class="tk">*</a><a id="52c43" class="tk">data</a>, <a id="52c49" class="tk">uint8_t</a> <a id="52c57" class="tk">*</a><a id="52c58" class="tk">len</a>, <a id="52c63" class="tk">uint16_t</a> <a id="52c72" class="tk">*</a><a id="52c73" class="tk">res</a>);</td></tr>
+<tr name="53" id="53">
+<td><a id="l53" class='ln'>53</a></td><td></td></tr>
+<tr name="54" id="54">
+<td><a id="l54" class='ln'>54</a></td><td><span class="pp">#endif</span>                                 <span class="ct">/* BMU_DRIVER_H_ */</span></td></tr>
+<tr name="55" id="55">
+<td><a id="l55" class='ln'>55</a></td><td></td></tr>
+</table>
+</pre>
+</body>
+</html>

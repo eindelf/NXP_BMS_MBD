@@ -1,0 +1,80 @@
+
+%implements GDFLIB_FilterFIR_SF_FLT "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+   %if !EXISTS("GDFLIB_INCLUDED")
+      %assign ::GDFLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gdflib.h\"" + "\n")>
+   %endif 
+   
+   %assign ::cntFIR = 0
+   %assign ::cntInitFIR = 0
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+   %assign ::cntInitFIR = %<::cntInitFIR> + 1
+
+   %assign Order   = CAST("Number",Parameter[0].Value[0])
+   %assign CoefBuf = FEVAL("fixarr", Parameter[1].Value )
+	 
+%assign fFIRparams = LibCreateSourceFile("Source", "Custom", "FIRparams")
+%openfile tmpParamBuf 
+   %if !EXISTS("GDFLIB_INCLUDED_TO_FIRPARAM")
+      %assign ::GDFLIB_INCLUDED_TO_FIRPARAM = 1
+      #include "gdflib.h"
+   %endif 
+    tMclib InBufFIR_%<::cntInitFIR>[%<Order>+1];
+    tMclib CoefBufFIR_%<::cntInitFIR>[] = %<CoefBuf>;
+    const GDFLIB_FILTERFIR_PARAM_T paramFIR_%<::cntInitFIR> = { %<Order>, &CoefBufFIR_%<::cntInitFIR>[0] };
+    GDFLIB_FILTERFIR_STATE_T stateFIR_%<::cntInitFIR>;
+%closefile tmpParamBuf
+%<LibSetSourceFileSection(fFIRparams , "Definitions", tmpParamBuf)>
+	 
+   GDFLIB_FilterFIRInit (&paramFIR_%<::cntInitFIR>, &stateFIR_%<::cntInitFIR>, &InBufFIR_%<::cntInitFIR>[0]);
+   
+%openfile tmpParamExternBuf 
+    extern tMclib InBufFIR_%<::cntInitFIR>[];
+    extern tMclib CoefBufFIR_%<::cntInitFIR>[];
+    extern const GDFLIB_FILTERFIR_PARAM_T paramFIR_%<::cntInitFIR>;
+    extern GDFLIB_FILTERFIR_STATE_T stateFIR_%<::cntInitFIR>;
+%closefile tmpParamExternBuf
+%<LibCacheExtern(tmpParamExternBuf)>   
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+    %assign ::cntFIR = %<::cntFIR> + 1
+   
+    %assign x = LibBlockInputSignal(0, "", "", 0)
+    %assign y = LibBlockOutputSignal(0, "", "", 0)
+    %assign y = LibBlockOutputSignal(0, "", "", 0)
+    %assign y = LibBlockOutputSignal(0, "", "", 0)
+    %assign y1 = LibBlockOutputSignal(1, "", "", 0)
+    %assign y2 = LibBlockOutputSignal(2, "", "", 0)
+   
+    %<y> = GDFLIB_FilterFIR (%<x>,&paramFIR_%<::cntFIR>, &stateFIR_%<::cntFIR>);
+	%<y1> = stateFIR_%<::cntFIR>.u32Idx;
+	%<y2> = *stateFIR_%<::cntFIR>.ps32InBuf;
+
+%endfunction

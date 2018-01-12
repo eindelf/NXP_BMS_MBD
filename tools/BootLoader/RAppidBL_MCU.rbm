@@ -1,0 +1,107 @@
+*********************************************************************
+*                 RAppID Boot Tool MCU File
+*********************************************************************
+*********************************************************************
+*********************************************************************
+* This file specifies the format version of the rbl file 
+* This is needed for compatibility checks between tool versions
+*********************************************************************
+*********************************************************************
+[FORMAT_VERSION]
+3
+
+*********************************************************************
+* This file specifies which MCUs are supported and which RAppID 
+* Boot loader Algorithm (RBA) file shall be used to program 
+* application code in the flash.  The .rba file is in s19 format.
+*	1.  File name 	 (MPC5604P.rba, MPC5604B.rba, MPC5604S.rba, .....)
+*	2.  Start Address(Start Address of rba file)	
+*	3.  Size	     (Size of rba file in bytes)
+*	4.  RBA Baud	 (Baud rate supported by rba file)
+*	5.  BAM Baud	 (Baud rate supported by MCU BAM) 
+*	6.  AutoBaud	 (1 = AutoBaud; 0 = Fixed Baud)
+*	7.  BAM Type	 (Type of BAM implementation designated by a number)
+*	8.  BAM Delay    (Delay in ms needed b/t bytes for BAM - inter byte gap)(if set to 0.00 full duplex enabled)
+*	9.  CCP Delay    (Delay in ms needed b/t msgs for CCP - inter message gap)(if set to 0.00 full duplex enabled)
+*********************************************************************
+[MPC5534] 
+RBA_Files\MPC5534.rba, 0x40000100, 0x3000, 115200, 9600, 0, 1, 0, 0
+
+[MPC5604/3P] 
+RBA_Files\MPC5604P.rba, 0x40000100, 0x3000, 115200, 9600, 0, 1, 0, 0
+
+[MPC5601/2D] 
+RBA_Files\MPC5602D.rba, 0x40000100, 0x2A00, 115200, 9600, 0, 1, 0, 0
+
+[MPC5602/3/4BC] 
+RBA_Files\MPC5604B.rba, 0x40000100, 0x2C00, 115200, 9600, 0, 1, 0, 0
+
+[MPC5605/6BK] 
+RBA_Files\MPC5606BK.rba, 0x40000100, 0x3600, 115200, 9600, 0, 1, 0, 0
+
+[MPC5605/6/7B] 
+RBA_Files\MPC5607B.rba, 0x40000100, 0x3600, 115200, 9600, 0, 1, 0, 0
+
+[MPC564xB/C] 
+RBA_Files\MPC5646B.rba, 0x40000100, 0x4000, 115200, 9600, 0, 1, 0, 0
+
+[MPC564xL] 
+RBA_Files\MPC564xL.rba, 0x40000100, 0x3000, 115200, 115200, 1, 1, 0, 0
+
+[MPC567xK]	
+RBA_Files\MPC567xK.rba, 0x40000100, 0x3A00, 115200, 115200, 1, 1, 0, 0
+
+[MPC564xA] 
+RBA_Files\MPC564xA.rba, 0x40000100, 0x3500, 115200, 9600, 0, 1, 0, 0
+
+[MPC567xF] 
+RBA_Files\MPC567xF.rba, 0x40000100, 0x3000, 115200, 115200, 1, 2, 0, 0
+
+[MPC574xP] 
+RBF_Files\MPC574xP_16MHz.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[MPC5746R] 
+RBF_Files\MPC5746R_20MHz.rbf, 0x40000100, 0x4000, 115200, 115200, 1, 0, 0, 0
+
+[MPC5775K] 
+RBF_Files\MPC5775K.rbf, 0x40000100, 0x4000, 115200, 115200, 1, 0, 0, 0
+
+[S12ZVM] 
+RBF_Files\S12ZVM.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[KV10] 
+RBF_Files\KV10_10MHz.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[KV31F512] 
+RBF_Files\KV31F512.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[KV31F256] 
+RBF_Files\KV31F256.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[KV31F128] 
+RBF_Files\KV31F128.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[KV30F128] 
+RBF_Files\KV30F128.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[KV4xFxxx] 
+RBF_Files\KV4xFxxx.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[MC56F82DSC] 
+RBF_Files\56F82xx.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[MC56F84DSC] 
+RBF_Files\56F84xx.rbf, 0x40000100, 0x3000, 115200, 115200, 1, 0, 0, 0
+
+[PXS20xx] 
+RBA_Files\PXS20xx.rba, 0x40000100, 0x3000, 115200, 115200, 1, 1, 0, 0
+
+[PXS30xx] 
+RBA_Files\PXS30xx.rba, 0x40000100, 0x3000, 115200, 115200, 1, 1, 0, 0
+
+[PXR40xx] 
+RBA_Files\PXR40xx.rba, 0x40000100, 0x3000, 115200, 115200, 1, 2, 0, 0
+
+*********************************************************************
+* End of File
+*********************************************************************

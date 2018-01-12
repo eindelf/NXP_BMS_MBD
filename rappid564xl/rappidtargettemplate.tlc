@@ -1,0 +1,89 @@
+%% =============================================================================
+%%
+%% Abstract:
+%%   Real-Time Workshop Embedded Coder template
+%%
+%% Copyright 2006 
+%% Freescale Semiconductor Inc
+%% All Rights Reserved 
+%%
+%% $Log: rappidtargettemplate.tlc,v $
+%% Revision 1.1  2010/10/28 22:03:40  r61406
+%% Issue:10000
+%% Create Code Base for RAppID Toolbox Lite
+%%
+%% Revision 1.4  2006/07/20 15:46:00  r61406
+%% PWM:Update copyright notice and Log tag.
+%%
+%%
+%selectfile NULL_FILE
+
+%% Set the code template compliance level.  Based on this setting, Real-Time
+%% Workshop will perform the appropriate backward compatibility checks.
+
+%<LibSetCodeTemplateComplianceLevel(2)>
+
+
+%if CodeFormat == "Embedded-C" 
+
+  %% Create sample main
+  
+
+ %<SLibRAppIDMain("rappid_main")>
+
+  
+  %% Write files to disk
+  
+  %%foreach fileIdx = LibGetNumModelFiles()
+    %%foreach fileIdx = LibGetNumSourceFiles()
+    %%assign fileName  = LibGetModelFileAttribute(fileIdx,"Name")
+    %%assign fileSrc   = LibGetModelFileAttribute(fileIdx,"Creator")
+    %%assign fileType  = LibGetModelFileAttribute(fileIdx,"Type") == "SystemBody" ? "source" : "header"
+    %%assign fileGuard = "_RTW_HEADER_%<LibGetModelFileTag(fileIdx)>_"
+    %%assign needGuard = LibGetModelFileNeedHeaderGuard(fileIdx)
+    
+    %%<LibWriteToStandardOutput("### Writing %<fileType> file %<fileName>")>
+    
+    %%openfile outputFile = fileName
+    %%<LibGetModelFileAttribute(fileIdx,"Banner")>\
+    %%if needGuard      
+     %% #ifndef %<fileGuard>
+     %%# define %<fileGuard>      
+    %%endif
+    
+    %%<LibGetModelFileAttribute(fileIdx,"Includes")>\
+    %%<LibGetModelFileAttribute(fileIdx,"Defines")>\
+    %%<LibGetModelFileAttribute(fileIdx,"IntrinsicTypes")>\
+    %%<LibGetModelFileAttribute(fileIdx,"PrimitiveTypedefs")>\
+    %%<LibGetModelFileAttribute(fileIdx,"UserTop")>\
+    %%<LibGetModelFileAttribute(fileIdx,"Typedefs")>\
+    %%<LibGetModelFileAttribute(fileIdx,"Enums")>\
+    %%<LibGetModelFileAttribute(fileIdx,"Definitions")>\
+    %%<LibGetModelFileAttribute(fileIdx,"ExternData")>\
+    %%<LibGetModelFileAttribute(fileIdx,"ExternFcns")>\
+    %%<LibGetModelFileAttribute(fileIdx,"FcnPrototypes")>\
+    %%<LibGetModelFileAttribute(fileIdx,"Declarations")>\
+    %%<LibGetModelFileAttribute(fileIdx,"Functions")>\
+    %%<LibGetModelFileAttribute(fileIdx,"CompilerErrors")>\
+    %%<LibGetModelFileAttribute(fileIdx,"CompilerWarnings")>\
+    %%<LibGetModelFileAttribute(fileIdx,"Documentation")>\
+    %%<LibGetModelFileAttribute(fileIdx,"UserBottom")>\
+    %%if needGuard
+      
+      %%#endif /* %<fileGuard> */
+    %%endif
+    %%closefile outputFile
+    
+ %%endforeach
+  
+%endif
+
+%% Indent non standard files
+
+%if AutoBuildProcedure && !SLibGenerateCodeOnly()
+  %<SLibIndentFile("autobuild.h","")>
+%endif
+
+%if GenerateSampleERTMain
+  %<SLibIndentFile("rappid_main.c","")>
+%endif

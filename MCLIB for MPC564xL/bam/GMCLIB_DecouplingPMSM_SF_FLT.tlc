@@ -1,0 +1,66 @@
+
+%implements GMCLIB_DecouplingPMSM_SF_FLT "C"
+
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+   %if !EXISTS("GMCLIB_INCLUDED")
+      %assign ::GMCLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gmclib.h\"" + "\n")>
+   %endif 
+
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+  %assign s32Kd  = CAST("Real32",Parameter[0].Value[0])
+  %assign s32Kq  = CAST("Real32",Parameter[1].Value[0])
+
+  %assign Ud     = LibBlockInputSignal(0, "", "", 0)
+  %assign Uq     = LibBlockInputSignal(1, "", "", 0)
+  %assign Id     = LibBlockInputSignal(2, "", "", 0)
+  %assign Iq     = LibBlockInputSignal(3, "", "", 0)
+  %assign AngVel = LibBlockInputSignal(4, "", "", 0)
+  %assign UdDec  = LibBlockOutputSignal(0, "", "", 0)
+  %assign UqDec  = LibBlockOutputSignal(1, "", "", 0)
+  
+  { 
+    SWLIBS_2Syst UdqDec;  
+    SWLIBS_2Syst Udq;
+	SWLIBS_2Syst Idq;
+	const SWLIBS_2Syst *const pUdq = &Udq;
+	const SWLIBS_2Syst *const pIdq = &Idq;
+    static const GMCLIB_DECOUPLINGPMSM_T param = { %<s32Kd>, %<s32Kq> };
+	static const GMCLIB_DECOUPLINGPMSM_T *const pParam = &param;
+	
+	Udq.s32Arg1 = %<Ud>;
+	Udq.s32Arg2 = %<Uq>; 
+	Idq.s32Arg1 = %<Id>;
+	Idq.s32Arg2 = %<Iq>; 
+    GMCLIB_DecouplingPMSM (&UdqDec, pUdq, pIdq, %<AngVel>, pParam);
+	%<UdDec> = UdqDec.s32Arg1;
+	%<UqDec> = UdqDec.s32Arg2;
+  }
+
+%endfunction

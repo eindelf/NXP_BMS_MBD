@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>ADC Configuration Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">ADC Configuration Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">This block is used to configure the parameters of the ADC.</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="adc_config_block_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<div class="shifted">The block dialog consists of the following tabs:</div>
+	<ul class="shifted">
+		<li><a href="#General_tab">General</a></li>
+		<li><a href="#ConversionTimingRegister0">ConversionTimingRegister0(CTR0)</a></li>
+		<li><a href="#ConversionTimingRegister1">ConversionTimingRegister1(CTR1)</a></li>
+		<li><a href="#PresamplingControlRegister">PresamplingControlRegister(PSCR)</a></li>
+	</ul>
+	<ul>
+		<a name="General_tab">	
+			<li>The General tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="110">Names</td>
+			<th width="110">Selection Types</td>
+			<th width="110">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>ADC converter number</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 1</td>
+			<td>Select the ADC converter number</td>
+		</tr>
+		<tr>
+			<td>CTU</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>On/Off CTU mode.<br>If CTU mode on, ADC controls by CTU module.</td>
+		</tr>
+		<tr>
+			<td>OWREN</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>Overwrite enable.<br>This check-box enables or disables the functionality to overwrite unread converted data.</td>
+		</tr>
+		<tr>
+			<td>WLSIDE</td>
+			<td>Pop-up</td>
+			<td>Left/Right</td>
+			<td>Write left/right-aligned</td>
+		</tr>
+		<tr>
+			<td>ADCLKSEL</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>Analog clock frequency selector<br>If this bit is set the AD_clk frequency is equal to the system clock frequency. Otherwise, it is half of the system clock frequency. This bit can be written in power-down mode only</td>
+		</tr>
+		<tr>
+			<td>ACKO</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>Auto-clock-off enable</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="adc_config_block_files/image_param_1.jpg">
+	<ul>
+		<a name="ConversionTimingRegister0">	
+			<li>The ConversionTimingRegister0(CTR0) contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="120">Names</td>
+			<th width="130">Selection Types</td>
+			<th width="140">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>INPLATCH</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Configuration for latching phase duration. *</td>
+		</tr>
+		<tr>
+			<td>OFFSHIFT</td>
+			<td>Pop-up</td>
+			<td>00 &ndash; NoShift<br>01 &ndash; Avin = 1/2LSB<br>10 &ndash; Avin = 0</td>
+			<td>Configuration for offset shift characteristic. *</td>
+		</tr>
+		<tr>
+			<td>INPCMP</td>
+			<td>Pop-up</td>
+			<td>00, 01, 10, 11</td>
+			<td>Configuration bits for comparison phase duration. *</td>
+		</tr>
+		<tr>
+			<td>INPSAMP</td>
+			<td>Pop-up</td>
+			<td>3 &ndash; 255</td>
+			<td>Configuration bits for sampling phase duration. *</td>
+		</tr>
+	</tbody>
+	</table>
+	<div>* Read Hardware Manual documentation to get more information.</div>
+	<img vspace="15" src="adc_config_block_files/image_param_2.jpg">
+	<ul>
+		<a name="ConversionTimingRegister1">	
+			<li>The ConversionTimingRegister0(CTR1) contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="120">Names</td>
+			<th width="130">Selection Types</td>
+			<th width="140">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>INPLATCH</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Configuration for latching phase duration. *</td>
+		</tr>
+		<tr>
+			<td>INPCMP</td>
+			<td>Pop-up</td>
+			<td>00, 01, 10, 11</td>
+			<td>Configuration bits for comparison phase duration. *</td>
+		</tr>
+		<tr>
+			<td>INPSAMP</td>
+			<td>Pop-up</td>
+			<td>1 &ndash; 127</td>
+			<td>Configuration bits for sampling phase duration. *</td>
+		</tr>
+		<tr>
+			<td>TSENSOR_SEL</td>
+			<td>Pop-up</td>
+			<td>PTAT &ndash; CTAT</td>
+			<td>Select the operating mode of the TSENS module. *</td>
+		</tr>
+	</tbody>
+	</table>
+	<div>* This register configures the conversion timings for channel 15 (the TSENS channel).<br>
+		Read Hardware Manual documentation to get more information.</div>
+	<img vspace="15" src="adc_config_block_files/image_param_3.jpg">
+	<ul>
+		<a name="PresamplingControlRegister">	
+			<li>The PresamplingControlRegister(PSCR) contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="120">Names</td>
+			<th width="130">Selection Types</td>
+			<th width="140">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>PREVAL0</td>
+			<td>Pop-up</td>
+			<td>V0, V1</td>
+			<td>Internal voltage selection for presampling. *</td>
+		</tr>
+		<tr>
+			<td>INPCMP</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>0 - The ADC will perform a sampling followed by a conversion*<br>
+				1 - The ADC will perform a presampling followed by a conversion (the sampling is bypassed, so the 
+				conversion result is that of the presampled value)*</td>
+		</tr>
+	</tbody>
+	</table>
+	<div>*Read Hardware Manual documentation to get more information.</div>
+	<div><br><br>Table. Presampling voltages:</div>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="140">PSCR[PREVAL0] voltage label</td>
+			<th width="120">Voltage for ADC_0</td>
+			<th width="120">Voltage for ADC_1</td>
+		</tr>
+		<tr>
+			<td>V0</td>
+			<td>VDD_HV_ADR0</td>
+			<td>VDD_HV_ADR1</td>
+		</tr>
+		<tr>
+			<td>V1</td>
+			<td>VSS_HV_ADR0</td>
+			<td>VSS_HV_ADR1</td>
+		</tr>
+	</tbody>
+	</table>
+	<div>* Read Hardware Manual documentation to get more information.</div>
+	<img vspace="15" src="adc_config_block_files/image_param_4.jpg">
+	<h3>Block Dependency</h3>
+	<div>None</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

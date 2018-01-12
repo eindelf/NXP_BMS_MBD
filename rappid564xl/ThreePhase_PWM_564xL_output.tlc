@@ -1,0 +1,149 @@
+%%
+%% Abstract:
+%%
+%% Copyright Freescale Semiconductor Inc
+%% 2006 All Rights Reserved 
+%%
+%% $Log: ThreePhase_PWM_564xL_output.tlc,v $
+%% Revision 1.1  2010/10/28 22:03:35  r61406
+%% Issue:10000
+%% Create Code Base for RAppID Toolbox Lite
+%%
+%% Revision 1.7  2006/07/20 20:52:46  r61406
+%% PWM:Update with copyright notice and Log Tag.
+%%
+%%
+
+%implements ThreePhase_PWM_564xL_output "C"
+
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %if !EXISTS("FlexPWM_564xL_INCLUDED")
+      %assign ::FlexPWM_564xL_INCLUDED = 1
+      %<LibCacheIncludes("#include \"FlexPWM_564xL_library.h\"" + "\n")>
+   %endif 
+   %if !EXISTS("FlexPWMinit_INCLUDED")
+      %assign ::FlexPWMinit_INCLUDED = 1
+      %<LibCacheIncludes("#include \"flexpwm_init.h\"" + "\n")>
+   %endif 
+%endif 
+   
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %assign pwm_mod  = CAST("Number",Parameter[0].Value[0])
+   %assign modules  = CAST("Number",Parameter[1].Value[0])
+   %assign freqInit	= CAST("Number",Parameter[2].Value[0])
+   %assign dutyInitA	= CAST("Number",Parameter[3].Value[0])
+   %assign dutyInitB	= CAST("Number",Parameter[4].Value[0])
+   %assign dutyInitC	= CAST("Number",Parameter[5].Value[0])
+   %assign deadTimeInit	= CAST("Number",Parameter[6].Value[0])
+   %assign pcrNumA_A	= CAST("Number",Parameter[7].Value[0])
+   %assign pcrNumA_B	= CAST("Number",Parameter[7].Value[1])
+   %assign pcrNumB_A	= CAST("Number",Parameter[7].Value[2])
+   %assign pcrNumB_B	= CAST("Number",Parameter[7].Value[3])
+   %assign pcrNumC_A	= CAST("Number",Parameter[7].Value[4])
+   %assign pcrNumC_B	= CAST("Number",Parameter[7].Value[5])
+   %assign outTrig_A	= CAST("Number",Parameter[8].Value[0])
+   %assign outTrig_B	= CAST("Number",Parameter[8].Value[1])
+   %assign outTrig_C	= CAST("Number",Parameter[8].Value[2])
+   %assign deadtime_mks = CAST("Number",Parameter[10].Value[0])
+   %assign octrl_A      = CAST("Number",Parameter[11].Value[0])
+   %assign octrl_B      = CAST("Number",Parameter[11].Value[1])
+   %assign octrl_C      = CAST("Number",Parameter[11].Value[2])
+   %assign resolution   = CAST("Number",Parameter[12].Value[0])
+   %assign MC_freq = FEVAL("rappid_564xl_get_MC_clock")
+
+   %if modules == 0
+      %assign subModB = 1
+      %assign subModC = 2
+   %elseif modules == 1
+      %assign subModB = 1
+      %assign subModC = 3
+   %elseif modules == 2
+      %assign subModB = 2
+      %assign subModC = 3
+   %endif 
+
+   %if (deadtime_mks != 0)
+     %%assign deadTime = %<deadTimeInit>*10
+     %assign deadTime = %<deadTimeInit>*%<MC_freq>/1000000
+   %else
+     %assign deadTime = %<deadTimeInit>
+   %endif
+   
+  /* Initialize Pad Configuration Registers PAn & PBn as Output */ 
+   pwm_init_pcr_out_564xL(%<pwm_mod>,0,0,%<pcrNumA_A>); 
+   pwm_init_pcr_out_564xL(%<pwm_mod>,0,1,%<pcrNumA_B>); 
+   
+   pwm_init_pcr_out_564xL(%<pwm_mod>,%<subModB>,0,%<pcrNumB_A>); 
+   pwm_init_pcr_out_564xL(%<pwm_mod>,%<subModB>,1,%<pcrNumB_B>); 
+   
+   pwm_init_pcr_out_564xL(%<pwm_mod>,%<subModC>,0,%<pcrNumC_A>); 
+   pwm_init_pcr_out_564xL(%<pwm_mod>,%<subModC>,1,%<pcrNumC_B>); 
+  
+   /* Initialize PWM Submodules to correct dutycycle and frequency */
+   pwm_init_564xL_three_phase(%<pwm_mod>,%<subModB>,%<subModC>,%<freqInit>,%<resolution>,%<dutyInitA>,%<dutyInitB>,%<dutyInitC>,%<outTrig_A>,%<outTrig_B>,%<outTrig_C>,%<deadTime>,%<octrl_A>,%<octrl_B>,%<octrl_C>);
+%endif 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%assign resolution   = CAST("Number",Parameter[12].Value[0])
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %assign pwm_mod  = CAST("Number",Parameter[0].Value[0])
+   %assign modules  = CAST("Number",Parameter[1].Value[0])
+   %assign deadtime_mks = CAST("Number",Parameter[10].Value[0])
+   %assign MC_freq = FEVAL("rappid_564xl_get_MC_clock")
+   %assign factor_deadTime = %<MC_freq>/1000000
+
+
+   %if modules == 0
+      %assign subModB = 1
+      %assign subModC = 2
+   %elseif modules == 1
+      %assign subModB = 1
+      %assign subModC = 3
+   %elseif modules == 2
+      %assign subModB = 2
+      %assign subModC = 3
+   %endif 
+
+    
+
+   /* Three Phase PWM Outputs with Deadtime update: Sub Modules , Frequency, DutyCycle, PWMH Dead time, PWML Dead time */
+   %if (deadtime_mks != 0)
+     pwm_update_564xL_three_phase(%<pwm_mod>,%<subModB>, %<subModC>, %<LibBlockInputSignal(0, "", "", 0)>, %<resolution>, %<LibBlockInputSignal(1, "", "", 0)>, %<LibBlockInputSignal(2, "", "", 0)>, %<LibBlockInputSignal(3, "", "", 0)>, %<LibBlockInputSignal(4, "", "", 0)>*%<factor_deadTime>, %<LibBlockInputSignal(5, "", "", 0)>*%<factor_deadTime>);   
+   %else
+     pwm_update_564xL_three_phase(%<pwm_mod>,%<subModB>, %<subModC>, %<LibBlockInputSignal(0, "", "", 0)>, %<resolution>, %<LibBlockInputSignal(1, "", "", 0)>, %<LibBlockInputSignal(2, "", "", 0)>, %<LibBlockInputSignal(3, "", "", 0)>, %<LibBlockInputSignal(4, "", "", 0)>, %<LibBlockInputSignal(5, "", "", 0)>);   
+   %endif 
+%endif 
+
+    %assign debug_mod =  CAST("Number",Parameter[9].Value[0])
+    %if (debug_mod != 0)
+      %<LibBlockOutputSignal(0, "", "", 0)> = (real_T)%<LibBlockInputSignal(1, "", "", 0)>/(100.0*%<resolution>);
+      %<LibBlockOutputSignal(1, "", "", 0)> = (real_T)%<LibBlockInputSignal(2, "", "", 0)>/(100.0*%<resolution>);
+      %<LibBlockOutputSignal(2, "", "", 0)> = (real_T)%<LibBlockInputSignal(3, "", "", 0)>/(100.0*%<resolution>);
+	%endif
+%endfunction

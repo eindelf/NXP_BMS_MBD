@@ -1,0 +1,133 @@
+                             #**********************************************************************************************/
+                             #* FILE NAME:                                                    COPYRIGHT (c) Freescale 2011 */
+                             #* sw_handlers.s                                                          All Rights Reserved */
+                             #* DESCRIPTION:                                                                               */
+                             #* This file creates prolog, epilog for C ISR and enables nested interrupts. This file starts */
+                             #* in memory designated by the label "IVOR4Handler".                                          */
+                             #=============================================================================================*/
+                             # STACK FRAME DESIGN: Depth: 34 words (0x88 or 136 bytes)
+                             #            ************* ______________
+                             #   0x80     *  ACC      *    ^
+                             #   0x78     *  GPR12    *    |
+                             #   0x70     *  GPR11    *    |
+                             #   0x68     *  GPR10    *    |
+                             #   0x60     *  GPR9     *    |
+                             #   0x58     *  GPR8     *    |
+                             #   0x50     *  GPR7     *  GPRs (64 bit)
+                             #   0x48     *  GPR6     *    |
+                             #   0x40     *  GPR5     *    |
+                             #   0x38     *  GPR4     *    |
+                             #   0x30     *  GPR3     *    |
+                             #   0x28     *  GPR0     * ___v__________
+                             #   0x24     *  padding  *
+                             #   0x20     *  CR       * __CR__________
+                             #   0x1C     *  XER      *    ^
+                             #   0x18     *  CTR      *    |
+                             #   0x14     *  LR       * locals & padding for 16 B alignment
+                             #   0x10     *  SRR1     *    |
+                             #   0x0C     *  SRR0     *    |
+                             #   0x08     *  padding  * ___v__________
+                             #   0x04     * resvd- LR * Reserved for calling function 
+                             #   0x00     *  SP       * Backchain (same as gpr1 in GPRs)
+                             #            ************* 
+                                                .globl       IVOR4_Handler    
+                                                .section     .exec_vect_vle, text_vle 
+                                                .align       4                # Align IVOR handlers on a 16 byte boundary
+                                                                              # GHS, Cygnus, Diab(default) use .align 4; CodeWarrior .align 16
+
+                             # On Dual Core this register is treated as Processor 0
+0xfff48010:                  INTC_IACKR         .equ         0xfff48010       # Interrupt Acknowledge Register address
+0xfff48018:                  INTC_EOIR          .equ         0xfff48018       # End Of Interrupt Reg. addr.
+0x02000000:                  MSR_Mask           .equ         0x02000000       # MSR[SPE] enable
+
+                             IVOR4_Handler                                    
+                             prolog                                           
+0x00000000: 5461ffa8                            e_stw        r3,  -0x58 (r1)  # Temporary store a working 32-register
+0x00000004: 18618478                            e_subi       r3, r1, 0x88     # Create stack frame and store back chain
+0x00000008: 54230000                            e_stw        r1, 0x0 (r3)     
+0x0000000c: 18218478                            e_subi       r1, r1, 0x88     
+
+0x00000010: 7c7a02a6                            mfsrr0       r3               # Store SRR0:1 (must be done before enabling EE)
+0x00000014: 5461000c                            e_stw        r3,  0x0C (r1)   
+0x00000018: 7c7b02a6                            mfsrr1       r3               
+0x0000001c: d431                                se_stw       r3,  0x10 (r1)   
+0x0000001e: 707fe7f4                            e_lis        r3, INTC_IACKR@h # Read pointer into ISR Vector Table & store in r3
+0x00000022: 7070c010                            e_or2i       r3, INTC_IACKR@l 
+0x00000026: 50630000                            e_lwz        r3,  0x0  (r3)   # Read ISR address from ISR Vector Table using pointer
+0x0000002a: 50630000                            e_lwz        r3,  0x0  (r3)   
+0x0000002e: 7c008146                            wrteei       1                # Set MSR[EE]=1 (must wait a couple clocks after reading IACKR)
+0x00000032: de41                                se_stw       r4,  0x38 (r1)   # Temporary store a second working 32-register
+0x00000034: 0084                                se_mflr      r4               # Store LR (LR will be used for ISR Vector)
+0x00000036: d541                                se_stw       r4,  0x14 (r1)   
+0x00000038: 0093                                se_mtlr      r3               # Store ISR address to LR to use for branching later
+0x0000003a: 70600000                            e_li         r3, 0            # Set MSR[SPE]
+0x0000003e: 7c6000a6                            mfmsr        r3               
+0x00000042: 7080e200                            e_lis        r4, MSR_Mask@h   
+0x00000046: 7080c000                            e_or2i       r4, MSR_Mask@l   
+0x0000004a: 4443                                se_or        r3, r4           
+0x0000004c: 7c600124                            mtmsr        r3               
+
+0x00000050: ce41                                se_lwz       r4,  0x38 (r1)   # Restore working 32-registers
+0x00000052: cc31                                se_lwz       r3,  0x30 (r1)   
+0x00000054: 11817b21                            evstdd       r12, 0x78 (r1)   # Store 64-gprs
+0x00000058: 11617321                            evstdd       r11, 0x70 (r1)   
+0x0000005c: 11416b21                            evstdd       r10, 0x68 (r1)   
+0x00000060: 11216321                            evstdd       r9,  0x60 (r1)   
+0x00000064: 11015b21                            evstdd       r8,  0x58 (r1)   
+0x00000068: 10e15321                            evstdd       r7,  0x50 (r1)   
+0x0000006c: 10c14b21                            evstdd       r6,  0x48 (r1)   
+0x00000070: 10a14321                            evstdd       r5,  0x40 (r1)   
+0x00000074: 10813b21                            evstdd       r4,  0x38 (r1)   
+0x00000078: 10613321                            evstdd       r3,  0x30 (r1)   
+0x0000007c: 10012b21                            evstdd       r0,  0x28 (r1)   
+
+0x00000080: 7c600026                            mfcr         r3               # Store CR
+0x00000084: d831                                se_stw       r3,  0x20 (r1)   
+0x00000086: 7c6102a6                            mfxer        r3               # Store XER
+0x0000008a: d731                                se_stw       r3,  0x1C (r1)   
+0x0000008c: 00a3                                se_mfctr     r3               # Store CTR
+0x0000008e: d631                                se_stw       r3,  0x18 (r1)   
+
+0x00000090: 10631a16                            evxor        r3, r3, r3       # store SPE accumulator
+0x00000094: 10631d58                            evmwumiaa    r3, r3, r3       
+0x00000098: 54610080                            e_stw        r3, 0x80 (r1)    
+0x0000009c: 0005                                se_blrl                       # Branch to ISR, but return here
+                             epilog                                           
+                                                                              # EPILOGUE
+0x0000009e: c531                                se_lwz       r3,  0x14 (r1)   # Restore LR
+0x000000a0: 0093                                se_mtlr      r3               
+0x000000a2: c631                                se_lwz       r3,  0x18 (r1)   # Restore CTR
+0x000000a4: 00b3                                se_mtctr     r3               
+0x000000a6: c731                                se_lwz       r3,  0x1C (r1)   # Restore XER
+0x000000a8: 7c6103a6                            mtxer        r3               
+0x000000ac: c831                                se_lwz       r3,  0x20 (r1)   # Restore CR
+0x000000ae: 7c6ff120                            mtcrf        0xFF, r3         
+0x000000b2: 50610080                            e_lwz        r3,  0x80 (r1)   # Restore SPE accumulator
+0x000000b6: 108304c4                            evmra        r4, r3           
+
+0x000000ba: 10012b01                            evldd        r0,  0x28 (r1)   # Restore 64-gprs except working registers
+0x000000be: 10a14301                            evldd        r5,  0x40 (r1)   
+0x000000c2: 10c14b01                            evldd        r6,  0x48 (r1)   
+0x000000c6: 10e15301                            evldd        r7,  0x50 (r1)   
+0x000000ca: 11015b01                            evldd        r8,  0x58 (r1)   
+0x000000ce: 11216301                            evldd        r9,  0x60 (r1)   
+0x000000d2: 11416b01                            evldd        r10, 0x68 (r1)   
+0x000000d6: 11617301                            evldd        r11, 0x70 (r1)   
+0x000000da: 11817b01                            evldd        r12, 0x78 (r1)   
+
+0x000000de: 7c0006ac                            mbar         0                # Ensure store to clear interrupt's flag bit has completed
+0x000000e2: 707fe7f4                            e_lis        r3, INTC_EOIR@h  # Load upper half of EIOR address to r3
+0x000000e6: 70800000                            e_li         r4, 0            
+0x000000ea: 7c000146                            wrteei       0                # Disable interrupts for rest of handler
+0x000000ee: 7070c018                            e_or2i       r3, INTC_EOIR@l  
+0x000000f2: 54830000                            e_stw        r4,  0x0 (r3)    # Write 0 to INTC_EOIR
+0x000000f6: 5061000c                            e_lwz        r3, 0x0C (r1)    # Restore SRR0
+0x000000fa: 7c7a03a6                            mtsrr0       r3               
+0x000000fe: 50610010                            e_lwz        r3, 0x10 (r1)    # Restore SRR1
+0x00000102: 7c7b03a6                            mtsrr1       r3               
+
+0x00000106: 10813b01                            evldd        r4,  0x38 (r1)   # Restore 64-working registers
+0x0000010a: 10613301                            evldd        r3,  0x30 (r1)   
+0x0000010e: 1c210088                            e_add16i     r1, r1, 0x88     # Delete stack frame
+0x00000112: 0008                                se_rfi                        # End of Interrupt
+

@@ -1,0 +1,134 @@
+%implements pwm_564xl_interrupt "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign cmpf    =  CAST("Number",Parameter[1].Value[0])
+  %assign chanNum =  CAST("Number",Parameter[2].Value[0])
+  %assign modNum  =  CAST("Number",Parameter[4].Value[0])
+  
+  %if cmpf == 4096
+	%<LibCacheIncludes("#include \"FlexPWM%<modNum>_reload%<chanNum>_isr.h\"" + "\n")>
+  
+  %elseif cmpf == 8192
+	%<LibCacheIncludes("#include \"FlexPWM%<modNum>_rerr%<chanNum>_isr.h\"" + "\n")>
+
+  %else
+	%<LibCacheIncludes("#include \"FlexPWM%<modNum>_comp%<chanNum>_isr.h\"" + "\n")>
+  
+  %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign secondInput  =  CAST("Number",Parameter[0].Value[0])
+  %assign cmpf    =  CAST("Number",Parameter[1].Value[0])
+  %assign chanNum =  CAST("Number",Parameter[2].Value[0])
+  %assign modNum  =  CAST("Number",Parameter[4].Value[0])
+
+  %% ----- Reload interrupt -----------------------------
+  %if cmpf == 4096
+     %assign isr_c = "FlexPWM%<modNum>_reload%<chanNum>_isr.c"
+     %assign isr_h = "FlexPWM%<modNum>_reload%<chanNum>_isr.h"
+     %assign isr_func = "FlexPWM%<modNum>_reload%<chanNum>_ISR"
+     %assign isr_flag = "FLEXPWM_%<modNum>.SUB[%<chanNum>].STS.B.RF"
+     %assign isr_flag_clear = "1"
+     %assign isr_ie_flag = "FLEXPWM_%<modNum>.SUB[%<chanNum>].INTEN.B.RIE"
+	 %assign isr_ie_set = "1"
+  
+  %% ----- Reload error interrupt -----------------------
+  %elseif cmpf == 8192
+     %assign isr_c = "FlexPWM%<modNum>_rerr%<chanNum>_isr.c"
+     %assign isr_h = "FlexPWM%<modNum>_rerr%<chanNum>_isr.h"
+     %assign isr_func = "FlexPWM%<modNum>_rerr%<chanNum>_ISR"
+     %assign isr_flag = "FLEXPWM_%<modNum>.SUB[%<chanNum>].STS.B.REF"
+     %assign isr_flag_clear = "1"
+     %assign isr_ie_flag = "FLEXPWM_%<modNum>.SUB[%<chanNum>].INTEN.B.REIE"
+	 %assign isr_ie_set = "1"
+
+  %% ----- Compare interrupt ----------------------------
+  %else
+     %assign isr_c = "FlexPWM%<modNum>_comp%<chanNum>_isr.c"
+     %assign isr_h = "FlexPWM%<modNum>_comp%<chanNum>_isr.h"
+     %assign isr_func = "FlexPWM%<modNum>_comp%<chanNum>_ISR"
+     %assign isr_flag = "FLEXPWM_%<modNum>.SUB[%<chanNum>].STS.B.CMPF"
+     %assign isr_flag_clear = "0x3F"
+     %assign isr_ie_flag = "FLEXPWM_%<modNum>.SUB[%<chanNum>].INTEN.B.CMPIE"
+	 %assign isr_ie_set = %<cmpf>
+
+  %endif 
+
+/* enable interrupt source */
+%<isr_ie_flag> = %<isr_ie_set>;
+  
+%openfile isr_c = "%<isr_c>"
+  
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+void %<isr_func>(void)
+{
+%if secondInput != 0
+	%<LibBlockOutputSignal(1, "", "", 0)> = %<isr_flag>;
+%endif
+     
+%foreach fcnCallIdx = NumSFcnSysOutputCalls
+%% call the downstream system
+  %with SFcnSystemOutputCall[fcnCallIdx]
+%% skip unconnected function call outputs
+    %if ISEQUAL(BlockToCall, "unconnected")
+      %continue
+    %endif
+    %assign sysIdx = BlockToCall[0]
+    %assign blkIdx = BlockToCall[1]
+    %assign ssBlock = System[sysIdx].Block[blkIdx]
+    %<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+         ParamSettings.SampleTimesToSet[0][1])>\
+  %endwith
+%endforeach
+
+%<isr_flag> = %<isr_flag_clear>;   //clear flags
+}
+
+%closefile isr_c
+
+%openfile isr_h = "%<isr_h>"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+extern void %<isr_func>(void);
+
+%closefile isr_h
+
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+;

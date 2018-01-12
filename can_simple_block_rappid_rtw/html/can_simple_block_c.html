@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="./js/coder_app.js"></script>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="./rtwreport_utils.js"></script>
+<script type="text/javascript" src="./rtwannotate.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/coder_app.css"/>
+</head>
+<body onload="srcFileOnload();">
+<pre id="code">
+<table class="code" id="codeTbl">
+<tr name="1" id="1">
+<td><a id="l1" class='ln'>1</a></td><td><span class="ct">/*</span></td></tr>
+<tr name="2" id="2">
+<td><a id="l2" class='ln'>2</a></td><td><span class="ct"> * Sponsored License - for use in support of a program or activity</span></td></tr>
+<tr name="3" id="3">
+<td><a id="l3" class='ln'>3</a></td><td><span class="ct"> * sponsored by MathWorks.  Not for government, commercial or other</span></td></tr>
+<tr name="4" id="4">
+<td><a id="l4" class='ln'>4</a></td><td><span class="ct"> * non-sponsored organizational use.</span></td></tr>
+<tr name="5" id="5">
+<td><a id="l5" class='ln'>5</a></td><td><span class="ct"> *</span></td></tr>
+<tr name="6" id="6">
+<td><a id="l6" class='ln'>6</a></td><td><span class="ct"> * File: can_simple_block.c</span></td></tr>
+<tr name="7" id="7">
+<td><a id="l7" class='ln'>7</a></td><td><span class="ct"> *</span></td></tr>
+<tr name="8" id="8">
+<td><a id="l8" class='ln'>8</a></td><td><span class="ct"> * Code generated for Simulink model 'can_simple_block'.</span></td></tr>
+<tr name="9" id="9">
+<td><a id="l9" class='ln'>9</a></td><td><span class="ct"> *</span></td></tr>
+<tr name="10" id="10">
+<td><a id="l10" class='ln'>10</a></td><td><span class="ct"> * Model version                  : 1.89</span></td></tr>
+<tr name="11" id="11">
+<td><a id="l11" class='ln'>11</a></td><td><span class="ct"> * Simulink Coder version         : 8.11 (R2016b) 25-Aug-2016</span></td></tr>
+<tr name="12" id="12">
+<td><a id="l12" class='ln'>12</a></td><td><span class="ct"> * C/C++ source code generated on : Thu Oct 12 12:02:13 2017</span></td></tr>
+<tr name="13" id="13">
+<td><a id="l13" class='ln'>13</a></td><td><span class="ct"> *</span></td></tr>
+<tr name="14" id="14">
+<td><a id="l14" class='ln'>14</a></td><td><span class="ct"> * Target selection: rappid564xl.tlc</span></td></tr>
+<tr name="15" id="15">
+<td><a id="l15" class='ln'>15</a></td><td><span class="ct"> * Embedded hardware selection: Freescale-&gt;32-bit PowerPC</span></td></tr>
+<tr name="16" id="16">
+<td><a id="l16" class='ln'>16</a></td><td><span class="ct"> * Code generation objectives: Unspecified</span></td></tr>
+<tr name="17" id="17">
+<td><a id="l17" class='ln'>17</a></td><td><span class="ct"> * Validation result: Not run</span></td></tr>
+<tr name="18" id="18">
+<td><a id="l18" class='ln'>18</a></td><td><span class="ct"> */</span></td></tr>
+<tr name="19" id="19">
+<td><a id="l19" class='ln'>19</a></td><td></td></tr>
+<tr name="20" id="20">
+<td><a id="l20" class='ln'>20</a></td><td><span class="pp">#include "can_simple_block.h"</span></td></tr>
+<tr name="21" id="21">
+<td><a id="l21" class='ln'>21</a></td><td><span class="pp">#include "can_simple_block_private.h"</span></td></tr>
+<tr name="22" id="22">
+<td><a id="l22" class='ln'>22</a></td><td></td></tr>
+<tr name="23" id="23">
+<td><a id="l23" class='ln'>23</a></td><td><span class="ct">/* Block signals (auto storage) */</span></td></tr>
+<tr name="24" id="24">
+<td><a id="l24" class='ln'>24</a></td><td><a id="24c1" class="tk">BlockIO_can_simple_block</a> <a id="24c26" class="tk">can_simple_block_B</a>;</td></tr>
+<tr name="25" id="25">
+<td><a id="l25" class='ln'>25</a></td><td></td></tr>
+<tr name="26" id="26">
+<td><a id="l26" class='ln'>26</a></td><td><span class="ct">/* External outputs (root outports fed by signals with auto storage) */</span></td></tr>
+<tr name="27" id="27">
+<td><a id="l27" class='ln'>27</a></td><td><a id="27c1" class="tk">ExternalOutputs_can_simple_bloc</a> <a id="27c33" class="tk">can_simple_block_Y</a>;</td></tr>
+<tr name="28" id="28">
+<td><a id="l28" class='ln'>28</a></td><td></td></tr>
+<tr name="29" id="29">
+<td><a id="l29" class='ln'>29</a></td><td><span class="ct">/* Output and update for function-call system: '<a class="ct blk" blk_line="29">&lt;Root&gt;/Subsystem</a>' */</span></td></tr>
+<tr name="30" id="30">
+<td><a id="l30" class='ln'>30</a></td><td><span class="kw">void</span> <a id="30c6" class="tk">can_simple_block_Subsystem</a>(<span class="kw">void</span>)</td></tr>
+<tr name="31" id="31">
+<td><a id="l31" class='ln'>31</a></td><td><span class="br">{</span></td></tr>
+<tr name="32" id="32">
+<td><a id="l32" class='ln'>32</a></td><td>  <a id="32c3" class="tk">int32_T</a> <a id="32c11" class="tk">i</a>;</td></tr>
+<tr name="33" id="33">
+<td><a id="l33" class='ln'>33</a></td><td></td></tr>
+<tr name="34" id="34">
+<td><a id="l34" class='ln'>34</a></td><td>  <span class="ct">/* Inport: '<a class="ct blk" blk_line="34">&lt;S1&gt;/In3</a>' */</span></td></tr>
+<tr name="35" id="35">
+<td><a id="l35" class='ln'>35</a></td><td>  <span class="kw">for</span> (<a id="35c8" class="tk">i</a> = 0; <a id="35c15" class="tk">i</a> <a id="35c17" class="tk">&lt;</a> 8; <a id="35c22" class="tk">i</a><a id="35c23" class="tk">++</a>) <span class="br">{</span></td></tr>
+<tr name="36" id="36">
+<td><a id="l36" class='ln'>36</a></td><td>    <a id="36c5" class="tk">can_simple_block_B</a>.<a id="36c24" class="tk">In3</a>[<a id="36c28" class="tk">i</a>] = <a id="36c33" class="tk">can_simple_block_B</a>.<a id="36c52" class="tk">CANReceiveDataTrigger1_o4</a>[<a id="36c78" class="tk">i</a>];</td></tr>
+<tr name="37" id="37">
+<td><a id="l37" class='ln'>37</a></td><td>  <span class="br">}</span></td></tr>
+<tr name="38" id="38">
+<td><a id="l38" class='ln'>38</a></td><td></td></tr>
+<tr name="39" id="39">
+<td><a id="l39" class='ln'>39</a></td><td>  <span class="ct">/* End of Inport: '<a class="ct blk" blk_line="39">&lt;S1&gt;/In3</a>' */</span></td></tr>
+<tr name="40" id="40">
+<td><a id="l40" class='ln'>40</a></td><td><span class="br">}</span></td></tr>
+<tr name="41" id="41">
+<td><a id="l41" class='ln'>41</a></td><td></td></tr>
+<tr name="42" id="42">
+<td><a id="l42" class='ln'>42</a></td><td><span class="ct">/* Model step function */</span></td></tr>
+<tr name="43" id="43">
+<td><a id="l43" class='ln'>43</a></td><td><span class="kw">void</span> <a id="43c6" class="tk">can_simple_block_step</a>(<span class="kw">void</span>)</td></tr>
+<tr name="44" id="44">
+<td><a id="l44" class='ln'>44</a></td><td><span class="br">{</span></td></tr>
+<tr name="45" id="45">
+<td><a id="l45" class='ln'>45</a></td><td>  <span class="ct">/* S-Function (can_564xl_receive_data): '<a class="ct blk" blk_line="45">&lt;Root&gt;/CAN_Receive_data1</a>' */</span></td></tr>
+<tr name="46" id="46">
+<td><a id="l46" class='ln'>46</a></td><td>  <span class="br">{</span></td></tr>
+<tr name="47" id="47">
+<td><a id="l47" class='ln'>47</a></td><td>    <a id="47c5" class="tk">FLEXCAN_MsgBufferStructure</a> <a id="47c32" class="tk">*</a><a id="47c33" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>;</td></tr>
+<tr name="48" id="48">
+<td><a id="l48" class='ln'>48</a></td><td>    <a id="48c5" class="tk">FLEXCAN_MsgBufferStructure</a> <a id="48c32" class="tk">str_FLEXCAN_MsgBufferStructure</a>;</td></tr>
+<tr name="49" id="49">
+<td><a id="l49" class='ln'>49</a></td><td>    <a id="49c5" class="tk">uint8_t</a> <a id="49c13" class="tk">i</a> = 0U;</td></tr>
+<tr name="50" id="50">
+<td><a id="l50" class='ln'>50</a></td><td>    <a id="50c5" class="tk">ptr_FLEXCAN_MsgBufferStructure</a> = <a id="50c38" class="tk">&amp;</a>(<a id="50c40" class="tk">str_FLEXCAN_MsgBufferStructure</a>);</td></tr>
+<tr name="51" id="51">
+<td><a id="l51" class='ln'>51</a></td><td>    <a id="51c5" class="tk">memset</a>(<a id="51c12" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>,0,<span class="kw">sizeof</span></td></tr>
+<tr name="52" id="52">
+<td><a id="l52" class='ln'>52</a></td><td>           (<a id="52c13" class="tk">*</a><a id="52c14" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>));</td></tr>
+<tr name="53" id="53">
+<td><a id="l53" class='ln'>53</a></td><td>    <span class="kw">if</span> (<a id="53c9" class="tk">flexcan_564xl_rxbuffull</a>( 0, 7)) <span class="br">{</span></td></tr>
+<tr name="54" id="54">
+<td><a id="l54" class='ln'>54</a></td><td>      <a id="54c7" class="tk">can_simple_block_Y</a>.<a id="54c26" class="tk">Out3</a> = <a id="54c33" class="tk">flexcan_564xl_get_id</a>(0, 7);</td></tr>
+<tr name="55" id="55">
+<td><a id="l55" class='ln'>55</a></td><td>      <a id="55c7" class="tk">flexcan_564xl_get_mb</a>(<a id="55c28" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>, 0, 7);</td></tr>
+<tr name="56" id="56">
+<td><a id="l56" class='ln'>56</a></td><td>      <span class="kw">for</span> (<a id="56c12" class="tk">i</a>=0;<a id="56c16" class="tk">i</a><a id="56c17" class="tk">&lt;</a><a id="56c18" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>-&gt;<a id="56c50" class="tk">length</a>;<a id="56c57" class="tk">i</a><a id="56c58" class="tk">++</a>) <span class="br">{</span></td></tr>
+<tr name="57" id="57">
+<td><a id="l57" class='ln'>57</a></td><td>        (<a id="57c10" class="tk">&amp;</a><a id="57c11" class="tk">can_simple_block_Y</a>.<a id="57c30" class="tk">Out1</a>[0])[<a id="57c39" class="tk">i</a>] = <a id="57c44" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>-&gt;</td></tr>
+<tr name="58" id="58">
+<td><a id="l58" class='ln'>58</a></td><td>          <a id="58c11" class="tk">data</a>[<a id="58c16" class="tk">i</a>];</td></tr>
+<tr name="59" id="59">
+<td><a id="l59" class='ln'>59</a></td><td>      <span class="br">}</span></td></tr>
+<tr name="60" id="60">
+<td><a id="l60" class='ln'>60</a></td><td></td></tr>
+<tr name="61" id="61">
+<td><a id="l61" class='ln'>61</a></td><td>      <a id="61c7" class="tk">can_simple_block_Y</a>.<a id="61c26" class="tk">Out2</a> = <a id="61c33" class="tk">flexcan_564xl_get_idtype</a>(0, 7);</td></tr>
+<tr name="62" id="62">
+<td><a id="l62" class='ln'>62</a></td><td>      <a id="62c7" class="tk">can_simple_block_Y</a>.<a id="62c26" class="tk">Out4</a> = <a id="62c33" class="tk">flexcan_564xl_get_ts</a>(0, 7);</td></tr>
+<tr name="63" id="63">
+<td><a id="l63" class='ln'>63</a></td><td>      <a id="63c7" class="tk">flexcan_564xl_release_mb_lock</a>(0);</td></tr>
+<tr name="64" id="64">
+<td><a id="l64" class='ln'>64</a></td><td>      <a id="64c7" class="tk">flexcan_564xl_clear_mask</a>(0, 7);</td></tr>
+<tr name="65" id="65">
+<td><a id="l65" class='ln'>65</a></td><td>    <span class="br">}</span></td></tr>
+<tr name="66" id="66">
+<td><a id="l66" class='ln'>66</a></td><td>  <span class="br">}</span></td></tr>
+<tr name="67" id="67">
+<td><a id="l67" class='ln'>67</a></td><td></td></tr>
+<tr name="68" id="68">
+<td><a id="l68" class='ln'>68</a></td><td>  <span class="ct">/* Outport: '<a class="ct blk" blk_line="68">&lt;Root&gt;/Out5</a>' */</span></td></tr>
+<tr name="69" id="69">
+<td><a id="l69" class='ln'>69</a></td><td>  <a id="69c3" class="tk">can_simple_block_Y</a>.<a id="69c22" class="tk">Out5</a> = <a id="69c29" class="tk">can_simple_block_B</a>.<a id="69c48" class="tk">In3</a>[0];</td></tr>
+<tr name="70" id="70">
+<td><a id="l70" class='ln'>70</a></td><td></td></tr>
+<tr name="71" id="71">
+<td><a id="l71" class='ln'>71</a></td><td>  <span class="ct">/* SignalConversion: '<a class="ct blk" blk_line="71">&lt;Root&gt;/TmpSignal ConversionAtCAN Transmit1Inport1</a>' incorporates:</span></td></tr>
+<tr name="72" id="72">
+<td><a id="l72" class='ln'>72</a></td><td><span class="ct">   *  Constant: '<a class="ct blk" blk_line="72">&lt;Root&gt;/Constant1</a>'</span></td></tr>
+<tr name="73" id="73">
+<td><a id="l73" class='ln'>73</a></td><td><span class="ct">   *  Constant: '<a class="ct blk" blk_line="73">&lt;Root&gt;/Constant2</a>'</span></td></tr>
+<tr name="74" id="74">
+<td><a id="l74" class='ln'>74</a></td><td><span class="ct">   *  Constant: '<a class="ct blk" blk_line="74">&lt;Root&gt;/Constant3</a>'</span></td></tr>
+<tr name="75" id="75">
+<td><a id="l75" class='ln'>75</a></td><td><span class="ct">   *  Constant: '<a class="ct blk" blk_line="75">&lt;Root&gt;/Constant4</a>'</span></td></tr>
+<tr name="76" id="76">
+<td><a id="l76" class='ln'>76</a></td><td><span class="ct">   *  Constant: '<a class="ct blk" blk_line="76">&lt;Root&gt;/Constant5</a>'</span></td></tr>
+<tr name="77" id="77">
+<td><a id="l77" class='ln'>77</a></td><td><span class="ct">   *  Constant: '<a class="ct blk" blk_line="77">&lt;Root&gt;/Constant6</a>'</span></td></tr>
+<tr name="78" id="78">
+<td><a id="l78" class='ln'>78</a></td><td><span class="ct">   *  Constant: '<a class="ct blk" blk_line="78">&lt;Root&gt;/Constant7</a>'</span></td></tr>
+<tr name="79" id="79">
+<td><a id="l79" class='ln'>79</a></td><td><span class="ct">   *  Constant: '<a class="ct blk" blk_line="79">&lt;Root&gt;/Constant8</a>'</span></td></tr>
+<tr name="80" id="80">
+<td><a id="l80" class='ln'>80</a></td><td><span class="ct">   */</span></td></tr>
+<tr name="81" id="81">
+<td><a id="l81" class='ln'>81</a></td><td>  <a id="81c3" class="tk">can_simple_block_B</a>.<a id="81c22" class="tk">TmpSignalConversionAtCANTransmi</a>[0] = 1U;</td></tr>
+<tr name="82" id="82">
+<td><a id="l82" class='ln'>82</a></td><td>  <a id="82c3" class="tk">can_simple_block_B</a>.<a id="82c22" class="tk">TmpSignalConversionAtCANTransmi</a>[1] = 2U;</td></tr>
+<tr name="83" id="83">
+<td><a id="l83" class='ln'>83</a></td><td>  <a id="83c3" class="tk">can_simple_block_B</a>.<a id="83c22" class="tk">TmpSignalConversionAtCANTransmi</a>[2] = 3U;</td></tr>
+<tr name="84" id="84">
+<td><a id="l84" class='ln'>84</a></td><td>  <a id="84c3" class="tk">can_simple_block_B</a>.<a id="84c22" class="tk">TmpSignalConversionAtCANTransmi</a>[3] = 4U;</td></tr>
+<tr name="85" id="85">
+<td><a id="l85" class='ln'>85</a></td><td>  <a id="85c3" class="tk">can_simple_block_B</a>.<a id="85c22" class="tk">TmpSignalConversionAtCANTransmi</a>[4] = 5U;</td></tr>
+<tr name="86" id="86">
+<td><a id="l86" class='ln'>86</a></td><td>  <a id="86c3" class="tk">can_simple_block_B</a>.<a id="86c22" class="tk">TmpSignalConversionAtCANTransmi</a>[5] = 6U;</td></tr>
+<tr name="87" id="87">
+<td><a id="l87" class='ln'>87</a></td><td>  <a id="87c3" class="tk">can_simple_block_B</a>.<a id="87c22" class="tk">TmpSignalConversionAtCANTransmi</a>[6] = 7U;</td></tr>
+<tr name="88" id="88">
+<td><a id="l88" class='ln'>88</a></td><td>  <a id="88c3" class="tk">can_simple_block_B</a>.<a id="88c22" class="tk">TmpSignalConversionAtCANTransmi</a>[7] = 8U;</td></tr>
+<tr name="89" id="89">
+<td><a id="l89" class='ln'>89</a></td><td></td></tr>
+<tr name="90" id="90">
+<td><a id="l90" class='ln'>90</a></td><td>  <span class="ct">/* S-Function (can_564xl_transmit): '<a class="ct blk" blk_line="90">&lt;Root&gt;/CAN Transmit1</a>' */</span></td></tr>
+<tr name="91" id="91">
+<td><a id="l91" class='ln'>91</a></td><td>  <span class="br">{</span></td></tr>
+<tr name="92" id="92">
+<td><a id="l92" class='ln'>92</a></td><td>    <a id="92c5" class="tk">FLEXCAN_MsgBufferStructure</a> <a id="92c32" class="tk">*</a><a id="92c33" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>;</td></tr>
+<tr name="93" id="93">
+<td><a id="l93" class='ln'>93</a></td><td>    <a id="93c5" class="tk">FLEXCAN_MsgBufferStructure</a> <a id="93c32" class="tk">str_FLEXCAN_MsgBufferStructure</a>;</td></tr>
+<tr name="94" id="94">
+<td><a id="l94" class='ln'>94</a></td><td>    <a id="94c5" class="tk">uint8_t</a> <a id="94c13" class="tk">i</a> = 0U;</td></tr>
+<tr name="95" id="95">
+<td><a id="l95" class='ln'>95</a></td><td>    <a id="95c5" class="tk">uint8_t</a><a id="95c12" class="tk">*</a> <a id="95c14" class="tk">data</a> = <a id="95c21" class="tk">&amp;</a><a id="95c22" class="tk">can_simple_block_B</a>.<a id="95c41" class="tk">TmpSignalConversionAtCANTransmi</a>[0];</td></tr>
+<tr name="96" id="96">
+<td><a id="l96" class='ln'>96</a></td><td>    <a id="96c5" class="tk">uint8_t</a> <a id="96c13" class="tk">datalen</a> = ((<a id="96c25" class="tk">uint8_T</a>)8U);</td></tr>
+<tr name="97" id="97">
+<td><a id="l97" class='ln'>97</a></td><td>    <a id="97c5" class="tk">ptr_FLEXCAN_MsgBufferStructure</a> = <a id="97c38" class="tk">&amp;</a>(<a id="97c40" class="tk">str_FLEXCAN_MsgBufferStructure</a>);</td></tr>
+<tr name="98" id="98">
+<td><a id="l98" class='ln'>98</a></td><td>    <a id="98c5" class="tk">memset</a>(<a id="98c12" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>,0,<span class="kw">sizeof</span></td></tr>
+<tr name="99" id="99">
+<td><a id="l99" class='ln'>99</a></td><td>           (<a id="99c13" class="tk">*</a><a id="99c14" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>));</td></tr>
+<tr name="100" id="100">
+<td><a id="l100" class='ln'>100</a></td><td>    <a id="100c5" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>-&gt;<a id="100c37" class="tk">length</a> = <a id="100c46" class="tk">datalen</a>;</td></tr>
+<tr name="101" id="101">
+<td><a id="l101" class='ln'>101</a></td><td>    <span class="kw">if</span> (522<a id="101c12" class="tk">&amp;</a>0xFFFF800)</td></tr>
+<tr name="102" id="102">
+<td><a id="l102" class='ln'>102</a></td><td>      <a id="102c7" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>-&gt;<a id="102c39" class="tk">ext</a> = 1;</td></tr>
+<tr name="103" id="103">
+<td><a id="l103" class='ln'>103</a></td><td>    <a id="103c5" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>-&gt;<a id="103c37" class="tk">id</a> = 522;</td></tr>
+<tr name="104" id="104">
+<td><a id="l104" class='ln'>104</a></td><td>    <a id="104c5" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>-&gt;<a id="104c37" class="tk">id</a> = 1002;</td></tr>
+<tr name="105" id="105">
+<td><a id="l105" class='ln'>105</a></td><td>    <span class="kw">for</span> (<a id="105c10" class="tk">i</a>=0;<a id="105c14" class="tk">i</a><a id="105c15" class="tk">&lt;</a><a id="105c16" class="tk">datalen</a>;<a id="105c24" class="tk">i</a><a id="105c25" class="tk">++</a>) <span class="br">{</span></td></tr>
+<tr name="106" id="106">
+<td><a id="l106" class='ln'>106</a></td><td>      <a id="106c7" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>-&gt;<a id="106c39" class="tk">data</a>[<a id="106c44" class="tk">i</a>] = <a id="106c49" class="tk">*</a>(<a id="106c51" class="tk">data</a><a id="106c55" class="tk">++</a>);</td></tr>
+<tr name="107" id="107">
+<td><a id="l107" class='ln'>107</a></td><td>    <span class="br">}</span></td></tr>
+<tr name="108" id="108">
+<td><a id="l108" class='ln'>108</a></td><td></td></tr>
+<tr name="109" id="109">
+<td><a id="l109" class='ln'>109</a></td><td>    <a id="109c5" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>-&gt;<a id="109c37" class="tk">code</a> = <a id="109c44" class="tk">CAN_TX_MSG</a>;</td></tr>
+<tr name="110" id="110">
+<td><a id="l110" class='ln'>110</a></td><td>    <a id="110c5" class="tk">flexcan_564xl_buffer_transmit</a>(<a id="110c35" class="tk">ptr_FLEXCAN_MsgBufferStructure</a>,14,0);</td></tr>
+<tr name="111" id="111">
+<td><a id="l111" class='ln'>111</a></td><td>    <a id="111c5" class="tk">flexcan_564xl_release_mb_lock</a>(0);</td></tr>
+<tr name="112" id="112">
+<td><a id="l112" class='ln'>112</a></td><td>    <a id="112c5" class="tk">flexcan_564xl_clear_mask</a>(0, 14);</td></tr>
+<tr name="113" id="113">
+<td><a id="l113" class='ln'>113</a></td><td>  <span class="br">}</span></td></tr>
+<tr name="114" id="114">
+<td><a id="l114" class='ln'>114</a></td><td><span class="br">}</span></td></tr>
+<tr name="115" id="115">
+<td><a id="l115" class='ln'>115</a></td><td></td></tr>
+<tr name="116" id="116">
+<td><a id="l116" class='ln'>116</a></td><td><span class="ct">/* Model initialize function */</span></td></tr>
+<tr name="117" id="117">
+<td><a id="l117" class='ln'>117</a></td><td><span class="kw">void</span> <a id="117c6" class="tk">can_simple_block_initialize</a>(<span class="kw">void</span>)</td></tr>
+<tr name="118" id="118">
+<td><a id="l118" class='ln'>118</a></td><td><span class="br">{</span></td></tr>
+<tr name="119" id="119">
+<td><a id="l119" class='ln'>119</a></td><td>  <span class="ct">/* Registration code */</span></td></tr>
+<tr name="120" id="120">
+<td><a id="l120" class='ln'>120</a></td><td></td></tr>
+<tr name="121" id="121">
+<td><a id="l121" class='ln'>121</a></td><td>  <span class="ct">/* block I/O */</span></td></tr>
+<tr name="122" id="122">
+<td><a id="l122" class='ln'>122</a></td><td>  (<span class="kw">void</span>) <a id="122c10" class="tk">memset</a>(((<span class="kw">void</span> <a id="122c24" class="tk">*</a>) <a id="122c27" class="tk">&amp;</a><a id="122c28" class="tk">can_simple_block_B</a>), 0,</td></tr>
+<tr name="123" id="123">
+<td><a id="l123" class='ln'>123</a></td><td>                <span class="kw">sizeof</span>(<a id="123c24" class="tk">BlockIO_can_simple_block</a>));</td></tr>
+<tr name="124" id="124">
+<td><a id="l124" class='ln'>124</a></td><td></td></tr>
+<tr name="125" id="125">
+<td><a id="l125" class='ln'>125</a></td><td>  <span class="ct">/* external outputs */</span></td></tr>
+<tr name="126" id="126">
+<td><a id="l126" class='ln'>126</a></td><td>  (<span class="kw">void</span>) <a id="126c10" class="tk">memset</a>((<span class="kw">void</span> <a id="126c23" class="tk">*</a>)<a id="126c25" class="tk">&amp;</a><a id="126c26" class="tk">can_simple_block_Y</a>, 0,</td></tr>
+<tr name="127" id="127">
+<td><a id="l127" class='ln'>127</a></td><td>                <span class="kw">sizeof</span>(<a id="127c24" class="tk">ExternalOutputs_can_simple_bloc</a>));</td></tr>
+<tr name="128" id="128">
+<td><a id="l128" class='ln'>128</a></td><td></td></tr>
+<tr name="129" id="129">
+<td><a id="l129" class='ln'>129</a></td><td>  <span class="ct">/* Start for S-Function (can_564xl_config): '<a class="ct blk" blk_line="129">&lt;Root&gt;/CAN Config</a>' */</span></td></tr>
+<tr name="130" id="130">
+<td><a id="l130" class='ln'>130</a></td><td>  <a id="130c3" class="tk">flexcan_564xl_init</a>( 0, 1342177343, 81461382);</td></tr>
+<tr name="131" id="131">
+<td><a id="l131" class='ln'>131</a></td><td>  <a id="131c3" class="tk">flexcan_564xl_pin_init</a>( 0);</td></tr>
+<tr name="132" id="132">
+<td><a id="l132" class='ln'>132</a></td><td></td></tr>
+<tr name="133" id="133">
+<td><a id="l133" class='ln'>133</a></td><td>  <span class="ct">/* Start for S-Function (can_564xl_receive_data): '<a class="ct blk" blk_line="133">&lt;Root&gt;/CAN_Receive_data1</a>' */</span></td></tr>
+<tr name="134" id="134">
+<td><a id="l134" class='ln'>134</a></td><td>  <span class="br">{</span></td></tr>
+<tr name="135" id="135">
+<td><a id="l135" class='ln'>135</a></td><td>    <span class="kw">if</span> ((1010U <a id="135c16" class="tk">&amp;</a> 0x1FFFF800) <a id="135c30" class="tk">!=</a> 0x0) <span class="br">{</span> <span class="ct">//extended tag</span></td></tr>
+<tr name="136" id="136">
+<td><a id="l136" class='ln'>136</a></td><td>      <a id="136c7" class="tk">flexcan_564xl_set_filter_id</a>(0, 7, 1010U, 1);</td></tr>
+<tr name="137" id="137">
+<td><a id="l137" class='ln'>137</a></td><td>    <span class="br">}</span> <span class="kw">else</span> <span class="br">{</span>                           <span class="ct">//standart tag</span></td></tr>
+<tr name="138" id="138">
+<td><a id="l138" class='ln'>138</a></td><td>      <a id="138c7" class="tk">flexcan_564xl_set_filter_id</a>(0, 7, 1010U, 0);</td></tr>
+<tr name="139" id="139">
+<td><a id="l139" class='ln'>139</a></td><td>    <span class="br">}</span></td></tr>
+<tr name="140" id="140">
+<td><a id="l140" class='ln'>140</a></td><td>  <span class="br">}</span></td></tr>
+<tr name="141" id="141">
+<td><a id="l141" class='ln'>141</a></td><td></td></tr>
+<tr name="142" id="142">
+<td><a id="l142" class='ln'>142</a></td><td>  <span class="ct">/* Start for S-Function (can_564xl_receive_data_trigger): '<a class="ct blk" blk_line="142">&lt;Root&gt;/CAN Receive Data Trigger1</a>' */</span></td></tr>
+<tr name="143" id="143">
+<td><a id="l143" class='ln'>143</a></td><td>  <a id="143c3" class="tk">flexcan_564xl_set_filter_id</a>(0, 5, 1021, 0);</td></tr>
+<tr name="144" id="144">
+<td><a id="l144" class='ln'>144</a></td><td>  <a id="144c3" class="tk">CAN_0</a>.<a id="144c9" class="tk">IMASK1</a>.<a id="144c16" class="tk">R</a> <a id="144c18" class="tk">|=</a> 1<a id="144c22" class="tk">&lt;&lt;</a>5;</td></tr>
+<tr name="145" id="145">
+<td><a id="l145" class='ln'>145</a></td><td><span class="br">}</span></td></tr>
+<tr name="146" id="146">
+<td><a id="l146" class='ln'>146</a></td><td></td></tr>
+<tr name="147" id="147">
+<td><a id="l147" class='ln'>147</a></td><td><span class="ct">/* Model terminate function */</span></td></tr>
+<tr name="148" id="148">
+<td><a id="l148" class='ln'>148</a></td><td><span class="kw">void</span> <a id="148c6" class="tk">can_simple_block_terminate</a>(<span class="kw">void</span>)</td></tr>
+<tr name="149" id="149">
+<td><a id="l149" class='ln'>149</a></td><td><span class="br">{</span></td></tr>
+<tr name="150" id="150">
+<td><a id="l150" class='ln'>150</a></td><td>  <span class="ct">/* (no terminate code required) */</span></td></tr>
+<tr name="151" id="151">
+<td><a id="l151" class='ln'>151</a></td><td><span class="br">}</span></td></tr>
+<tr name="152" id="152">
+<td><a id="l152" class='ln'>152</a></td><td></td></tr>
+<tr name="153" id="153">
+<td><a id="l153" class='ln'>153</a></td><td><span class="ct">/*</span></td></tr>
+<tr name="154" id="154">
+<td><a id="l154" class='ln'>154</a></td><td><span class="ct"> * File trailer for generated code.</span></td></tr>
+<tr name="155" id="155">
+<td><a id="l155" class='ln'>155</a></td><td><span class="ct"> *</span></td></tr>
+<tr name="156" id="156">
+<td><a id="l156" class='ln'>156</a></td><td><span class="ct"> * [EOF]</span></td></tr>
+<tr name="157" id="157">
+<td><a id="l157" class='ln'>157</a></td><td><span class="ct"> */</span></td></tr>
+<tr name="158" id="158">
+<td><a id="l158" class='ln'>158</a></td><td></td></tr>
+</table>
+</pre>
+</body>
+</html>

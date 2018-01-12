@@ -1,0 +1,69 @@
+%implements sineWave_564xl "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %if !EXISTS("SINEWAVE_564xL_INCLUDED")
+    %assign ::SINEWAVE_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"sine_wave_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %assign frequency = CAST("Number",Parameter[0].Value[0])
+   %assign amplitude = CAST("Number",Parameter[1].Value[0])
+   %assign SWG_freq = FEVAL("rappid_564xl_get_SWG_clock")
+   %assign IOFREQ_min = FEVAL("rappid_564xl_get_FreqFactorSWG", 1000)
+   %assign IOFREQ_max = FEVAL("rappid_564xl_get_FreqFactorSWG", 50000)
+   %assign FREQ_min = FEVAL("rappid_564xl_get_freqMinSWG")
+   %assign FREQ_max = FEVAL("rappid_564xl_get_freqMaxSWG")
+
+   sine_wave_init_564xL( %<frequency>, %<amplitude> );
+
+%openfile swgFreq = "SWG_frequency.h"
+#ifndef SWG_FREQUENCY_H_
+#define SWG_FREQUENCY_H_
+ 
+#define sysClk %<SWG_freq> /* SWG Input clock */
+#define IOFREQmin %<IOFREQ_min> /* frequency = %<FREQ_min>  */
+#define IOFREQmax %<IOFREQ_max> /* frequency = %<FREQ_max>  */
+
+#endif /* SWG_FREQUENCY_H_ */
+%closefile swgFreq	
+
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  sine_wave_update_564xL(%<LibBlockInputSignal(0, "", "", 0)>);
+%endif 
+
+%endfunction

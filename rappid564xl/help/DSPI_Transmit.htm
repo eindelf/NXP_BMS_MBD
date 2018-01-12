@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>DSPI Transmit Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">DSPI Transmit Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">This block transmits data through a DSPI module.</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="DSPI_Transmit_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>Data to be transmitted (uint16)</li>
+		<li>EOQ (boolean) – available if EOQ is enabled</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="100">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="110">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>DSPI</td>
+			<td>Pop-up</td>
+			<td>0,1,2</td>
+			<td>Select the Serial Communication Interface module which should be used for the 
+				transmit of the data
+			</td>
+		</tr>
+		<tr>
+			<td>Continuous Peripheral Chip Select Enable</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>This bit is used in SPI master mode. This bit enables the selected PCS signals to 
+				remain asserted between transfers
+			</td>
+		</tr>
+		<tr>
+			<td>Parity Enable</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>Parity Enable bit enables parity bit transmission and parity reception check for 
+				the SPI frame
+			</td>
+		</tr>
+		<tr>
+			<td>Parity Polarity</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>Parity Polarity bit controls polarity of the parity bit transmitted and checked.</td>
+		</tr>
+		<tr>
+			<td>CS</td>
+			<td>Pop-up</td>
+			<td>Pin selection</td>
+			<td>CS pin selection</td>
+		</tr>
+		<tr>
+			<td>SIN</td>
+			<td>Pop-up</td>
+			<td>Pin selection</td>
+			<td>SIN pin selection</td>
+		</tr>
+		<tr>
+			<td>SCK</td>
+			<td>Pop-up</td>
+			<td>Pin selection</td>
+			<td>SCK pin selection</td>
+		</tr>
+		<tr>
+			<td>SOUT</td>
+			<td>Pop-up</td>
+			<td>Pin selection</td>
+			<td>SOUT pin selection</td>
+		</tr>
+		<tr>
+			<td>CS Strobe</td>
+			<td>Pop-up</td>
+			<td>Pin selection</td>
+			<td>CS Strobe pin selection</td>
+		</tr>
+		<tr>
+			<td>Enable EOQ</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>If set EOQ input will be available. The EOQ bit provides a means for host software 
+				to signal to the DSPI that the current SPI transfer is the last in a queue.</br>
+				*Ignored in Slave mode.
+			</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="DSPI_Transmit_files/image_param.jpg">
+	<h3>Block Dependency</h3>
+	<div>Please do the following:
+		<ol>
+			<li>Configure DSPI.</br>
+			If DSPI Config module is absent or it configure for slave mode, all unnecessary settings disabled.</li>
+		</ol>
+	</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

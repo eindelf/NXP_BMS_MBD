@@ -1,0 +1,58 @@
+
+%implements GFLIB_VectorLimit_SF_FLT "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+   %if !EXISTS("GFLIB_INCLUDED")
+      %assign ::GFLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gflib.h\"" + "\n")>
+   %endif 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+   %assign s32Lim   = CAST("Real32",Parameter[0].Value[0])
+
+   %assign InD = LibBlockInputSignal(0, "", "", 0)
+   %assign InQ = LibBlockInputSignal(1, "", "", 0)
+   %assign OutD = LibBlockOutputSignal(0, "", "", 0)
+   %assign OutQ = LibBlockOutputSignal(1, "", "", 0)
+   %assign bFlag = LibBlockOutputSignal(2, "", "", 0)
+   
+   {  
+	 static const GFLIB_VECTORLIMIT_T param = { %<s32Lim> };
+	 static SWLIBS_2Syst In;
+	 static SWLIBS_2Syst Out;
+	 SWLIBS_2Syst *const pIn = &In; 
+	 SWLIBS_2Syst *const pOut = &Out; 
+	 
+	 pIn->s32Arg1 = %<InD>;
+	 pIn->s32Arg2 = %<InQ>;
+     %<bFlag> = GFLIB_VectorLimit (pOut,pIn,&param);
+	 %<OutD> = pOut->s32Arg1;
+	 %<OutQ> = pOut->s32Arg2;
+   }
+
+%endfunction

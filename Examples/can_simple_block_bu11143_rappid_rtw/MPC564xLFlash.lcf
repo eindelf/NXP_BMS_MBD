@@ -1,0 +1,118 @@
+/*
+ ******************************************************************************** 
+ *
+ * Detail Description     : 
+ * Scott OBrien 4/29/10   : Leopard LSM File.
+ *
+ ******************************************************************************** 
+ * NOTE:
+ * 1) When generated a ROM Image - Which is a MUST if you have Initialzed Data
+ * The ROM Image ROM Locattion needs to match the "int_flash" Section Address
+ *
+ * 2) We are NOT using any Small Data
+ ******************************************************************************** 
+*/
+
+MEMORY
+{
+    word:                           org=0x00000000, len=0x00000008
+    exception_handlers:             org=0x00001000, len=0x00001000
+    vector_table:                   org=0x00002000, len=0x00001000
+    int_flash:                      org=0x00003000, len=0x000FD000
+    int_sram:                       org=0x40000000, len=0x0000F800
+    stack_ram:                      org=0x4000F800, len=0x00000800
+}
+
+SECTIONS
+{
+    GROUP : 
+    { 
+      .rcw  LOAD (0x0): {   }
+    } > word
+
+    GROUP : 
+    { 
+      .exec_vect : {}
+      .exec_vect_vle (VLECODE) LOAD(0x1000): 
+      {
+      *(.exec_vect)
+      *(.exec_vect_vle)
+      }
+
+    } > exception_handlers
+
+
+    GROUP : 
+    { 
+      .ivor4_vector_table LOAD(0x2000): {}
+    } > vector_table
+
+
+    GROUP : 
+    { 
+      __argv=.;
+      __env=.;
+      
+      .init : {}
+      .init_vle (VLECODE) : 
+      { 
+        *(.init)
+        *(.init_vle)
+      }
+      .text : {}
+      .text_vle (VLECODE) ALIGN(0x08) : 
+      { 
+        *(.text_vle)
+        *(.text)
+      }
+      .rodata (CONST): 
+      { 
+        *(.rdata)
+        *(.rodata)
+      }
+      .ctors  ALIGN (0x4): { *(.ctors) }
+      .dtors  ALIGN (0x4): { *(.dtors) }
+       extab : {}
+       extabindex : {}
+      .sdata2 : {}
+      .sbss2 : {}         
+    } > int_flash
+
+    GROUP : 
+    { 
+      __DATA_ROM_ADDR = ADDR(.sbss2) + SIZEOF(.sbss2);
+      __DATA_SRAM_ADDR =.;
+
+__DATA_RAM=.;
+        .data (DATA) : {} 
+        .sdata (DATA) : {}
+__DATA_END=.;
+__DATA_ROM=ROMADDR(.data);
+
+__BSS_START=.;
+      .sbss : {}
+      .bss : {}      
+      .tibss : {}
+__BSS_END=.;
+
+      .tidata : {}
+      
+      __HEAP_START =.;
+    } > int_sram
+
+}
+
+/* Variable required for Startup, Interrupts, etc */
+
+__DATA_SIZE       = __DATA_END - __DATA_SRAM_ADDR;
+__SP_INIT         = ADDR(stack_ram) + SIZEOF(stack_ram);
+__SP_END          = ADDR(stack_ram);
+_SRAM_BASE_ADDR   = ADDR(int_sram);
+_SRAM_SIZE        = SIZEOF(int_sram) + SIZEOF(stack_ram);
+__SDATA_SIZE      = 0;
+__SDATA_ROM_ADDR  = __DATA_ROM_ADDR;
+__SDATA_SRAM_ADDR = __DATA_SRAM_ADDR;
+__BSS_SIZE		  = __BSS_END - __BSS_START;
+
+__IVPR_VALUE = ADDR(exception_handlers);
+

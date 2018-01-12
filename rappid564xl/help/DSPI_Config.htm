@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>DSPI Configuration Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">DSPI Configuration Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">This block is used to configure the DSPI module.</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="DSPI_Config_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<div class="shifted">The block dialog consists of the following tabs:</div>
+	<ul class="shifted">
+		<li><a href="#General_tab">General</a></li>
+		<li><a href="#TransferMode_tab">Transfer Mode</a></li>
+		<li><a href="#ChipSelect_tab">Chip Select State</a></li>
+	</ul>
+	<ul>
+		<a name="General_tab">	
+			<li>The General tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="110">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="140">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>DSPI</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 2</td>
+			<td>Select the Serial Communication Interface module which should be used 
+				for the receive of the data *
+			</td>
+		</tr>
+		<tr>
+			<td>Mode</td>
+			<td>Pop-up</td>
+			<td>Master<br>Slave</td>
+			<td>Mode of operation *
+				</br>When Slave mode is selected all unnecessary settings disabled.
+			</td>
+		</tr>
+		<tr>
+			<td>Modified Timing Format Enabled</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>The MTFE bit enables a modified transfer format to be used *</td>
+		</tr>
+		<tr>
+			<td>Continuous SCK</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>The Continuous SCK bit enables the Serial Communication Clock (SCK) to run 
+				continuously *
+			</td>
+		</tr>
+		<tr>
+			<td>Receive FIFO Overflow Overwrite Enable</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>Receive FIFO Overflow Overwrite Enable. The ROOE bit enables in RX FIFO overflow 
+				condition to ignore the incoming serial data or to overwrite existing data. If the 
+				RX FIFO is full and new data is received, the data from the transfer, generated 
+				the overflow, is ignored or shifted in to the shift register *
+			</td>
+		</tr>
+		<tr>
+			<td>Transmit FIFO</td>
+			<td>Pop-up</td>
+			<td>Enable<br>Disable</td>
+			<td>When TXF isn’t set, the TX FIFO acts as a single-entry (unit depth) FIFO. Therefore, 
+				serial operation is performed as if the FIFO has only one valid entry space for 
+				serial-word transfer * The FIFO mode doesn’t support, should be always Disabled.
+			</td>
+		</tr>
+		<tr>
+			<td>Receive FIFO</td>
+			<td>Pop-up</td>
+			<td>Enable<br>Disable</td>
+			<td>When RXF isn’t set, the RX FIFO acts as a single-entry (unit depth) FIFO. Therefore, 
+				serial operation is performed as if the FIFO has only one valid entry space for 
+				serial-word * The FIFO mode doesn’t support, should be always Disabled.
+			</td>
+		</tr>
+		<tr>
+			<td>Sample Point</td>
+			<td>Pop-up</td>
+			<td>&ndash; DSPI samples SIN at driving SCK edge<br>
+				&ndash; DSPI samples SIN one system clock after driving SCK edge<br>
+				&ndash; DSPI samples SIN two system clocks after driving SCK edge
+			</td>
+			<td>Sample Point. SMPL_PT field controls when the DSPI master samples SIN in Modified 
+				Transfer Format *
+			</td>
+		</tr>
+	</tbody>
+	</table>
+	<div>* Read Hardware Manual documentation to get more information.</div>
+	<img vspace="15" src="DSPI_Config_files/image_param_1.jpg">
+	<ul>
+		<a name="TransferMode_tab">	
+			<li>The Transfer Mode tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="110">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="160">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Frame Size</td>
+			<td>Pop-up</td>
+			<td>3 c 16</td>
+			<td>The number of bits transferred per frame</td>
+		</tr>
+		<tr>
+			<td>Clock Polarity</td>
+			<td>Pop-up</td>
+			<td>Low<br>High</td>
+			<td>The CPOL bit selects the inactive state of the Serial Communications Clock (SCK). 
+				This bit is used in both master and slave mode. For successful communication between 
+				serial devices, the devices must have identical clock polarities. When the Continuous 
+				selection format is selected, switching between clock polarities without stopping 
+				the DSPI can cause errors in the transfer due to the peripheral device interpreting 
+				the switch of clock polarity as a valid clock edge.
+			</td>
+		</tr>
+		<tr>
+			<td>Clock Phase</td>
+			<td>Pop-up</td>
+			<td>&ndash; Data is captured on the leading edge of SCK and changed on the following edge<br>
+				&ndash; Data is changed on the leading edge of SCK and captured on the following edge
+			</td>
+			<td>The CPHA bit selects which edge of SCK causes data to change and which edge causes 
+				data to be captured. This bit is used in both master and slave mode. For successful 
+				communication between serial devices, the devices must have identical clock phase 
+				settings. In Continuous SCK mode the bit value is ignored and the transfers are done 
+				as CPHA bit is set to 1
+			</td>
+		</tr>
+		<tr>
+			<td>Data Transfer Mode</td>
+			<td>Pop-up</td>
+			<td>MSB first<br>LSB first</td>
+			<td>Selects LSB or MSB of the frame transferred first</td>
+		</tr>
+		<tr>
+			<td>Double Baud Rate (DBR)</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>Double Baud Rate. The DBR bit doubles the effective baud rate of the Serial 
+				Communications Clock (SCK). This field is only used in master mode. It effectively 
+				halves the Baud Rate division ratio supporting faster frequencies and odd division 
+				ratios for the Serial Communications Clock (SCK). *
+			</td>
+		</tr>
+		<tr>
+			<td>PCS to SCK Delay Prescaler (PCSSCK)</td>
+			<td>Pop-up</td>
+			<td>1,3,5,7</td>
+			<td>The PCSSCK field selects the prescaler value for the delay between assertion of 
+				PCS and the first edge of the SCK *
+			</td>
+		</tr>
+		<tr>
+			<td>After SCK Delay Prescaler (PASC)</td>
+			<td>Pop-up</td>
+			<td>1,3,5,7</td>
+			<td>Selects the prescaler value for the delay between the last edge of SCK and the 
+				negation of PCS *
+			</td>
+		</tr>
+		<tr>
+			<td>Delay After Transfer Prescaler (PDT)</td>
+			<td>Pop-up</td>
+			<td>1,3,5,7</td>
+			<td>The PDT field selects the prescaler value for the delay between the negation of 
+				the PCS signal at the end of a frame and the assertion of PCS at the beginning of 
+				the next frame. The PDT field is only used in master mode *
+			</td>
+		</tr>
+		<tr>
+			<td>Baud Rate Prescaler (PBR)</td>
+			<td>Pop-up</td>
+			<td>1,3,5,7</td>
+			<td>The PBR field selects the prescaler value for the baud rate. This field is only 
+				used in master mode. The Baud Rate is the frequency of the Serial Communications 
+				Clock (SCK). The system clock is divided by the prescaler value before the baud 
+				rate selection takes place. *
+			</td>
+		</tr>
+		<tr>
+			<td>PCS to SCK Delay Scaler (CSSCK)</td>
+			<td>Pop-up</td>
+			<td>2<sup>N</sup>, where N in the range of 1 to 16</td>
+			<td>The CSSCK field selects the scaler value for the PCS to SCK delay. This field is 
+				only used in master mode. *
+			</td>
+		</tr>
+		<tr>
+			<td>After SCK delay Scaler (ASC)</td>
+			<td>Pop-up</td>
+			<td>2<sup>N</sup>, where N in the range of 1 to 16</td>
+			<td>The ASC field selects the scaler value for the After SCK Delay. This field is only 
+				used in master mode. *
+			</td>
+		</tr>
+		<tr>
+			<td>Delay after Transfer Scaler (DT)</td>
+			<td>Pop-up</td>
+			<td>2<sup>N</sup>, where N in the range of 1 to 16</td>
+			<td>The DT field selects the Delay after Transfer Scaler. This field is only used in master mode. *</td>
+		</tr>
+		<tr>
+			<td>Baud Rate Scaler (BR)</td>
+			<td>Pop-up</td>
+			<td>2<sup>N</sup>, where N in the range of 1 to 16</td>
+			<td>The BR field selects the scaler value for the baud rate. This field is only used in master mode. *</td>
+		</tr>
+	</tbody>
+	</table>
+	<div>* Read Hardware Manual documentation to get more information.</div>
+	<img vspace="15" src="DSPI_Config_files/image_param_2.jpg">
+	<ul>
+		<a name="ChipSelect_tab">	
+			<li>The Chip Select State tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="180">Names</td>
+			<th width="120">Selection Types</td>
+			<th width="120">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Chip Select Inactive State <i>n</i><br>
+				<i>n</i> if 0 <i>n</i> 7
+			</td>
+			<td>Pop-up</td>
+			<td>Low<br>High</td>
+			<td></td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="DSPI_Config_files/image_param_3.jpg">
+	<h3>Block Dependency</h3>
+	<div>None</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

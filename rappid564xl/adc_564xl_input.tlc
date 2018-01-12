@@ -1,0 +1,71 @@
+%implements adc_564xl_input "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %if !EXISTS("ADC_564xL_INCLUDED")
+    %assign ::ADC_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"adc_564xl_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+ %assign chanNum		= CAST("Number", Parameter[0].Value[0])
+ %assign adcNum		= CAST("Number", Parameter[1].Value[0])
+ %assign adcMode  	= CAST("Number", Parameter[2].Value[0])
+ %assign adcSimulate = CAST("Number", Parameter[3].Value[0])
+ %assign adcISR 		= CAST("Number", Parameter[4].Value[0])
+ %assign adcPresample	= CAST("Number", Parameter[5].Value[0])
+ 
+ %assign adcNum = adcNum - 1
+
+ adc_pin_init( %<adcNum>, %<chanNum>);
+ adc_channelmode_setup( %<adcNum>, %<chanNum>, %<adcMode>);
+ adc_presample( %<adcNum>, %<chanNum>, %<adcPresample>);
+ %if (adcISR == 1)
+	adc_interrupt_set_channel( %<adcNum>, %<chanNum>);
+ %endif
+%endif 
+
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+ %assign chanNum  = CAST("Number",Parameter[0].Value[0])
+ %assign adcNum	  = CAST("Number",Parameter[1].Value[0])
+ 
+ %assign adcNum = adcNum - 1
+
+ /* ADC Data Input ADC_%<adcNum> Channel %<chanNum>  */ 
+ %<LibBlockOutputSignal(0,"","",0)> = adc_read_chan( %<adcNum>, %<chanNum> );
+ 
+%else
+ %assign adcSimulate = CAST("Number", Parameter[3].Value[0])
+ %if adcSimulate != 0
+    %<LibBlockOutputSignal(0,"","",0)> = (uint16_T)%<LibBlockInputSignal(0, "", "", 0)>;
+ %endif
+
+%endif 
+
+%endfunction

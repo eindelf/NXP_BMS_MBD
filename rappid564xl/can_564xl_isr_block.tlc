@@ -1,0 +1,128 @@
+%implements can_564xl_isr_block "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign can_unit 	=  CAST("Number",Parameter[0].Value[0])
+  
+  %if !EXISTS("FLEXCAN_564xL_INCLUDED")
+    %assign ::FLEXCAN_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"flexcan_564xl_library.h\"" + "\n")>
+  %endif 
+%endif 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign canNum 	=  CAST("Number",Parameter[0].Value[0])
+  %assign canIsrPrio=  CAST("Number",Parameter[1].Value[0])
+  %assign canMode	=  CAST("Number",Parameter[2].Value[0])
+  %assign canTxWrn  =  CAST("Number",Parameter[3].Value[0])
+  %assign canRxWrn  =  CAST("Number",Parameter[3].Value[1])
+  
+  %assign canNum = %<canNum> - 1
+  
+  %assign name = "no"
+  
+
+  %%setup CTR and MCR registers
+  %if (canMode == 0) %%Erros
+	CAN_%<canNum>.CTRL.B.ERR_MSK = 1;
+	%assign name = "can%<canNum>_isr_errors"
+  %endif
+  %if (canMode == 1) %% Warnings
+	CAN_%<canNum>.MCR.B.WRN_EN = 1;
+	%if (canTxWrn == 1)
+		CAN_%<canNum>.CTRL.B.TWRN_MSK = 1;
+	%endif
+	%if (canRxWrn == 1)
+		CAN_%<canNum>.CTRL.B.RWRN_MSK = 1;
+	%endif
+	%assign name = "can%<canNum>_isr_warnings"
+  %endif
+  
+  %if (FEVAL("strcmp",name,"no"))
+	%%endfunction
+  %endif
+  
+  
+  %%Create ISR Routine
+	%openfile isr_h = "%<name>.h"
+		#include "%<CompiledModel.Name + ".h">"
+		#include "%<CompiledModel.Name + "_private.h">"
+
+		extern void %<name>(void);
+
+	%closefile isr_h
+	
+	
+	%%ISR Body
+  
+	%openfile fname = "%<name>.c"
+		#include "%<CompiledModel.Name + ".h">"
+		#include "%<CompiledModel.Name + "_private.h">"
+		void %<name>(void)
+		{
+			%<LibBlockOutputSignal(1, "", "", 0)> = CAN_%<canNum>.ESR.R;
+			
+			%foreach fcnCallIdx = NumSFcnSysOutputCalls
+			%% call the downstream system
+			%with SFcnSystemOutputCall[fcnCallIdx]
+			%% skip unconnected function call outputs
+			%if ISEQUAL(BlockToCall, "unconnected")
+				%continue
+			%endif
+			%assign sysIdx = BlockToCall[0]
+			%assign blkIdx = BlockToCall[1]
+			%assign ssBlock = System[sysIdx].Block[blkIdx]
+			%<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+				ParamSettings.SampleTimesToSet[0][1])>\
+			%endwith
+			%endforeach
+		
+			%%clear ISR flags
+			
+			%if (canMode == 0) %%Erros
+				CAN_%<canNum>.ESR.B.ERR_INT = 1;
+			%endif
+			%if (canMode == 1) %% Warnings
+				%if (canTxWrn == 1)
+					CAN_%<canNum>.ESR.B.TWRN_INT = 1;
+				%endif
+				%if (canRxWrn == 1)
+					CAN_%<canNum>.ESR.B.RWRN_INT = 1;
+				%endif
+			%endif
+		}
+		%closefile fname
+%endif 
+	
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+;

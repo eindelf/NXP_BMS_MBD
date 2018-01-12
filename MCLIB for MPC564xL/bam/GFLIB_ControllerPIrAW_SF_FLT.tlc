@@ -1,0 +1,57 @@
+
+%implements GFLIB_ControllerPIrAW_SF_FLT "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+   %if !EXISTS("GFLIB_INCLUDED")
+      %assign ::GFLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gflib.h\"" + "\n")>
+   %endif 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+   %assign s32CC1        = CAST("Real32",Parameter[0].Value[0])
+   %assign s32CC2        = CAST("Real32",Parameter[1].Value[0])
+   %assign s32UpperLimit = CAST("Real32",Parameter[2].Value[0])
+   %assign s32LowerLimit = CAST("Real32",Parameter[3].Value[0])
+
+   %assign x = LibBlockInputSignal(0, "", "", 0)
+   %assign x1 = LibBlockInputSignal(1, "", "", 0)
+   %assign x2 = LibBlockInputSignal(2, "", "", 0)
+   %assign y = LibBlockOutputSignal(0, "", "", 0)
+   %assign y1 = LibBlockOutputSignal(1, "", "", 0)
+   %assign y2 = LibBlockOutputSignal(2, "", "", 0)
+  
+   {  
+	 static GFLIB_CONTROLLER_PIAW_R_T param = { %<s32CC1>, %<s32CC2>, 0, 0, %<s32UpperLimit>, %<s32LowerLimit> };
+	 param.s32Acc = %<x1>;
+	 param.s32InErrK1 = %<x2>;
+     %<y> = GFLIB_ControllerPIrAW (%<x>,&param);
+	 %<y1> = param.s32Acc;
+	 %<y2> = param.s32InErrK1;
+   }
+
+%endfunction

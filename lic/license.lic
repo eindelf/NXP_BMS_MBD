@@ -1,0 +1,10 @@
+#Motor Control Toolbox for MATLAB/Simulink MBD - Motor Control Toolbox for
+#MATLAB/Simulink MBD supporting MPC564xL for Eugene Kim Software Account
+# License for DISK_SERIAL_NUM=EC6AA5E0
+INCREMENT MC_Toolbox_564xL freescale 1.00 permanent uncounted \
+	VENDOR_STRING="Motor Control Toolbox for MATLAB/Simulink MBD \
+	supporting MPC564xL" HOSTID=DISK_SERIAL_NUM=ec6aa5e0 \
+	ISSUER="Freescale Semiconductor" ISSUED=27-jul-2017 ck=220 \
+	SN="FSL - 20442947" TS_OK SIGN="1AFC EE85 E288 40C1 F9F6 558C \
+	2570 5DD8 3BCA 5D6D 1D89 AF06 77C0 092C A794 12EF FD11 061B \
+	5D75 404D D275 05F0 3D27 F4B5 CF6A AAB4 BE38 146C FC94 FD84"

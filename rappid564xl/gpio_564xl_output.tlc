@@ -1,0 +1,66 @@
+%%
+%% Abstract:
+%%   Block target file for GPIO block
+%%
+%% Copyright Freescale Semiconductor Inc
+%% 2006 All Rights Reserved 
+%%
+%% $Log: GPIO_564xL_output.tlc,v $
+%% Revision 1.1  2010/10/28 22:03:35  r61406
+%% Issue:10000
+%% Create Code Base for RAppID Toolbox Lite
+%%
+%% Revision 1.7  2006/07/20 20:52:46  r61406
+%% PWM:Update with copyright notice and Log Tag.
+%%
+%%
+
+%implements gpio_564xl_output "C"
+
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %if !EXISTS("GPIO_564xL_INCLUDED")
+      %assign ::GPIO_564xL_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gpio_564xl_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %assign pcrNum	= CAST("Number",Parameter[0].Value[0])
+   /* Initialize Pad Configuration Register %<pcrNum> as Output */ 
+   gpo_init_pcr_out_564xl_fnc( %<pcrNum> ); 
+%endif
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %assign pcrNum	= CAST("Number",Parameter[0].Value[0])
+   /* Pin Data Output Signal Update PCR[%<pcrNum>]. */
+   gpo_pin_update_564xl_fnc(%<pcrNum>, %<LibBlockInputSignal(0, "", "", 0)>);   /* GPO Pin Data Output Register Update */
+%endif
+
+%endfunction

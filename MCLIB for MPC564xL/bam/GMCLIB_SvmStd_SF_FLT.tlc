@@ -1,0 +1,61 @@
+
+%implements GMCLIB_SvmStd_SF_FLT "C"
+
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+   %if !EXISTS("GFLIB_INCLUDED")
+      %assign ::GFLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gflib.h\"" + "\n")>
+   %endif 
+   %if !EXISTS("GMCLIB_INCLUDED")
+      %assign ::GMCLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gmclib.h\"" + "\n")>
+   %endif 
+
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+  %assign alpha  = LibBlockInputSignal(0, "", "", 0)
+  %assign beta   = LibBlockInputSignal(1, "", "", 0)
+  %assign out1   = LibBlockOutputSignal(0, "", "", 0)
+  %assign out2   = LibBlockOutputSignal(1, "", "", 0)
+  %assign out3   = LibBlockOutputSignal(2, "", "", 0)
+  %assign sector = LibBlockOutputSignal(3, "", "", 0)
+  
+  {  
+    SWLIBS_3Syst Out;
+	SWLIBS_2Syst In;
+	
+	In.s32Arg1 = %<alpha>;
+	In.s32Arg2 = %<beta>; 
+	
+    %<sector> = GMCLIB_SvmStd (&Out, &In);
+	%<out1> = Out.s32Arg1;
+	%<out2> = Out.s32Arg2;
+	%<out3> = Out.s32Arg3;
+  }
+
+%endfunction

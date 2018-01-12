@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>Memory Write Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">Memory Write Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">The main functionality of the block is to write data at memory location specified by the base address and the offset value. That is reading data at memory location (Base Address + Offest.)
+    This block writes 32bit data at a time for the specified memory location. Therefore the address must be within the 32bit boundary. </div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="Memory_Write_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>A 32bit Data at the specified 32bit memory location to write to.</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="240">Names</td>
+			<th width="120">Selection Types</td>
+			<th width="100">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Enter base Address</td>
+			<td>Text-box</td>
+			<td>32bit Hex value</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Enter Offset from the base address</td>
+			<td>Text-box</td>
+			<td>32bit Hex value</td>
+			<td></td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Memory_Write_files/image_param.jpg">
+	<h3>Block Dependency</h3>
+	<div>None</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>The block requires that the memory address (base address + offset) must be within 32bit boundary.</div>
+</body>
+</html>

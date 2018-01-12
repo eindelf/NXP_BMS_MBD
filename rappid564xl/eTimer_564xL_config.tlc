@@ -1,0 +1,102 @@
+%%
+%% Abstract:
+%%
+%% Copyright Freescale Semiconductor Inc
+%% 2006 All Rights Reserved 
+%%
+%% $Log: eTimer_564xL_config.tlc,v $
+%% Revision 1.1  2010/10/28 22:03:35  r61406
+%% Issue:10000
+%% Create Code Base for RAppID Toolbox Lite
+%%
+%% Revision 1.7  2006/07/20 20:52:46  r61406
+%% PWM:Update with copyright notice and Log Tag.
+%%
+%%
+
+%implements eTimer_564xL_config "C"
+
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %if !EXISTS("ETIMER_564xL_INCLUDED")
+      %assign ::ETIMER_564xL_INCLUDED = 1
+      %<LibCacheIncludes("#include \"eTimer_564xL_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %assign subMod     = CAST("Number",Parameter[0].Value[0])
+   %assign channel    = CAST("Number",Parameter[1].Value[0])
+   %assign pcrNum0    = CAST("Number",Parameter[2].Value[0])
+   %assign pcrNum1    = CAST("Number",Parameter[3].Value[0])
+   %assign pcrNum2    = CAST("Number",Parameter[4].Value[0])
+   %assign pcrNum3    = CAST("Number",Parameter[5].Value[0])
+   %assign pcrNum4    = CAST("Number",Parameter[6].Value[0])
+   %assign pcrNum5    = CAST("Number",Parameter[7].Value[0])
+   %assign CNTMODE    = CAST("Number",Parameter[8].Value[0])
+   %assign OUTMODE    = CAST("Number",Parameter[9].Value[0])
+   %assign ONCE       = CAST("Number",Parameter[10].Value[0])
+   %assign LENGTH     = CAST("Number",Parameter[11].Value[0])
+   %assign DIR        = CAST("Number",Parameter[12].Value[0])
+   %assign OEN        = CAST("Number",Parameter[13].Value[0])
+   %assign COINIT     = CAST("Number",Parameter[14].Value[0])
+   %assign STPEN      = CAST("Number",Parameter[15].Value[0])
+   %assign ROC        = CAST("Number",Parameter[16].Value[0])
+   %assign PRISRC     = CAST("Number",Parameter[17].Value[0])
+   %assign SECSRC     = CAST("Number",Parameter[18].Value[0])
+   %assign PIPS       = CAST("Number",Parameter[19].Value[0])
+   %assign SIPS       = CAST("Number",Parameter[20].Value[0])
+   %assign OPS        = CAST("Number",Parameter[21].Value[0])
+   %assign MSTR       = CAST("Number",Parameter[22].Value[0])
+   %assign VAL        = CAST("Number",Parameter[23].Value[0])
+   %assign COFRC      = CAST("Number",Parameter[24].Value[0])
+   %assign CLC1       = CAST("Number",Parameter[25].Value[0])
+   %assign CLC2       = CAST("Number",Parameter[26].Value[0])
+   %assign CMPMODE    = CAST("Number",Parameter[27].Value[0])
+   %assign CPT1MODE   = CAST("Number",Parameter[28].Value[0])
+   %assign CPT2MODE   = CAST("Number",Parameter[29].Value[0])
+   %assign ONESHOT    = CAST("Number",Parameter[30].Value[0])
+   %assign CFWM       = CAST("Number",Parameter[31].Value[0])
+   %assign CNTRinit   = CAST("Number",Parameter[32].Value[0])
+   %assign COMP1init  = CAST("Number",Parameter[33].Value[0])
+   %assign COMP2init  = CAST("Number",Parameter[34].Value[0])
+   %assign FILT       = CAST("Number",Parameter[35].Value[0])
+   %assign INTDMA     = CAST("Number",Parameter[36].Value[0])
+    
+   etimer_init_pcr_in_out_564xL(%<subMod>,0,%<pcrNum0>);
+   etimer_init_pcr_in_out_564xL(%<subMod>,1,%<pcrNum1>);
+   etimer_init_pcr_in_out_564xL(%<subMod>,2,%<pcrNum2>);
+   etimer_init_pcr_in_out_564xL(%<subMod>,3,%<pcrNum3>);
+   etimer_init_pcr_in_out_564xL(%<subMod>,4,%<pcrNum4>);
+   etimer_init_pcr_in_out_564xL(%<subMod>,5,%<pcrNum5>);
+   
+   etimer_init_564xL (%<subMod>,%<channel>,%<CNTMODE>,%<OUTMODE>,%<ONCE>,%<LENGTH>,%<DIR>,%<OEN>,%<COINIT>,%<STPEN>,%<ROC>,%<PRISRC>,%<SECSRC>,%<PIPS>,%<SIPS>,%<OPS>,%<MSTR>,%<VAL>,%<COFRC>,%<CLC1>,%<CLC2>,%<CMPMODE>,%<CPT1MODE>,%<CPT2MODE>,%<ONESHOT>,%<CFWM>,%<CNTRinit>,%<COMP1init>,%<COMP2init>,%<FILT>,%<INTDMA>);
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction

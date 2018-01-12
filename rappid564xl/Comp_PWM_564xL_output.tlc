@@ -1,0 +1,131 @@
+%%
+%% Abstract:
+%%
+%% Copyright Freescale Semiconductor Inc
+%% 2006 All Rights Reserved 
+%%
+%% $Log: Comp_FlexPWM_564xL_output.tlc,v $
+%% Revision 1.1  2010/10/28 22:03:35  r61406
+%% Issue:10000
+%% Create Code Base for RAppID Toolbox Lite
+%%
+%% Revision 1.7  2006/07/20 20:52:46  r61406
+%% PWM:Update with copyright notice and Log Tag.
+%%
+%%
+
+%implements Comp_PWM_564xL_output "C"
+
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %if !EXISTS("FlexPWM_564xL_INCLUDED")
+      %assign ::FlexPWM_564xL_INCLUDED = 1
+      %<LibCacheIncludes("#include \"FlexPWM_564xL_library.h\"" + "\n")>
+   %endif 
+   %if !EXISTS("FlexPWMinit_INCLUDED")
+      %assign ::FlexPWMinit_INCLUDED = 1
+      %<LibCacheIncludes("#include \"flexpwm_init.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %assign pwm_mod  = CAST("Number",Parameter[0].Value[0])
+   %assign subMod   = CAST("Number",Parameter[1].Value[0])
+   %assign freqInit	= CAST("Number",Parameter[2].Value[0])
+   %assign dutyInit	= CAST("Number",Parameter[3].Value[0])
+   %assign deadTimeInit	= CAST("Number",Parameter[4].Value[0])
+   %assign pcrNumA 	= CAST("Number",Parameter[5].Value[0])
+   %assign pcrNumB 	= CAST("Number",Parameter[6].Value[0])
+   %assign pwm45en 	= CAST("Number",Parameter[7].Value[0])
+   %assign outTrig 	= CAST("Number",Parameter[9].Value[0])
+   %assign masterSync	= CAST("Number",Parameter[10].Value[0])
+   %assign deadtime_mks = CAST("Number",Parameter[12].Value[0])
+   %assign octrl    = CAST("Number",Parameter[13].Value[0])
+   %assign resolution   = CAST("Number",Parameter[14].Value[0])
+   %assign MC_freq = FEVAL("rappid_564xl_get_MC_clock")
+
+
+   %if (subMod == 0)
+     %assign masterSync	= 0
+   %endif
+
+   %if (deadtime_mks != 0)
+     %assign deadTime = %<deadTimeInit>*%<MC_freq>/1000000
+   %else
+     %assign deadTime = %<deadTimeInit>
+   %endif
+
+   %if (pwm45en == 0)
+     %assign dutyInitB	= 0
+   %else
+     %assign dutyInitB	= CAST("Number",Parameter[8].Value[0])
+   %endif
+   
+  /* Initialize Pad Configuration Registers PAn & PBn as Output */ 
+   pwm_init_pcr_out_564xL(%<pwm_mod>,%<subMod>,0,%<pcrNumA>); 
+   pwm_init_pcr_out_564xL(%<pwm_mod>,%<subMod>,1,%<pcrNumB>);   
+  
+   /* Initialize PWM Submodule %<subMod> to correct dutycycle and frequency */
+   pwm_init_564xL_comp(%<pwm_mod>,%<subMod>, %<freqInit>, %<resolution>, %<dutyInit>, %<deadTime>, %<outTrig>, %<masterSync>, %<pwm45en>, %<dutyInitB>, %<octrl>);
+   
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%assign resolution   = CAST("Number",Parameter[14].Value[0])
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %assign pwm_mod  = CAST("Number",Parameter[0].Value[0])
+   %assign subMod   = CAST("Number",Parameter[1].Value[0])
+   %assign pwm45en  = CAST("Number",Parameter[7].Value[0])
+   %assign deadtime_mks = CAST("Number",Parameter[12].Value[0])
+
+   %assign MC_freq = FEVAL("rappid_564xl_get_MC_clock")
+   %assign factor_deadTime = %<MC_freq>/1000000
+
+
+   /* Complimentary PWM Outputs with Deadtime update: Module, Sub Module, Frequency, Resolution, DutyCycle, PWMH Dead time, PWML Dead time */
+   %if (deadtime_mks != 0)
+    %if (pwm45en == 0)
+        pwm_update_564xL_comp(%<pwm_mod>,%<subMod>, %<LibBlockInputSignal(0, "", "", 0)>, %<resolution>, %<LibBlockInputSignal(1, "", "", 0)>, %<LibBlockInputSignal(2, "", "", 0)>*%<factor_deadTime>, %<LibBlockInputSignal(3, "", "", 0)>*%<factor_deadTime>);   
+    %else
+        pwm_update_564xL_comp2(%<pwm_mod>,%<subMod>, %<LibBlockInputSignal(0, "", "", 0)>, %<resolution>, %<LibBlockInputSignal(1, "", "", 0)>, %<LibBlockInputSignal(4, "", "", 0)>, %<LibBlockInputSignal(2, "", "", 0)>*%<factor_deadTime>, %<LibBlockInputSignal(3, "", "", 0)>*%<factor_deadTime>);   
+    %endif
+   %else
+    %if (pwm45en == 0)
+        pwm_update_564xL_comp(%<pwm_mod>,%<subMod>, %<LibBlockInputSignal(0, "", "", 0)>, %<resolution>, %<LibBlockInputSignal(1, "", "", 0)>, %<LibBlockInputSignal(2, "", "", 0)>, %<LibBlockInputSignal(3, "", "", 0)>);   
+    %else
+        pwm_update_564xL_comp2(%<pwm_mod>,%<subMod>, %<LibBlockInputSignal(0, "", "", 0)>, %<resolution>, %<LibBlockInputSignal(1, "", "", 0)>, %<LibBlockInputSignal(4, "", "", 0)>, %<LibBlockInputSignal(2, "", "", 0)>, %<LibBlockInputSignal(3, "", "", 0)>);   
+    %endif
+   %endif
+   
+%endif 
+
+   %assign debug_mod =  CAST("Number",Parameter[11].Value[0])
+   %if (debug_mod != 0)
+        %<LibBlockOutputSignal(0, "", "", 0)> = (real_T)%<LibBlockInputSignal(1, "", "", 0)>/(100.0*%<resolution>);
+   %endif
+%endfunction

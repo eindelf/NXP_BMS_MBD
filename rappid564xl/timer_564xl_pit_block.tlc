@@ -1,0 +1,101 @@
+%%
+%% Abstract:
+%%   Block target file for malfunction
+%%
+%% Copyright Freescale Semiconductor Inc
+%% 2006 All Rights Reserved 
+%%
+%% $Log: timer_560xp_pit_block.tlc,v $
+%% Revision 1.1  2010/10/28 22:03:43  r61406
+%% Issue:10000
+%% Create Code Base for RAppID Toolbox Lite
+%%
+%% Revision 1.7  2006/07/20 20:52:46  r61406
+%% PWM:Update with copyright notice and Log Tag.
+%%
+%%
+
+%implements timer_564xl_pit_block "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign pitChan =  CAST("Number",Parameter[0].Value[0])
+  %assign pitChanTimeOut =  CAST("Number",Parameter[1].Value[0])
+  %assign pitFunction = FEVAL("rappid_564xl_pit_channel_isr",pitChan) 
+
+  %<LibCacheIncludes("#include \"pit_ch%<pitChan>_isr.h\"" + "\n")>
+  %if !EXISTS("PIT_TIMER_564xL_INCLUDED")
+    %assign ::PIT_TIMER_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"pit_timer_564xl_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign pitChan =  CAST("Number",Parameter[0].Value[0])
+  %assign pitChanTimeOut =  CAST("Number",Parameter[1].Value[0])
+   
+  pit_timer_init_564xl(%<pitChan>,%<pitChanTimeOut>); 
+
+%openfile isr_c = "pit_ch%<pitChan>_isr.c"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+void PIT_Ch%<pitChan>_ISR(void)
+{
+     
+%foreach fcnCallIdx = NumSFcnSysOutputCalls
+%% call the downstream system
+  %with SFcnSystemOutputCall[fcnCallIdx]
+%% skip unconnected function call outputs
+    %if ISEQUAL(BlockToCall, "unconnected")
+      %continue
+    %endif
+    %assign sysIdx = BlockToCall[0]
+    %assign blkIdx = BlockToCall[1]
+    %assign ssBlock = System[sysIdx].Block[blkIdx]
+    %<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+         ParamSettings.SampleTimesToSet[0][1])>\
+  %endwith
+%endforeach
+
+      PIT.CH[%<pitChan>].TFLG.B.TIF = 1 ; /* Clear PIT Timer Interrupt Acknoledgement Flag */
+}
+
+%closefile isr_c
+
+%openfile isr_h = "pit_ch%<pitChan>_isr.h"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+extern void PIT_Ch%<pitChan>_ISR(void);
+
+%closefile isr_h
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+      
+%endfunction

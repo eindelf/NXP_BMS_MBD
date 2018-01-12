@@ -1,0 +1,56 @@
+*****************************************************************************
+Freescale RAppID MBD Toolbox for MPC564xL v.1.1
+Example model readme file
+
+Freescale(TM) and the Freescale logo are trademarks of Freescale Semiconductor, Inc. 
+All other product or service names are the property of their respective owners. 
+(C) Freescale Semiconductor, Inc. 2012
+************************************************************
+
+
+Models:
+======
+sim_pil_test.mdl - test harness model for PIL simulation
+sim_acc_test.mdl - test harness model for Accelerator mode simulation
+sim_sil_test.mdl - test harness model for SIL simulation
+
+sim_pil_acc_target.mdl   - referenced model for PIL and Accelerator mode simulation
+sim_pil_target_block.mdl - PIL model block
+sim_sil_target.mdl       - referenced model for SIL and Accelerator mode simulation
+sim_sil_target_block.mdl - SIL model block
+
+Hardware:
+========
+MPC5643L EVB 
+
+
+Setup:
+=====
+Connect serial interface cable to the board.
+
+Open RAppID_564xL_Config block parameters window of sim_pil_acc_target.mdl model and set COM port number. 
+
+Open RAppID_564xL_Config block parameters window of sim_pil_target_block.mdl model and set COM port number. 
+
+
+Description:
+==========
+The models test for PIL simulation for top model and for PIL block.
+
+For top model PIL simulation open sim_pil_test.mdl model and select "Start simulation". 
+For top model Accelerator mode simulation open sim_acc_test.mdl model and select "Start simulation". 
+For top model SIL simulation open sim_sil_test.mdl model and select "Start simulation". 
+
+For PIL block simulation open sim_pil_target_block.mdl model and select "Build Subsystem" for "PIL_block" block. 
+After PIL block is generated open sim_pil_test.mdl block, remove "Model" block and insert generated PIL block instead. 
+Then select "Start simulation". 
+
+For SIL block simulation open sim_sil_target_block.mdl model and select "Build Subsystem" for "SIL_block" block. 
+After SIL block is generated open sim_sil_test.mdl block, remove "Model" block and insert generated SIL block instead. 
+Then select "Start simulation". 
+
+
+Miscellaneous details:
+=====================
+Matlab R2009a and earlier does not support PIL and SIL block simulation.
+

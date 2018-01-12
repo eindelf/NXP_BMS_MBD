@@ -1,0 +1,77 @@
+%implements dspi_564xl_disable_isr "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+%assign dspiNum  = CAST("Number",Parameter[0].Value[0])
+%assign flag     = CAST("Number",Parameter[0].Value[1])
+
+
+{
+	uint32_t isr_flag_set = 0U;
+	uint32_t isr_flag_clr = 0U;
+%if (FEVAL("bitand", flag, 1))
+	isr_flag_set |= DSPI_ISR_TFUF_RE;
+%else
+	isr_flag_clr |= DSPI_ISR_TFUF_RE;
+%endif
+%if (FEVAL("bitand", flag, 2))
+	isr_flag_set |= DSPI_ISR_RFOF_RE;
+%else
+	isr_flag_clr |= DSPI_ISR_RFOF_RE;
+%endif
+%if (FEVAL("bitand", flag, 4))
+	isr_flag_set |= DSPI_ISR_EOQF_RE;
+%else
+	isr_flag_clr |= DSPI_ISR_EOQF_RE;
+%endif
+%if (FEVAL("bitand", flag, 8))
+	isr_flag_set |= DSPI_ISR_TFFF_RE;
+%else
+	isr_flag_clr |= DSPI_ISR_TFFF_RE;
+%endif
+%if (FEVAL("bitand", flag, 16))
+	isr_flag_set |= DSPI_ISR_TCF_RE;
+%else
+	isr_flag_clr |= DSPI_ISR_TCF_RE;
+%endif
+%if (FEVAL("bitand", flag, 32))
+	isr_flag_set |= DSPI_ISR_RFDF_RE;
+%else
+	isr_flag_clr |= DSPI_ISR_RFDF_RE;
+%endif
+	
+	dspi_564xl_interrupt_set(%<dspiNum>, isr_flag_set);
+	dspi_564xl_interrupt_clr(%<dspiNum>, isr_flag_clr);
+}
+%endif
+%endfunction
+;

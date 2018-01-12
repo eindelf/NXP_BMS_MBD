@@ -1,0 +1,52 @@
+%%
+%% Abstract: ccp_564xl_daq_fcn
+%%
+%% Copyright 2010 
+%% Freescale Semiconductor Inc
+%% All Rights Reserved 
+%%
+%%
+%%
+%%
+%implements ccp_564xl_daq_fcn "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+%%  %<LibBlockSetIsExpressionCompliant(block)>
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+ %if !EXISTS("RAPPID_CCP_DAQ_SETUP")
+  %assign ::RAPPID_CCP_DAQ_SETUP = 1
+ %endif
+ 
+ #include "ccp_init.h"
+ 
+%endif
+ 
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%function Start(block, system) Output
+
+
+%endfunction
+%% Start
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+%assign indexVal = CAST("Number",Parameter[0].Value[0])
+%assign indexVal = indexVal-1
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+	ccpDaq(%<indexVal>);
+%endif
+%endfunction

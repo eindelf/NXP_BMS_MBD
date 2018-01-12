@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>FlexCAN Configuration Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">FlexCAN Configuration Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">The main functionality of the block is to configure FlexCAN module.</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="CAN_config_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<div class="shifted">The block dialog consists of the following tabs:</div>
+	<ul class="shifted">
+		<li><a href="#MCR_tab">MCR</a></li>
+		<li><a href="#CTRL_tab">CTRL</a></li>
+	</ul>
+	<ul>
+		<a name="MCR_tab">	
+			<li>The MCR tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="100">Names</td>
+			<th width="110">Selection Types</td>
+			<th width="100">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>CAN Bus </td>
+			<td>Pop-up</td>
+			<td>0 or 1</td>
+			<td>Select the CAN Bus name</td>
+		</tr>
+		<tr>
+			<td>ID Acceptance Mode</td>
+			<td>Pop-up</td>
+			<td>A, B, C or D</td>
+			<td>A &ndash; One full ID (standard or extended) per filter element.<br>
+				B &ndash; Two full standard IDs or two partial 14-bit extended IDs per filter element.<br>
+				C &ndash; Four partial 8-bit IDs (standard or extended) per filter element.<br>
+				D &ndash; All frames rejected.
+			</td>
+		</tr>
+		<tr>
+			<td>Self Reception Disable</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 1</td>
+			<td>0 &ndash; Self reception enabled<br>
+				1 &ndash; Self reception disabled
+			</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="CAN_config_files/image_param_1.jpg">
+	<ul>
+		<a name="CTRL_tab">	
+			<li>The CTRL tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="90">Names</td>
+			<th width="90">Selection Types</td>
+			<th width="140">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Prescaler Divider (0-255)</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 255</td>
+			<td>This 8-bit field defines the ratio between the CPI clock frequency and the Serial Clock (Sclock) 
+				frequency. The Sclock period defines the time quantum of the CAN protocol. For the reset value, the 
+				Sclock frequency is equal to the CPI clock frequency. The Maximum value of this register is 0xFF, 
+				that gives a minimum Sclock frequency equal to the CPI clock frequency divided by 256
+			</td>
+		</tr>
+		<tr>
+			<td>Resync Jump Width</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 3</td>
+			<td>This 2-bit field defines the maximum number of time quanta1 that a bit time can be changed by one 
+				re-synchronization
+			</td>
+		</tr>
+		<tr>
+			<td>Phase Segment 1</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 7</td>
+			<td>This 3-bit field defines the length of Phase Buffer Segment 1 in the bit time. The valid programmable 
+				values are 0–7.
+			</td>
+		</tr>
+		<tr>
+			<td>Phase Segment 2</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 7</td>
+			<td>This 3-bit field defines the length of Phase Buffer Segment 2 in the bit time. The valid programmable 
+				values are 0–7.
+			</td>
+		</tr>
+		<tr>
+			<td>CAN Engine Clock Source</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; The CAN Engine Clock Source is the oscillator clock<br>
+				1 &ndash; The CAN Engine Clock Source is the bus clock
+			</td>
+			<td>This bit selects the clock source to the CAN Protocol Interface (CPI) to be either the peripheral 
+				clock (driven by the FMPLL) or the crystal oscillator clock. The selected clock is the one fed to 
+				the prescaler to generate the Serial Clock (Sclock)
+			</td>
+		</tr>
+		<tr>
+			<td>Loop Back</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Loop Back disabled<br>
+				1 &ndash; Loop Back enabled
+			</td>
+			<td>This bit configures FlexCAN to operate in Loop-Back Mode. In this mode, FlexCAN performs an internal 
+				loop back that can be used for self test operation
+			</td>
+		</tr>
+		<tr>
+			<td>Samplig Mode</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; One sample is used to determine the value of the received bit<br>
+				1 &ndash; Three samples are used to determine the value of the received bit
+			</td>
+			<td>This bit defines the sampling mode of CAN bits at the Rx input</td>
+		</tr>
+		<tr>
+			<td>Bus Off Recovery Mode</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Automatic recovery from Bus Off state enabled<br>
+				1 &ndash; Automatic recovery from Bus Off state disabled
+			</td>
+			<td>This bit defines how FlexCAN recovers from Bus Off state</td>
+		</tr>
+		<tr>
+			<td>Timer Sync Mode</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Timer Sync feature disabled<br>
+				1 &ndash; Timer Sync feature enabled
+			</td>
+			<td>This bit enables a mechanism that resets the free-running timer each time a message is 
+				received in Message Buffer 0
+			</td>
+		</tr>
+		<tr>
+			<td>Lowest Buffer Transmitted First</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Buffer with highest priority is transmitted first<br>
+				1 &ndash; Lowest number buffer is transmitted first
+			</td>
+			<td>This bit defines the ordering mechanism for Message Buffer transmission</td>
+		</tr>
+		<tr>
+			<td>Listen-Only Mode</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Listen Only Mode is deactivated<br>
+				1 &ndash; FlexCAN module operates in Listen Only Mode
+			</td>
+			<td>This bit configures FlexCAN to operate in Listen Only Mode. In this mode, transmission is disabled,
+				all error counters are frozen and the module operates in a CAN Error Passive mode
+			</td>
+		</tr>
+		<tr>
+			<td>Propagation Segment</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 7</td>
+			<td>This 3-bit field defines the length of the Propagation Segment in the bit time. The valid programmable
+				values are 0–7.
+			</td>
+		</tr>
+	</tbody>
+	</table>
+	<div>* Read Hardware Manual documentation to get more information.</div>
+	<img vspace="15" src="CAN_config_files/image_param_2.jpg">
+	<h3>Block Dependency</h3>
+	<div>Please do the following:
+		<ol>
+			<li>Configure the FlexCAN module.</li>
+		</ol>
+	</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>FlexCAN module has predefined pin assignment:</br>
+		 <table rules="all" cellpadding="2" cellspacing="2">
+		 <tbody>
+			<tr>
+				<th>FlexCAN Module</td>
+				<th width="180">Tx pin</td>
+				<th width="180">Rx pin</td>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>GPIO[16]</td>
+				<td>GPIO[17]</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>GPIO[14]</td>
+				<td>GPIO[15]</td>
+			</tr>
+		 </tbody>
+		 </table>
+	</div>
+</body>
+</html>

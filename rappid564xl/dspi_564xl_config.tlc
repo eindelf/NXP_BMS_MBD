@@ -1,0 +1,44 @@
+%implements dspi_564xl_config "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %if !EXISTS("DSPI_564xL_INCLUDED")
+    %assign ::DSPI_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"dspi_564xl_library.h\"" + "\n")>
+  %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+ %assign dspi_Num = CAST("Number",Parameter[0].Value[0])
+ %assign dspi_MCR = CAST("Number",Parameter[1].Value[0])
+ %assign dspi_CTAR = CAST("Number",Parameter[2].Value[0])
+
+ dspi_564xl_config( %<dspi_Num>, %<dspi_MCR>, %<dspi_CTAR>);
+%endif 
+
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction

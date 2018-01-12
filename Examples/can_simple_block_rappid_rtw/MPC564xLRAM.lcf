@@ -1,0 +1,107 @@
+/*
+ ******************************************************************************** 
+ *
+ * Detail Description     : 
+ * Scott OBrien 4/29/10   : Leopard LSM File.  Works. Need to match this to GHS.
+ *
+ ******************************************************************************** 
+*/
+
+MEMORY
+{
+    init:                           org=0x40000000, len=0x00000FE0
+    exception_handlers:             org=0x40001000, len=0x00001000
+    vector_table:                   org=0x40002000, len=0x00001000
+    int_flash:                      org=0x40003000, len=0x00007000
+    int_sram:                       org=0x4000A000, len=0x00005800
+    stack_ram:                      org=0x4000F800, len=0x00000800
+}
+
+SECTIONS
+{
+    GROUP : 
+    { 
+      .init : {}
+      .init_vle (VLECODE) LOAD (0x20): 
+      { 
+        *(.init)
+        *(.init_vle)
+      }
+    } > init
+
+    GROUP : 
+    { 
+      .exec_vect  LOAD (0x1000): {}
+      .exec_vect_vle (VLECODE) LOAD (0x1000): {}
+    } > exception_handlers
+
+    GROUP : 
+    { 
+      .ivor4_vector_table LOAD(0x12000): {}
+    } > vector_table
+
+    GROUP : 
+    { 
+      __argv=.;
+      __env=.;
+
+      .text : {}
+      .text_vle (VLECODE): 
+      { 
+        *(.text_vle)
+        *(.text)
+      }
+      .rodata (CONST): 
+      { 
+        *(.rdata)
+        *(.rodata)
+      }
+      .ctors  ALIGN (0x4): { *(.ctors) }
+      .dtors  ALIGN (0x4): { *(.dtors) }
+      extab      : {}
+      extabindex : {}
+      .sdata2 : {}
+      .sbss2 : {} 
+    } > int_flash
+
+    GROUP : 
+    { 
+      __DATA_ROM_ADDR = ADDR(.sbss2) + SIZEOF(.sbss2);
+      __DATA_SRAM_ADDR =.;
+
+      .data : { *(.data) }
+      .j_pdata : { *(.j_pdata) }
+      .sdata : { *(.sdata) }
+      
+      __DATA_END=.;
+      __BSS_START=.;
+
+      .sbss : { *(.sbss) }
+      .bss : { *(.bss) }
+      .tibss : {}
+        
+      __BSS_END=.;
+
+      .tidata : {}
+      
+      __HEAP_START =.;
+    } > int_sram
+}
+
+__DATA_SIZE       = __DATA_END - __DATA_SRAM_ADDR;
+__SP_INIT         = ADDR(stack_ram) + SIZEOF(stack_ram);
+__SP_END          = ADDR(stack_ram);
+_SRAM_BASE_ADDR   = ADDR(int_sram);
+_SRAM_SIZE        = SIZEOF(int_sram) + SIZEOF(stack_ram);
+__BSS_SIZE        = __BSS_END - __BSS_START;
+
+/* I am making this 0 for now */
+__SDATA_SIZE      = 0;
+__SDATA_ROM_ADDR  = _SRAM_BASE_ADDR;
+__SDATA_SRAM_ADDR = _SRAM_BASE_ADDR;
+
+__IVPR_VALUE = ADDR(exception_handlers);
+
+/* FORCEFILES { main.o } */
+
+

@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>ADC Trigger Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">ADC Trigger Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">This block allows get measure in One Shot or Injected Mode. The ADC moved from 
+	   Free Scan to One Shot/Injected mode get conversion and return it back.*</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="adc_trigger_block_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>Function-call</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="120">Names</td>
+			<th width="110">Selection Types</td>
+			<th width="110">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>ADC converter number</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 1</td>
+			<td>ADC module selection.</td>
+		</tr>
+		<tr>
+			<td>Mode</td>
+			<td>Pop-up</td>
+			<td>Normal/Injected</td>
+			<td>Single Shot/Injected mode.</td>
+		</tr>
+	</tbody>
+	</table>
+	<div>* To get more information about different modes of the ADC, refer to Hardware Manual documentation.</div>
+	<img vspace="15" src="adc_trigger_block_files/image_param.jpg">
+	<h3>Block Dependency</h3>
+	<div>Please do the following:
+		<ol>
+			<li>Configure the ADC converter.</li>
+			<li>Put inside user function ADC Channel block in the same mode.</li>
+		</ol>
+	</div>
+	<div><i>Note:</i>
+		<ol>
+			<li>ADC trigger Block and ADC Channel inside the user function should be set in one mode.</li>
+		</ol>
+	</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

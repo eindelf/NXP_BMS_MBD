@@ -1,0 +1,92 @@
+%implements dspi_564xl_receive_trg "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+ 
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+ %assign dspiNum =  CAST("Number",Parameter[0].Value[0])
+ 
+  %<LibCacheIncludes("#include \"dspi%<dspiNum -1>_isr.h\"" + "\n")>
+  
+  %if !EXISTS("DSPI_564xL_INCLUDED")
+    %assign ::ADC_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"dspi_564xl_library.h\"" + "\n")>
+  %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+ 
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign dspiNum =  CAST("Number",Parameter[0].Value[0])
+  %assign dspi_mode = FEVAL("rappid_564xl_dspi_get_mode_txt",dspiNum)
+   
+dspi_564xl_interrupt_set(%<dspiNum-1>,	DSPI_ISR_RFDF_RE); 
+
+
+%openfile isr_c = "dspi%<dspiNum-1>_EOC_isr.c"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+
+void dspi%<dspiNum-1>_isr(void)
+{
+
+%<LibBlockOutputSignal(1,"","",0)> = dspi_564xl_read_%<dspi_mode>( %<dspiNum-1>);
+     
+%foreach fcnCallIdx = NumSFcnSysOutputCalls
+%% call the downstream system
+  %with SFcnSystemOutputCall[fcnCallIdx]
+%% skip unconnected function call outputs
+    %if ISEQUAL(BlockToCall, "unconnected")
+      %continue
+    %endif
+    %assign sysIdx = BlockToCall[0]
+    %assign blkIdx = BlockToCall[1]
+    %assign ssBlock = System[sysIdx].Block[blkIdx]
+    %<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+         ParamSettings.SampleTimesToSet[0][1])>\
+  %endwith
+%endforeach
+
+DSPI_%<dspiNum-1>.SR.B.RFDF = 1; //clear flag
+}
+
+%closefile isr_c
+
+%openfile isr_h = "dspi%<dspiNum-1>_isr.h"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+extern void dspi%<dspiNum-1>_isr(void);
+
+%closefile isr_h
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+;

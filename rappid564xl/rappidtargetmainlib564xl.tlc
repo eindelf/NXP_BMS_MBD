@@ -1,0 +1,2409 @@
+%% Copyright 2011 
+%% Freescale Semiconductor Inc
+%% All Rights Reserved 
+%%
+%%
+%% Abstract:
+%%   Library file to create a sample main for ERT code format
+%%   for a given model.
+%%
+%selectfile NULL_FILE
+
+
+%function SLibRAppIDMain(fName) void
+
+  %assign cFile = SLibAddModelFile("SystemBody","Simulink",fName)
+  %assign period = FcnGetPeriodFromTID(0)
+  %assign globalIntPriority = FEVAL("rappid_564xl_global_intc_pri")
+  
+  %assign fmEnabled = FEVAL("rappid_564xl_fmaster_status")
+  %assign fmInterface = FEVAL("rappid_564xl_fmaster_interface")
+  %assign ccpEnabled = FEVAL("rappid_564xl_ccp_status")
+  %assign ccpInterface = FEVAL("rappid_564xl_ccp_interface")
+  
+  %assign adcBlock = FEVAL("rappid_564xl_adc_block")
+  %assign adcConfig = FEVAL("rappid_564xl_adc_config_block")
+  %assign flexPWMBlock = FEVAL("rappid_564xl_flexpwm_block")
+  %assign ctuBlock = FEVAL("rappid_564xl_ctu_block")
+  %assign pilEnabled = FEVAL("rappid_564xl_pil_status")
+  %if (pilEnabled == 1)
+	%assign sysTickSupress = 1
+  %else	
+    %assign sysTickSupress = FEVAL("rappid_564xl_sys_tick_supress")
+  %endif
+
+
+  %openfile tmpFcnBuf
+  /*
+   * Auto generated simple test main program for model: %<FcnMdlName()>
+   *
+   * Real-Time Workshop file version      : %<Version>
+   * Real-Time Workshop file generated on : %<GeneratedOn>
+   * C source code generated on           : %<TLC_TIME>
+   *
+   *
+   */
+  %closefile tmpFcnBuf
+  
+  %<SLibSetModelFileAttribute(cFile, "Banner", tmpFcnBuf)>
+  
+   %openfile tmpFcnBuf
+   /* Model's headers */
+   #include "%<FcnGetPublicModelHeaderFile()>"	 
+   #include "target.h"
+   #include "sys_init.h"
+
+   %if( FEVAL("strcmp", fmInterface, "Serial") != 0)
+   #include "linflex_init.h"
+   #include "linflex_siu_init.h"
+   #include "freemaster_cfg.h"
+   %endif
+   
+   %if (ccpEnabled == 1)
+   #include "ccp_init.h"
+   %endif
+   
+   %if(adcBlock==1)
+   #include "adc_init.h"
+   #include "adc_trigger_init.h"
+   %if(adcConfig==1)
+	%assign adcNumConf1 = FEVAL("rappid_564xl_adc_config_num","1")
+	%assign adcNumConf2 = FEVAL("rappid_564xl_adc_config_num","2")
+		%if(adcNumConf1)
+			#include<adc0_config.h>
+		%endif
+		%if(adcNumConf2)
+			#include<adc1_config.h>
+		%endif
+   %endif
+   %endif
+   
+   %if(flexPWMBlock==1)
+   #include "flexpwm_init.h"
+   %endif
+
+   %if(ctuBlock==1)
+   #include "CTU_564xL_library.h"
+   %endif
+   
+   %closefile tmpFcnBuf
+         
+   
+  %<SLibSetModelFileAttribute(cFile, "Includes", tmpFcnBuf)>
+  
+    
+    %if(NumContStates>0)
+		%exit Model has continuous sample times which causes FIT base period to be 0
+    		%assign pitChan0Value = "UNKNOWN"
+
+    %else
+	%assign period = FcnGetPeriodFromTID(0)
+	%assign pitChan0Value = FEVAL("rappid_564xl_calculate_pit_period",%<period>)
+    %endif
+	
+    
+    %assign simple_startuphook_exists = FEVAL("rappid_564xl_simple_startuphook_exists","0")
+ 
+    %openfile tmpFcnBuf
+
+
+     extern const vuint32_t ISRVectorTable[];       
+
+     
+     %<FcnGenerateTaskingCode()>\
+
+  
+	void pit_init_fnc(void)
+	{
+	  
+	//PIT.PITMCR.R = 0x00000001;            
+	/* ----------------------------------------------------------- */
+	/*               Configure Load Value Registers                */
+	/* ----------------------------------------------------------- */
+	//    PIT.CH[1].LDVAL.R  =  0x%<pitChan0Value>;    /* The model's base sample time is %<period> seconds. */	    
+	/* ----------------------------------------------------------- */
+	/*                     Enable Interrupts                       */
+	/* ----------------------------------------------------------- */
+	//    PIT.CH[1].TCTRL.R  = 0x00000003;    
+		    PIT.PITMCR.B.MDIS   = 1 ;    
+		        /*Disable PIT for initialization         */
+		/* ----------------------------------------------------------- */
+		/*                     Configure Load Value Registers                */
+		/* ----------------------------------------------------------- */
+		
+		    PIT.CH[0].LDVAL.R  = 0x%<pitChan0Value>;    /* The model's base sample time is %<period> seconds. */	    
+		/* ----------------------------------------------------------- */
+		/*                     Enable Interrupts                  */
+		/* ----------------------------------------------------------- */
+		
+		    PIT.CH[0].TCTRL.B.TIE  = 0x1 ;    
+		/* ----------------------------------------------------------- */
+		/*                   Start Timers                 */
+		/* ----------------------------------------------------------- */
+		
+		    PIT.CH[0].TCTRL.B.TEN = 0x1 ;    
+		        /*Start Timer 0 is : Enabled    */
+		
+		    PIT.PITMCR.B.MDIS = 0 ;    
+		        /*PIT Module : Enabled        */
+	
+	}
+  
+     %if(sysTickSupress==0)
+      void PIT_Ch0_ISR(void)
+	{ 
+	  
+	       /* Attach SYSTEM_TASK to a timer or interrupt service routine with
+	        * period %<period> seconds (the model's base sample time) here.  The
+	        * call syntax for SYSTEM_TASK is  SYSTEM_TASK(); 
+	        */  
+
+	        PIT.CH[0].TFLG.B.TIF = 1 ;
+  		SYSTEM_TASK();
+	}
+     %endif
+
+  
+    void main(void)
+    {
+     /* Shut Down Software Watchdog Timer */
+     /* remove the SWT Soft lock  */
+      SWT.SR.R = 0x0000C520;
+      SWT.SR.R = 0x0000D928;
+     /* Disable SWT  */
+      SWT.CR.B.WEN = 0x0;
+ 
+      sys_init_fnc();           /* Disable Watchdog */
+	  
+	%if(adcBlock == 1)
+		adc_init_fnc();			/* Adc configuration */
+		%if(adcConfig)
+			%if(adcNumConf1)
+			adc0_config();
+			%endif
+			%if(adcNumConf2)
+			adc1_config();
+			%endif
+		%endif
+		adc_normal_start_fnc();
+	%endif
+	
+    %if(flexPWMBlock==1)
+        flexpwm_init_fnc();   /* General FlexPWM initialization */ 
+    %endif
+    %if(ctuBlock==1)
+        ctu_disable_isr_564xL();
+    %endif
+    %if( FEVAL("strcmp", fmInterface, "Serial") != 0)
+       linflex_init_fnc();
+       linflex_siu_init();
+    %endif
+
+    %if( FEVAL("strcmp", fmInterface, "CAN") != 0 || FEVAL("strcmp", ccpInterface, "CAN"))
+       flexcan_init_fnc();
+    %endif
+
+    %if(fmEnabled == 1)
+       FMSTR_Init();
+    %endif
+	
+	%if (ccpEnabled == 1)
+		InitCCP_Comm();
+		ccpInit();
+	%endif
+
+
+	  
+      SYSTEM_INIT_TASK();   	/* Initialize the processor. */   
+	  
+	
+      pit_init_fnc();		/* Initialize PIT Timer Module */
+      INTC.CPR.B.PRI = 0; 	/* Ensure INTC's current priority is 0 */
+      intc_init_fnc();
+      asm(" wrteei 1");     /* Enable IRQ */
+ 	    
+      INTC.CPR.R = %<globalIntPriority>;  /* Global Minimum Interrupt Priority */
+
+ 
+      while(1)
+       { 
+          %if(fmEnabled == 1)
+          FMSTR_Poll();
+      	  %endif
+		  
+		  %if (ccpEnabled == 1)
+		  ProcessCCP();
+		  %endif
+
+      	}  
+    }
+
+
+
+  %closefile tmpFcnBuf
+  
+  %<SLibSetModelFileAttribute(cFile, "Functions", tmpFcnBuf)>
+  
+%endfunction
+
+  
+%function FcnGenerateTaskingCode() Output
+  %assign singleTasking = SLibSingleTasking()
+  %assign task_profiler_block = FEVAL("rappid_564xl_find_task_profiler")
+  %assign StartProfile_inittask  = FEVAL("rappid_564xl_profile_code", 100,"1")
+  %assign EndProfile_inittask    = FEVAL("rappid_564xl_profile_code", 100,"2")
+  %assign StartProfile  = FEVAL("rappid_564xl_profile_code", 101,"1")
+  %assign EndProfile    = FEVAL("rappid_564xl_profile_code", 101,"2")
+  %assign EndProfile_i    = FEVAL("rappid_564xl_profile_code", 101,"3")
+  %assign fcall_ver = FEVAL("rappid_564xl_find_fcall_ver",1)
+
+  void SYSTEM_INIT_TASK(void) 
+  {
+	%if(task_profiler_block==1)
+	%<StartProfile_inittask>
+	%endif
+    /* Initialize model */
+    %<FcnMdlName()>_initialize(%<SLibModelFcnArgs("Initialize",TLC_TRUE,"")>);
+	%if(task_profiler_block==1)
+	%<EndProfile_inittask>
+	%endif
+  }
+
+  void SYSTEM_TASK(void)
+  {
+%if NumSynchronousSampleTimes == 1
+%% Single rate (Single Tasking by default)
+
+		%if(task_profiler_block==1)
+		%<StartProfile>
+		%endif
+		%<FcnCallMdlStep("")>\
+		%if(task_profiler_block==1)
+		%<EndProfile>
+		%endif
+%elseif !singleTasking
+%% Multirate/Multitasking
+		%assign tid01Eq = FixedStepOpts.TID01EQ
+		boolean_T eventFlags[%<FcnNumST()>]; /* Model has %<FcnNumST()> rates */
+    		%if (FcnNumST() - tid01Eq) > 2
+      		int_T i;
+		%endif
+	        
+	        %if(fcall_ver==1)
+		%<FcnCallEventFlagsFunction()>\
+		%else
+		%<FcnCallEventFlagsFunction("%<Name>_")>\
+		%endif
+		
+    		/* Set model inputs associated with base rate here */
+		%assign rootSystem.CurrentTID = 0
+		%if(task_profiler_block==1)
+    		%<StartProfile>
+		%endif
+		%<FcnCallMdlStep(0)>\
+		%if(task_profiler_block==1)
+		%<EndProfile>
+		%endif
+		%if (FcnNumST() - tid01Eq) > 2
+			for (i = %<1+tid01Eq>; i < %<FcnNumST()>; i++)
+			{
+			  
+				if (eventFlags[i])
+				{
+					%if(task_profiler_block==1)
+					%<StartProfile>
+					%endif
+					%<FcnCallMdlStep("i")>\
+					%if(task_profiler_block==1)
+					%<EndProfile_i>
+					%endif
+				}
+			}
+		%else
+			%assign tid = FcnNumST()-1
+			if (eventFlags[%<tid>])
+			{
+      			%assign EndProfile_tid    = FEVAL("rappid_564xl_profile_code", 101 + %<tid>,"2")
+				%assign rootSystem.CurrentTID = tid
+      			/* Set model inputs associated with subrates here */
+				%if(task_profiler_block==1)
+				%<StartProfile>
+				%endif
+        			%<FcnCallMdlStep(tid)>\
+				%if(task_profiler_block==1)
+				%<EndProfile_tid>
+				%endif
+			}
+		%endif
+    	
+%else
+  	
+	%if(task_profiler_block==1)
+	%<StartProfile>
+	%endif	
+	%<FcnCallMdlStep(0)>\
+	%if(task_profiler_block==1)
+	%<EndProfile>
+	%endif
+   
+%endif
+  }
+       
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  
+%% Create software interrupt vector table - intc_sw_vectable.c/.h
+%%
+%% Dynamically be able to po\ulate any interrupt vector from model.
+%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%assign lin0RxISR =  FEVAL("rappid_564xl_lin0_Rx_interrupt_isr")
+
+%assign pitCh0ISR =  FEVAL("rappid_564xl_pit_channel_isr", "0")
+%assign pitCh1ISR =  FEVAL("rappid_564xl_pit_channel_isr", "1")
+%assign pitCh2ISR =  FEVAL("rappid_564xl_pit_channel_isr", "2")
+%assign pitCh3ISR =  FEVAL("rappid_564xl_pit_channel_isr", "3")
+
+%assign ADC1_EOC = FEVAL("rappid_564xl_adc_interrupt_isr", "0")
+%assign ADC2_EOC = FEVAL("rappid_564xl_adc_interrupt_isr", "1")
+%assign ADC1_WDG = FEVAL("rappid_564xl_adc_wdg_interrupt_isr", "0")
+%assign ADC2_WDG = FEVAL("rappid_564xl_adc_wdg_interrupt_isr", "1")
+
+%assign dspi0ISR = FEVAL("rappid_564xl_dspi_interrupt_isr", "0")
+%assign dspi1ISR = FEVAL("rappid_564xl_dspi_interrupt_isr", "1")
+%assign dspi2ISR = FEVAL("rappid_564xl_dspi_interrupt_isr", "2")
+
+%assign dspi0IsrTFUF = FEVAL("rappid_564xl_dspi_interrupt_isr2","0","1")
+%assign dspi0IsrEOQF = FEVAL("rappid_564xl_dspi_interrupt_isr2","0","2")
+%assign dspi0IsrTFFF = FEVAL("rappid_564xl_dspi_interrupt_isr2","0","3")
+%assign dspi0IsrTCF  = FEVAL("rappid_564xl_dspi_interrupt_isr2","0","4")
+
+%assign dspi1IsrTFUF = FEVAL("rappid_564xl_dspi_interrupt_isr2","1","1")
+%assign dspi1IsrEOQF = FEVAL("rappid_564xl_dspi_interrupt_isr2","1","2")
+%assign dspi1IsrTFFF = FEVAL("rappid_564xl_dspi_interrupt_isr2","1","3")
+%assign dspi1IsrTCF  = FEVAL("rappid_564xl_dspi_interrupt_isr2","1","4")
+
+%assign dspi2IsrTFUF = FEVAL("rappid_564xl_dspi_interrupt_isr2","2","1")
+%assign dspi2IsrEOQF = FEVAL("rappid_564xl_dspi_interrupt_isr2","2","2")
+%assign dspi2IsrTFFF = FEVAL("rappid_564xl_dspi_interrupt_isr2","2","3")
+%assign dspi2IsrTCF  = FEVAL("rappid_564xl_dspi_interrupt_isr2","2","4")
+
+%assign can0ISRWrn = FEVAL("rappid_564xl_can_warning_interrupt_isr", "0")
+%assign can1ISRWrn = FEVAL("rappid_564xl_can_warning_interrupt_isr", "1")
+
+%assign can0ISRErr = FEVAL("rappid_564xl_can_error_interrupt_isr", "0")
+%assign can1ISRErr = FEVAL("rappid_564xl_can_error_interrupt_isr", "1")
+
+%assign can0ISRBuf_0_3 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "0", "0", "3")
+%assign can0ISRBuf_4_7 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "0", "4", "7")
+%assign can0ISRBuf_8_11 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "0", "8", "11")
+%assign can0ISRBuf_12_15 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "0", "12", "15")
+%assign can0ISRBuf_16_31 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "0", "16", "31")
+
+%assign can1ISRBuf_0_3 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "1", "0", "3")
+%assign can1ISRBuf_4_7 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "1", "4", "7")
+%assign can1ISRBuf_8_11 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "1", "8", "11")
+%assign can1ISRBuf_12_15 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "1", "12", "15")
+%assign can1ISRBuf_16_31 = FEVAL("rappid_564xl_can_buff_interrupt_isr", "1", "16", "31")
+
+%assign eTimer0_0_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "0", "0")
+%assign eTimer0_1_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "0", "1")
+%assign eTimer0_2_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "0", "2")
+%assign eTimer0_3_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "0", "3")
+%assign eTimer0_4_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "0", "4")
+%assign eTimer0_5_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "0", "5")
+%assign eTimer1_0_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "1", "0")
+%assign eTimer1_1_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "1", "1")
+%assign eTimer1_2_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "1", "2")
+%assign eTimer1_3_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "1", "3")
+%assign eTimer1_4_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "1", "4")
+%assign eTimer1_5_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "1", "5")
+%assign eTimer2_0_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "2", "0")
+%assign eTimer2_1_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "2", "1")
+%assign eTimer2_2_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "2", "2")
+%assign eTimer2_3_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "2", "3")
+%assign eTimer2_4_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "2", "4")
+%assign eTimer2_5_EOC = FEVAL("rappid_564xl_etimer_interrupt_isr", "2", "5")
+
+%assign pwm0_comp0_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "0", "63")
+%assign pwm0_reload0_isr = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "0", "4096")
+%assign pwm0_rerr0_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "0", "8192")
+%assign pwm0_comp1_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "1", "63")
+%assign pwm0_reload1_isr = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "1", "4096")
+%assign pwm0_rerr1_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "1", "8192")
+%assign pwm0_comp2_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "2", "63")
+%assign pwm0_reload2_isr = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "2", "4096")
+%assign pwm0_rerr2_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "2", "8192")
+%assign pwm0_comp3_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "3", "63")
+%assign pwm0_reload3_isr = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "3", "4096")
+%assign pwm0_rerr3_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "0", "3", "8192")
+
+%assign pwm1_comp0_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "0", "63")
+%assign pwm1_reload0_isr = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "0", "4096")
+%assign pwm1_rerr0_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "0", "8192")
+%assign pwm1_comp1_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "1", "63")
+%assign pwm1_reload1_isr = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "1", "4096")
+%assign pwm1_rerr1_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "1", "8192")
+%assign pwm1_comp2_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "2", "63")
+%assign pwm1_reload2_isr = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "2", "4096")
+%assign pwm1_rerr2_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "2", "8192")
+%assign pwm1_comp3_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "3", "63")
+%assign pwm1_reload3_isr = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "3", "4096")
+%assign pwm1_rerr3_isr   = FEVAL("rappid_564xl_pwm_interrupt_isr", "1", "3", "8192")
+
+%assign ctu_msr_isr      = FEVAL("rappid_564xl_ctu_interrupt_isr", "16384")
+%assign ctu_error_isr    = FEVAL("rappid_564xl_ctu_interrupt_isr", "32768")
+%assign ctu_adc_isr      = FEVAL("rappid_564xl_ctu_interrupt_isr", "0")
+%assign ctu_trigger0_isr = FEVAL("rappid_564xl_ctu_interrupt_isr", "128")
+%assign ctu_trigger1_isr = FEVAL("rappid_564xl_ctu_interrupt_isr", "64")
+%assign ctu_trigger2_isr = FEVAL("rappid_564xl_ctu_interrupt_isr", "32")
+%assign ctu_trigger3_isr = FEVAL("rappid_564xl_ctu_interrupt_isr", "16")
+%assign ctu_trigger4_isr = FEVAL("rappid_564xl_ctu_interrupt_isr", "8")
+%assign ctu_trigger5_isr = FEVAL("rappid_564xl_ctu_interrupt_isr", "4")
+%assign ctu_trigger6_isr = FEVAL("rappid_564xl_ctu_interrupt_isr", "2")
+%assign ctu_trigger7_isr = FEVAL("rappid_564xl_ctu_interrupt_isr", "1")
+ 
+%if !EXISTS("_RAPPID_INTERRUPT_BUFFER_")
+  %assign ::_RAPPID_INTERRUPT_BUFFER_ = 1
+
+%assign fname = LibCreateSourceFile("Source", "Custom", "intc_sw_vectable")
+%assign target_compiler = FEVAL("rappid_564xl_get_data", "compiler")
+%openfile tmpFcnBuf 
+
+
+/********************  Dependent Include files here **********************/
+#include "rappid_ref.h"
+#include "target.h"
+
+/**********************  Function Prototype here *************************/
+void interrupt_handler (void);
+
+extern void LIN0_Rx_ISR_handler(void);
+
+extern void PIT_Ch0_ISR(void);
+
+%if( FEVAL("strcmp", pitCh1ISR, "interrupt_handler")==0)
+extern void %<pitCh1ISR>(void);
+%endif
+%if( FEVAL("strcmp", pitCh2ISR, "interrupt_handler")==0)
+extern void %<pitCh2ISR>(void);
+%endif
+%if( FEVAL("strcmp", pitCh3ISR, "interrupt_handler")==0)
+extern void %<pitCh3ISR>(void);
+%endif
+
+%if( FEVAL("strcmp", ADC1_EOC, "interrupt_handler")==0)
+extern void %<ADC1_EOC>(void);
+%endif
+%if( FEVAL("strcmp", ADC2_EOC, "interrupt_handler")==0)
+extern void %<ADC2_EOC>(void);
+%endif
+%if( FEVAL("strcmp", ADC1_WDG, "interrupt_handler")==0)
+extern void %<ADC1_WDG>(void);
+%endif
+%if( FEVAL("strcmp", ADC2_WDG, "interrupt_handler")==0)
+extern void %<ADC2_WDG>(void);
+%endif
+
+%if( FEVAL("strcmp", dspi0ISR, "interrupt_handler")==0)
+extern void %<dspi0ISR>(void);
+%endif
+%if( FEVAL("strcmp", dspi1ISR, "interrupt_handler")==0)
+extern void %<dspi1ISR>(void);
+%endif
+%if( FEVAL("strcmp", dspi2ISR, "interrupt_handler")==0)
+extern void %<dspi2ISR>(void);
+%endif
+
+%if( FEVAL("strcmp",dspi0IsrTFUF, "interrupt_handler")==0)
+extern void %<dspi0IsrTFUF>(void);
+%endif
+%if( FEVAL("strcmp",dspi0IsrEOQF, "interrupt_handler")==0)
+extern void %<dspi0IsrEOQF>(void);
+%endif
+%if( FEVAL("strcmp",dspi0IsrTFFF, "interrupt_handler")==0)
+extern void %<dspi0IsrTFFF>(void);
+%endif
+%if( FEVAL("strcmp",dspi0IsrTCF, "interrupt_handler")==0)
+extern void %<dspi0IsrTCF>(void);
+%endif
+
+
+%if( FEVAL("strcmp",dspi1IsrTFUF, "interrupt_handler")==0)
+extern void %<dspi1IsrTFUF>(void);
+%endif
+%if( FEVAL("strcmp",dspi1IsrEOQF, "interrupt_handler")==0)
+extern void %<dspi1IsrEOQF>(void);
+%endif
+%if( FEVAL("strcmp",dspi1IsrTFFF, "interrupt_handler")==0)
+extern void %<dspi1IsrTFFF>(void);
+%endif
+%if( FEVAL("strcmp",dspi1IsrTCF, "interrupt_handler")==0)
+extern void %<dspi1IsrTCF>(void);
+%endif
+
+
+%if( FEVAL("strcmp",dspi2IsrTFUF, "interrupt_handler")==0)
+extern void %<dspi2IsrTFUF>(void);
+%endif
+%if( FEVAL("strcmp",dspi2IsrEOQF, "interrupt_handler")==0)
+extern void %<dspi2IsrEOQF>(void);
+%endif
+%if( FEVAL("strcmp",dspi2IsrTFFF, "interrupt_handler")==0)
+extern void %<dspi2IsrTFFF>(void);
+%endif
+%if( FEVAL("strcmp",dspi2IsrTCF, "interrupt_handler")==0)
+extern void %<dspi2IsrTCF>(void);
+%endif
+
+
+%if( FEVAL("strcmp", can0ISRWrn, "interrupt_handler")==0)
+extern void %<can0ISRWrn>(void);
+%endif
+%if( FEVAL("strcmp", can1ISRWrn, "interrupt_handler")==0)
+extern void %<can1ISRWrn>(void);
+%endif
+
+%if( FEVAL("strcmp", can0ISRErr, "interrupt_handler")==0)
+extern void %<can0ISRErr>(void);
+%endif
+%if( FEVAL("strcmp", can1ISRErr, "interrupt_handler")==0)
+extern void %<can1ISRErr>(void);
+%endif
+
+%if( FEVAL("strcmp", can0ISRBuf_0_3, "interrupt_handler")==0)
+extern void %<can0ISRBuf_0_3>(void);
+%endif
+%if( FEVAL("strcmp", can0ISRBuf_4_7, "interrupt_handler")==0)
+extern void %<can0ISRBuf_4_7>(void);
+%endif
+%if( FEVAL("strcmp", can0ISRBuf_8_11, "interrupt_handler")==0)
+extern void %<can0ISRBuf_8_11>(void);
+%endif
+%if( FEVAL("strcmp", can0ISRBuf_12_15, "interrupt_handler")==0)
+extern void %<can0ISRBuf_12_15>(void);
+%endif
+%if( FEVAL("strcmp", can0ISRBuf_16_31, "interrupt_handler")==0)
+extern void %<can0ISRBuf_16_31>(void);
+%endif
+
+%if( FEVAL("strcmp", can1ISRBuf_0_3, "interrupt_handler")==0)
+extern void %<can1ISRBuf_0_3>(void);
+%endif
+%if( FEVAL("strcmp", can1ISRBuf_4_7, "interrupt_handler")==0)
+extern void %<can1ISRBuf_4_7>(void);
+%endif
+%if( FEVAL("strcmp", can1ISRBuf_8_11, "interrupt_handler")==0)
+extern void %<can1ISRBuf_8_11>(void);
+%endif
+%if( FEVAL("strcmp", can1ISRBuf_12_15, "interrupt_handler")==0)
+extern void %<can1ISRBuf_12_15>(void);
+%endif
+%if( FEVAL("strcmp", can1ISRBuf_16_31, "interrupt_handler")==0)
+extern void %<can1ISRBuf_16_31>(void);
+%endif
+
+%if( FEVAL("strcmp", eTimer0_0_EOC, "interrupt_handler")==0)
+extern void %<eTimer0_0_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer0_1_EOC, "interrupt_handler")==0)
+extern void %<eTimer0_1_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer0_2_EOC, "interrupt_handler")==0)
+extern void %<eTimer0_2_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer0_3_EOC, "interrupt_handler")==0)
+extern void %<eTimer0_3_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer0_4_EOC, "interrupt_handler")==0)
+extern void %<eTimer0_4_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer0_5_EOC, "interrupt_handler")==0)
+extern void %<eTimer0_5_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer1_0_EOC, "interrupt_handler")==0)
+extern void %<eTimer1_0_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer1_1_EOC, "interrupt_handler")==0)
+extern void %<eTimer1_1_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer1_2_EOC, "interrupt_handler")==0)
+extern void %<eTimer1_2_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer1_3_EOC, "interrupt_handler")==0)
+extern void %<eTimer1_3_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer1_4_EOC, "interrupt_handler")==0)
+extern void %<eTimer1_4_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer1_5_EOC, "interrupt_handler")==0)
+extern void %<eTimer1_5_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer2_0_EOC, "interrupt_handler")==0)
+extern void %<eTimer2_0_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer2_1_EOC, "interrupt_handler")==0)
+extern void %<eTimer2_1_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer2_2_EOC, "interrupt_handler")==0)
+extern void %<eTimer2_2_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer2_3_EOC, "interrupt_handler")==0)
+extern void %<eTimer2_3_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer2_4_EOC, "interrupt_handler")==0)
+extern void %<eTimer2_4_EOC>(void);
+%endif
+%if( FEVAL("strcmp", eTimer2_5_EOC, "interrupt_handler")==0)
+extern void %<eTimer2_5_EOC>(void);
+%endif
+
+%if( FEVAL("strcmp", pwm0_comp0_isr, "interrupt_handler")==0)
+extern void %<pwm0_comp0_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm0_comp1_isr, "interrupt_handler")==0)
+extern void %<pwm0_comp1_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm0_comp2_isr, "interrupt_handler")==0)
+extern void %<pwm0_comp2_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm0_comp3_isr, "interrupt_handler")==0)
+extern void %<pwm0_comp3_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm0_reload0_isr, "interrupt_handler")==0)
+extern void %<pwm0_reload0_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm0_reload1_isr, "interrupt_handler")==0)
+extern void %<pwm0_reload1_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm0_reload2_isr, "interrupt_handler")==0)
+extern void %<pwm0_reload2_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm0_reload3_isr, "interrupt_handler")==0)
+extern void %<pwm0_reload3_isr>(void);
+%endif
+
+%if( FEVAL("strcmp", pwm0_rerr0_isr, "interrupt_handler")==0) || ...
+   ( FEVAL("strcmp", pwm0_rerr1_isr, "interrupt_handler")==0) || ...
+   ( FEVAL("strcmp", pwm0_rerr2_isr, "interrupt_handler")==0) || ...
+   ( FEVAL("strcmp", pwm0_rerr3_isr, "interrupt_handler")==0)
+%assign pwm0_rerr_isr = "pwm0_rerr_ISR"
+void pwm0_rerr_ISR(void);
+%else
+%assign pwm0_rerr_isr = "interrupt_handler"
+%endif
+extern void %<pwm1_comp0_isr>(void);
+
+%if( FEVAL("strcmp", pwm1_comp0_isr, "interrupt_handler")==0)
+%endif
+%if( FEVAL("strcmp", pwm1_comp1_isr, "interrupt_handler")==0)
+extern void %<pwm1_comp1_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm1_comp2_isr, "interrupt_handler")==0)
+extern void %<pwm1_comp2_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm1_comp3_isr, "interrupt_handler")==0)
+extern void %<pwm1_comp3_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm1_reload0_isr, "interrupt_handler")==0)
+extern void %<pwm1_reload0_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm1_reload1_isr, "interrupt_handler")==0)
+extern void %<pwm1_reload1_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm1_reload2_isr, "interrupt_handler")==0)
+extern void %<pwm1_reload2_isr>(void);
+%endif
+%if( FEVAL("strcmp", pwm1_reload3_isr, "interrupt_handler")==0)
+extern void %<pwm1_reload3_isr>(void);
+%endif
+
+%if( FEVAL("strcmp", pwm1_rerr0_isr, "interrupt_handler")==0) || ...
+   ( FEVAL("strcmp", pwm1_rerr1_isr, "interrupt_handler")==0) || ...
+   ( FEVAL("strcmp", pwm1_rerr2_isr, "interrupt_handler")==0) || ...
+   ( FEVAL("strcmp", pwm1_rerr3_isr, "interrupt_handler")==0)
+%assign pwm1_rerr_isr = "pwm1_rerr_ISR"
+void pwm1_rerr_ISR(void);
+%else
+%assign pwm1_rerr_isr = "interrupt_handler"
+%endif
+
+%if( FEVAL("strcmp", ctu_msr_isr, "interrupt_handler")==0)
+extern void %<ctu_msr_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_error_isr, "interrupt_handler")==0)
+extern void %<ctu_error_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_adc_isr, "interrupt_handler")==0)
+extern void %<ctu_adc_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_trigger0_isr, "interrupt_handler")==0)
+extern void %<ctu_trigger0_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_trigger1_isr, "interrupt_handler")==0)
+extern void %<ctu_trigger1_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_trigger2_isr, "interrupt_handler")==0)
+extern void %<ctu_trigger2_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_trigger3_isr, "interrupt_handler")==0)
+extern void %<ctu_trigger3_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_trigger4_isr, "interrupt_handler")==0)
+extern void %<ctu_trigger4_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_trigger5_isr, "interrupt_handler")==0)
+extern void %<ctu_trigger5_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_trigger6_isr, "interrupt_handler")==0)
+extern void %<ctu_trigger6_isr>(void);
+%endif
+%if( FEVAL("strcmp", ctu_trigger7_isr, "interrupt_handler")==0)
+extern void %<ctu_trigger7_isr>(void);
+%endif
+
+
+/*************************** Pragma_1 Section **************************/
+
+%if (FEVAL("strcmp", target_compiler, "codewarrior") != 0)
+#pragma section data_type ".ivor4_vector_table" ".ivor4_vector_table"
+%endif
+%if (FEVAL("strcmp", target_compiler, "GreenHills") != 0)
+#pragma ghs section data=".vects"
+%endif
+%if (FEVAL("strcmp", target_compiler, "Diab") != 0)
+#pragma section DATA ".ivor4_vector_table" ".ivor4_vector_table"
+#pragma use_section DATA 
+%endif
+
+uint32_t ISRVectorTable[] = {
+  (uint32_t)&interrupt_handler,        /* ISR 00 */
+  (uint32_t)&interrupt_handler,        /* ISR 01 */
+  (uint32_t)&interrupt_handler,        /* ISR 02 */
+  (uint32_t)&interrupt_handler,        /* ISR 03 */
+  (uint32_t)&interrupt_handler,        /* ISR 04 */
+  (uint32_t)&interrupt_handler,        /* ISR 05 */
+  (uint32_t)&interrupt_handler,        /* ISR 06 */
+  (uint32_t)&interrupt_handler,        /* ISR 07 */
+  (uint32_t)&interrupt_handler,        /* ISR 08 */
+  (uint32_t)&interrupt_handler,        /* ISR 09 */
+  (uint32_t)&interrupt_handler,        /* ISR 10 */
+  (uint32_t)&interrupt_handler,        /* ISR 11 */
+  (uint32_t)&interrupt_handler,        /* ISR 12 */
+  (uint32_t)&interrupt_handler,        /* ISR 13 */
+  (uint32_t)&interrupt_handler,        /* ISR 14 */
+  (uint32_t)&interrupt_handler,        /* ISR 15 */
+  (uint32_t)&interrupt_handler,        /* ISR 16 */
+  (uint32_t)&interrupt_handler,        /* ISR 17 */
+  (uint32_t)&interrupt_handler,        /* ISR 18 */
+  (uint32_t)&interrupt_handler,        /* ISR 19 */
+  (uint32_t)&interrupt_handler,        /* ISR 20 */
+  (uint32_t)&interrupt_handler,        /* ISR 21 */
+  (uint32_t)&interrupt_handler,        /* ISR 22 */
+  (uint32_t)&interrupt_handler,        /* ISR 23 */
+  (uint32_t)&interrupt_handler,        /* ISR 24 */
+  (uint32_t)&interrupt_handler,        /* ISR 25 */
+  (uint32_t)&interrupt_handler,        /* ISR 26 */
+  (uint32_t)&interrupt_handler,        /* ISR 27 */
+  (uint32_t)&interrupt_handler,        /* ISR 28 */
+  (uint32_t)&interrupt_handler,        /* ISR 29 */
+  (uint32_t)&interrupt_handler,        /* ISR 30 */
+  (uint32_t)&interrupt_handler,        /* ISR 31 */
+  (uint32_t)&interrupt_handler,        /* ISR 32 */
+  (uint32_t)&interrupt_handler,        /* ISR 33 */
+  (uint32_t)&interrupt_handler,        /* ISR 34 */
+  (uint32_t)&interrupt_handler,        /* ISR 35 */
+  (uint32_t)&interrupt_handler,        /* ISR 36 */
+  (uint32_t)&interrupt_handler,        /* ISR 37 */
+  (uint32_t)&interrupt_handler,        /* ISR 38 */
+  (uint32_t)&interrupt_handler,        /* ISR 39 */
+  (uint32_t)&interrupt_handler,        /* ISR 40 */
+  (uint32_t)&interrupt_handler,        /* ISR 41 */
+  (uint32_t)&interrupt_handler,        /* ISR 42 */
+  (uint32_t)&interrupt_handler,        /* ISR 43 */
+  (uint32_t)&interrupt_handler,        /* ISR 44 */
+  (uint32_t)&interrupt_handler,        /* ISR 45 */
+  (uint32_t)&interrupt_handler,        /* ISR 46 */
+  (uint32_t)&interrupt_handler,        /* ISR 47 */
+  (uint32_t)&interrupt_handler,        /* ISR 48 */
+  (uint32_t)&interrupt_handler,        /* ISR 49 */
+  (uint32_t)&interrupt_handler,        /* ISR 50 */
+  (uint32_t)&interrupt_handler,        /* ISR 51 */
+  (uint32_t)&interrupt_handler,        /* ISR 52 */
+  (uint32_t)&interrupt_handler,        /* ISR 53 */
+  (uint32_t)&interrupt_handler,        /* ISR 54 */
+  (uint32_t)&interrupt_handler,        /* ISR 55 */
+  (uint32_t)&interrupt_handler,        /* ISR 56 */
+  (uint32_t)&interrupt_handler,        /* ISR 57 */
+  (uint32_t)&interrupt_handler,        /* ISR 58 */
+  (uint32_t)&%<pitCh0ISR>,             /* ISR 59 */
+  (uint32_t)&%<pitCh1ISR>,             /* ISR 60 */
+  (uint32_t)&%<pitCh2ISR>,             /* ISR 61 */
+  (uint32_t)&%<ADC1_EOC>,        		/* ISR 62 */
+  (uint32_t)&interrupt_handler,       	/* ISR 63 */
+  (uint32_t)&%<ADC1_WDG>,				/* ISR 64 */
+  (uint32_t)&%<can0ISRErr>,  	      /* ISR 65 */
+  (uint32_t)&%<can0ISRWrn>, 		      /* ISR 66 */
+  (uint32_t)&interrupt_handler,        /* ISR 67 */
+  (uint32_t)&%<can0ISRBuf_0_3>,        /* ISR 68 */
+  (uint32_t)&%<can0ISRBuf_4_7>,        /* ISR 69 */
+  (uint32_t)&%<can0ISRBuf_8_11>,        /* ISR 70 */
+  (uint32_t)&%<can0ISRBuf_12_15>,        /* ISR 71 */
+  (uint32_t)&%<can0ISRBuf_16_31>,        /* ISR 72 */
+  (uint32_t)&interrupt_handler,        /* ISR 73 */
+  (uint32_t)&%<dspi0IsrTFUF>,		        /* ISR 74 */
+  (uint32_t)&%<dspi0IsrEOQF>,		        /* ISR 75 */
+  (uint32_t)&%<dspi0IsrTFFF>,		        /* ISR 76 */
+  (uint32_t)&%<dspi0IsrTCF>,		        /* ISR 77 */
+  (uint32_t)&%<dspi0ISR>,			   /* ISR 78 */
+  (uint32_t)&%<lin0RxISR>,             /* ISR 79 */
+  (uint32_t)&interrupt_handler,        /* ISR 80 */
+  (uint32_t)&interrupt_handler,        /* ISR 81 */
+  (uint32_t)&%<ADC2_EOC>,        	   /* ISR 82 */
+  (uint32_t)&interrupt_handler,        /* ISR 83 */
+  (uint32_t)&%<ADC2_WDG>,              /* ISR 84 */
+  (uint32_t)&%<can1ISRErr>,		        /* ISR 85 */
+  (uint32_t)&%<can1ISRWrn>,		        /* ISR 86 */
+  (uint32_t)&interrupt_handler,        /* ISR 87 */
+  (uint32_t)&%<can1ISRBuf_0_3>,        /* ISR 88 */
+  (uint32_t)&%<can1ISRBuf_4_7>,        /* ISR 89 */
+  (uint32_t)&%<can1ISRBuf_8_11>,        /* ISR 90 */
+  (uint32_t)&%<can1ISRBuf_12_15>,        /* ISR 91 */
+  (uint32_t)&%<can1ISRBuf_16_31>,        /* ISR 92 */
+  (uint32_t)&interrupt_handler,        /* ISR 93 */
+  (uint32_t)&%<dspi1IsrTFUF>,   		     /* ISR 94 */
+  (uint32_t)&%<dspi1IsrEOQF>,     		   /* ISR 95 */
+  (uint32_t)&%<dspi1IsrTFFF>, 		       /* ISR 96 */
+  (uint32_t)&%<dspi1IsrTCF>,  		      /* ISR 97 */
+  (uint32_t)&%<dspi1ISR>,              /* ISR 98 */
+  (uint32_t)&interrupt_handler,        /* ISR 99 */
+  (uint32_t)&interrupt_handler,        /* ISR 100 */
+  (uint32_t)&interrupt_handler,        /* ISR 101 */
+  (uint32_t)&interrupt_handler,        /* ISR 102 */
+  (uint32_t)&interrupt_handler,        /* ISR 103 */
+  (uint32_t)&interrupt_handler,        /* ISR 104 */
+  (uint32_t)&interrupt_handler,        /* ISR 105 */
+  (uint32_t)&interrupt_handler,        /* ISR 106 */
+  (uint32_t)&interrupt_handler,        /* ISR 107 */
+  (uint32_t)&interrupt_handler,        /* ISR 108 */
+  (uint32_t)&interrupt_handler,        /* ISR 109 */
+  (uint32_t)&interrupt_handler,        /* ISR 110 */
+  (uint32_t)&interrupt_handler,        /* ISR 111 */
+  (uint32_t)&interrupt_handler,        /* ISR 112 */
+  (uint32_t)&interrupt_handler,        /* ISR 113 */
+  (uint32_t)&%<dspi2IsrTFUF>,  	      /* ISR 114 */
+  (uint32_t)&%<dspi2IsrEOQF>,  	      /* ISR 115 */
+  (uint32_t)&%<dspi2IsrTFFF>, 		       /* ISR 116 */
+  (uint32_t)&%<dspi2IsrTCF>, 		       /* ISR 117 */
+  (uint32_t)&%<dspi2ISR>,              /* ISR 118 */
+  (uint32_t)&interrupt_handler,        /* ISR 119 */
+  (uint32_t)&interrupt_handler,        /* ISR 120 */
+  (uint32_t)&interrupt_handler,        /* ISR 121 */
+  (uint32_t)&interrupt_handler,        /* ISR 122 */
+  (uint32_t)&interrupt_handler,        /* ISR 123 */
+  (uint32_t)&interrupt_handler,        /* ISR 124 */
+  (uint32_t)&interrupt_handler,        /* ISR 125 */
+  (uint32_t)&interrupt_handler,        /* ISR 126 */
+  (uint32_t)&%<pitCh3ISR>,             /* ISR 127 */
+  (uint32_t)&interrupt_handler,        /* ISR 128 */
+  (uint32_t)&interrupt_handler,        /* ISR 129 */
+  (uint32_t)&interrupt_handler,        /* ISR 130 */
+  (uint32_t)&interrupt_handler,        /* ISR 131 */
+  (uint32_t)&interrupt_handler,        /* ISR 132 */
+  (uint32_t)&interrupt_handler,        /* ISR 133 */
+  (uint32_t)&interrupt_handler,        /* ISR 134 */
+  (uint32_t)&interrupt_handler,        /* ISR 135 */
+  (uint32_t)&interrupt_handler,        /* ISR 136 */
+  (uint32_t)&interrupt_handler,        /* ISR 137 */
+  (uint32_t)&interrupt_handler,        /* ISR 138 */
+  (uint32_t)&interrupt_handler,        /* ISR 139 */
+  (uint32_t)&interrupt_handler,        /* ISR 140 */
+  (uint32_t)&interrupt_handler,        /* ISR 141 */
+  (uint32_t)&interrupt_handler,        /* ISR 142 */
+  (uint32_t)&interrupt_handler,        /* ISR 143 */
+  (uint32_t)&interrupt_handler,        /* ISR 144 */
+  (uint32_t)&interrupt_handler,        /* ISR 145 */
+  (uint32_t)&interrupt_handler,        /* ISR 146 */
+  (uint32_t)&interrupt_handler,        /* ISR 147 */
+  (uint32_t)&interrupt_handler,        /* ISR 148 */
+  (uint32_t)&interrupt_handler,        /* ISR 149 */
+  (uint32_t)&interrupt_handler,        /* ISR 150 */
+  (uint32_t)&interrupt_handler,        /* ISR 151 */
+  (uint32_t)&interrupt_handler,        /* ISR 152 */
+  (uint32_t)&interrupt_handler,        /* ISR 153 */
+  (uint32_t)&interrupt_handler,        /* ISR 154 */
+  (uint32_t)&interrupt_handler,        /* ISR 155 */
+  (uint32_t)&interrupt_handler,        /* ISR 156 */
+  (uint32_t)&%<eTimer0_0_EOC>,         /* ISR 157 */
+  (uint32_t)&%<eTimer0_1_EOC>,         /* ISR 158 */
+  (uint32_t)&%<eTimer0_2_EOC>,         /* ISR 159 */
+  (uint32_t)&%<eTimer0_3_EOC>,         /* ISR 160 */
+  (uint32_t)&%<eTimer0_4_EOC>,         /* ISR 161 */
+  (uint32_t)&%<eTimer0_5_EOC>,         /* ISR 162 */
+  (uint32_t)&interrupt_handler,        /* ISR 163 */
+  (uint32_t)&interrupt_handler,        /* ISR 164 */
+  (uint32_t)&interrupt_handler,        /* ISR 165 */
+  (uint32_t)&interrupt_handler,        /* ISR 166 */
+  (uint32_t)&interrupt_handler,        /* ISR 167 */
+  (uint32_t)&%<eTimer1_0_EOC>,         /* ISR 168 */
+  (uint32_t)&%<eTimer1_1_EOC>,         /* ISR 169 */
+  (uint32_t)&%<eTimer1_2_EOC>,         /* ISR 170 */
+  (uint32_t)&%<eTimer1_3_EOC>,         /* ISR 171 */
+  (uint32_t)&%<eTimer1_4_EOC>,         /* ISR 172 */
+  (uint32_t)&%<eTimer1_5_EOC>,         /* ISR 173 */
+  (uint32_t)&interrupt_handler,        /* ISR 174 */
+  (uint32_t)&interrupt_handler,        /* ISR 175 */
+  (uint32_t)&interrupt_handler,        /* ISR 176 */
+  (uint32_t)&interrupt_handler,        /* ISR 177 */
+  (uint32_t)&interrupt_handler,        /* ISR 178 */
+  (uint32_t)&%<pwm0_reload0_isr>,       /* ISR 179 */
+  (uint32_t)&%<pwm0_comp0_isr>,         /* ISR 180 */
+  (uint32_t)&interrupt_handler,        /* ISR 181 */
+  (uint32_t)&%<pwm0_reload1_isr>,       /* ISR 182 */
+  (uint32_t)&%<pwm0_comp1_isr>,         /* ISR 183 */
+  (uint32_t)&interrupt_handler,        /* ISR 184 */
+  (uint32_t)&%<pwm0_reload2_isr>,       /* ISR 185 */
+  (uint32_t)&%<pwm0_comp2_isr>,         /* ISR 186 */
+  (uint32_t)&interrupt_handler,        /* ISR 187 */
+  (uint32_t)&%<pwm0_reload3_isr>,       /* ISR 188 */
+  (uint32_t)&%<pwm0_comp3_isr>,         /* ISR 189 */
+  (uint32_t)&interrupt_handler,        /* ISR 190 */
+  (uint32_t)&interrupt_handler,        /* ISR 191 */
+  (uint32_t)&%<pwm0_rerr_isr>,          /* ISR 192 */
+  (uint32_t)&%<ctu_msr_isr>,           /* ISR 193 */
+  (uint32_t)&%<ctu_trigger0_isr>,      /* ISR 194 */
+  (uint32_t)&%<ctu_trigger1_isr>,      /* ISR 195 */
+  (uint32_t)&%<ctu_trigger2_isr>,      /* ISR 196 */
+  (uint32_t)&%<ctu_trigger3_isr>,      /* ISR 197 */
+  (uint32_t)&%<ctu_trigger4_isr>,      /* ISR 198 */
+  (uint32_t)&%<ctu_trigger5_isr>,      /* ISR 199 */
+  (uint32_t)&%<ctu_trigger6_isr>,      /* ISR 200 */
+  (uint32_t)&%<ctu_trigger7_isr>,      /* ISR 201 */
+  (uint32_t)&interrupt_handler,        /* ISR 202 */
+  (uint32_t)&interrupt_handler,        /* ISR 203 */
+  (uint32_t)&interrupt_handler,        /* ISR 204 */
+  (uint32_t)&interrupt_handler,        /* ISR 205 */
+  (uint32_t)&%<ctu_adc_isr>,           /* ISR 206 */
+  (uint32_t)&%<ctu_error_isr>,         /* ISR 207 */
+  (uint32_t)&interrupt_handler,        /* ISR 208 */
+  (uint32_t)&interrupt_handler,        /* ISR 209 */
+  (uint32_t)&interrupt_handler,        /* ISR 210 */
+  (uint32_t)&interrupt_handler,        /* ISR 211 */
+  (uint32_t)&interrupt_handler,        /* ISR 212 */
+  (uint32_t)&interrupt_handler,        /* ISR 213 */
+  (uint32_t)&interrupt_handler,        /* ISR 214 */
+  (uint32_t)&interrupt_handler,        /* ISR 215 */
+  (uint32_t)&interrupt_handler,        /* ISR 216 */
+  (uint32_t)&interrupt_handler,        /* ISR 217 */
+  (uint32_t)&interrupt_handler,        /* ISR 218 */
+  (uint32_t)&interrupt_handler,        /* ISR 219 */
+  (uint32_t)&interrupt_handler,        /* ISR 220 */
+  (uint32_t)&interrupt_handler,        /* ISR 221 */
+  (uint32_t)&%<eTimer2_0_EOC>,         /* ISR 222 */
+  (uint32_t)&%<eTimer2_1_EOC>,         /* ISR 223 */
+  (uint32_t)&%<eTimer2_2_EOC>,         /* ISR 224 */
+  (uint32_t)&%<eTimer2_3_EOC>,         /* ISR 225 */
+  (uint32_t)&%<eTimer2_4_EOC>,         /* ISR 226 */
+  (uint32_t)&%<eTimer2_5_EOC>,         /* ISR 227 */
+  (uint32_t)&interrupt_handler,        /* ISR 228 */
+  (uint32_t)&interrupt_handler,        /* ISR 229 */
+  (uint32_t)&interrupt_handler,        /* ISR 230 */
+  (uint32_t)&interrupt_handler,        /* ISR 231 */
+  (uint32_t)&interrupt_handler,        /* ISR 232 */
+  (uint32_t)&%<pwm1_reload0_isr>,       /* ISR 233 */
+  (uint32_t)&%<pwm1_comp0_isr>,         /* ISR 234 */
+  (uint32_t)&interrupt_handler,        /* ISR 235 */
+  (uint32_t)&%<pwm1_reload1_isr>,       /* ISR 236 */
+  (uint32_t)&%<pwm1_comp1_isr>,         /* ISR 237 */
+  (uint32_t)&interrupt_handler,        /* ISR 238 */
+  (uint32_t)&%<pwm1_reload2_isr>,       /* ISR 239 */
+  (uint32_t)&%<pwm1_comp2_isr>,         /* ISR 240 */
+  (uint32_t)&interrupt_handler,        /* ISR 241 */
+  (uint32_t)&%<pwm1_reload3_isr>,       /* ISR 242 */
+  (uint32_t)&%<pwm1_comp3_isr>,         /* ISR 243 */
+  (uint32_t)&interrupt_handler,        /* ISR 244 */
+  (uint32_t)&interrupt_handler,        /* ISR 245 */
+  (uint32_t)&%<pwm1_rerr_isr>,          /* ISR 246 */
+  (uint32_t)&interrupt_handler,        /* ISR 247 */
+  (uint32_t)&interrupt_handler,        /* ISR 248 */
+  (uint32_t)&interrupt_handler,        /* ISR 249 */
+  (uint32_t)&interrupt_handler,        /* ISR 250 */
+  (uint32_t)&interrupt_handler,        /* ISR 251 */
+  (uint32_t)&interrupt_handler,        /* ISR 252 */
+  (uint32_t)&interrupt_handler,        /* ISR 253 */
+  (uint32_t)&interrupt_handler,        /* ISR 254 */
+  (uint32_t)&interrupt_handler         /* ISR 255 */
+ };
+
+void interrupt_handler (void)
+{
+  vuint32_t reg;
+  reg = INTC.IACKR.R;
+  while (1) {};  /* Wait forever or for watchdog timeout */
+}
+
+%if( FEVAL("strcmp", pwm0_rerr_isr, "interrupt_handler")==0)
+void pwm0_rerr_ISR (void)
+{
+%if( FEVAL("strcmp", pwm0_rerr0_isr, "interrupt_handler")==0)
+	%<pwm0_rerr0_isr>();
+%endif
+%if( FEVAL("strcmp", pwm0_rerr1_isr, "interrupt_handler")==0)
+	%<pwm0_rerr1_isr>();
+%endif
+%if( FEVAL("strcmp", pwm0_rerr2_isr, "interrupt_handler")==0)
+	%<pwm0_rerr2_isr>();
+%endif
+%if( FEVAL("strcmp", pwm0_rerr3_isr, "interrupt_handler")==0)
+	%<pwm0_rerr3_isr>();
+%endif
+}
+%endif
+
+%if( FEVAL("strcmp", pwm1_rerr_isr, "interrupt_handler")==0)
+void pwm1_rerr_ISR (void)
+{
+%if( FEVAL("strcmp", pwm1_rerr0_isr, "interrupt_handler")==0)
+	%<pwm1_rerr0_isr>();
+%endif
+%if( FEVAL("strcmp", pwm1_rerr1_isr, "interrupt_handler")==0)
+	%<pwm1_rerr1_isr>();
+%endif
+%if( FEVAL("strcmp", pwm1_rerr2_isr, "interrupt_handler")==0)
+	%<pwm1_rerr2_isr>();
+%endif
+%if( FEVAL("strcmp", pwm1_rerr3_isr, "interrupt_handler")==0)
+	%<pwm1_rerr3_isr>();
+%endif
+}
+%endif
+
+/*
+ *######################################################################
+ *                           End of File
+ *######################################################################
+ */
+
+
+ %closefile tmpFcnBuf
+ %<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)>
+
+%endif
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Generate Interrupt Configuration Code File  intc_init.c 
+%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%assign pitCh0ISRPriority =  FEVAL("rappid_564xl_pit_channel_pri", "0")
+%assign pitCh1ISRPriority =  FEVAL("rappid_564xl_pit_channel_pri", "1")
+%assign pitCh2ISRPriority =  FEVAL("rappid_564xl_pit_channel_pri", "2")
+%assign pitCh3ISRPriority =  FEVAL("rappid_564xl_pit_channel_pri", "3")
+
+%assign adc1_EOCISRpriority = FEVAL("rappid_564xl_adc_interrupt_pri", "0")
+%assign adc2_EOCISRpriority = FEVAL("rappid_564xl_adc_interrupt_pri", "1")
+%assign adc1_WDGISRpriority = FEVAL("rappid_564xl_adc_wdg_interrupt_pri", "0")
+%assign adc2_WDGISRpriority = FEVAL("rappid_564xl_adc_wdg_interrupt_pri", "1")
+
+%assign dspi0_ISRPriority = FEVAL("rappid_564xl_dspi_interrupt_pri", "0")
+%assign dspi1_ISRPriority = FEVAL("rappid_564xl_dspi_interrupt_pri", "1")
+%assign dspi2_ISRPriority = FEVAL("rappid_564xl_dspi_interrupt_pri", "2")
+
+%assign dspi0_IsrPrioTFUF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "0","1")
+%assign dspi0_IsrPrioEOQF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "0","2")
+%assign dspi0_IsrPrioTFFF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "0","3")
+%assign dspi0_IsrPrioTCF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "0","4")
+
+%assign dspi1_IsrPrioTFUF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "1","1")
+%assign dspi1_IsrPrioEOQF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "1","2")
+%assign dspi1_IsrPrioTFFF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "1","3")
+%assign dspi1_IsrPrioTCF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "1","4")
+
+%assign dspi2_IsrPrioTFUF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "2","1")
+%assign dspi2_IsrPrioEOQF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "2","2")
+%assign dspi2_IsrPrioTFFF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "2","3")
+%assign dspi2_IsrPrioTCF = FEVAL("rappid_564xl_dspi_interrupt_pri2", "2","4")
+
+
+%assign can_0_ERRISRPriority = FEVAL("rappid_564xl_can_error_interrupt_pri", "0")
+%assign can_1_ERRISRPriority = FEVAL("rappid_564xl_can_error_interrupt_pri", "1")
+
+%assign can_0_WRNISRPriority = FEVAL("rappid_564xl_can_warning_interrupt_pri", "0")
+%assign can_1_WRNISRPriority = FEVAL("rappid_564xl_can_warning_interrupt_pri", "1")
+
+%assign can_0_Buff_0_3_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "0", "0", "3")
+%assign can_0_Buff_4_7_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "0", "4", "7")
+%assign can_0_Buff_8_11_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "0", "8", "11")
+%assign can_0_Buff_12_15_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "0", "12", "15")
+%assign can_0_Buff_16_31_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "0", "16", "31")
+%assign can_1_Buff_0_3_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "1", "0", "3")
+%assign can_1_Buff_4_7_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "1", "4", "7")
+%assign can_1_Buff_8_11_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "1", "8", "11")
+%assign can_1_Buff_12_15_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "1", "12", "15")
+%assign can_1_Buff_16_31_ISRPriority = FEVAL("rappid_564xl_can_buff_interrupt_pri", "1", "16", "31")
+
+
+%assign eTimer0_0_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "0", "0")
+%assign eTimer0_1_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "0", "1")
+%assign eTimer0_2_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "0", "2")
+%assign eTimer0_3_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "0", "3")
+%assign eTimer0_4_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "0", "4")
+%assign eTimer0_5_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "0", "5")
+%assign eTimer1_0_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "1", "0")
+%assign eTimer1_1_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "1", "1")
+%assign eTimer1_2_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "1", "2")
+%assign eTimer1_3_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "1", "3")
+%assign eTimer1_4_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "1", "4")
+%assign eTimer1_5_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "1", "5")
+%assign eTimer2_0_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "2", "0")
+%assign eTimer2_1_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "2", "1")
+%assign eTimer2_2_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "2", "2")
+%assign eTimer2_3_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "2", "3")
+%assign eTimer2_4_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "2", "4")
+%assign eTimer2_5_EOCISRpriority = FEVAL("rappid_564xl_etimer_interrupt_pri", "2", "5")
+
+%assign pwm0_comp0_prio   = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "0", "63")
+%assign pwm0_comp0_ISRPriority = pwm0_comp0_prio.str
+%assign pwm0_reload0_prio = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "0", "4096")
+%assign pwm0_reload0_ISRPriority = pwm0_reload0_prio.str
+%assign pwm0_comp1_prio   = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "1", "63")
+%assign pwm0_comp1_ISRPriority = pwm0_comp1_prio.str
+%assign pwm0_reload1_prio = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "1", "4096")
+%assign pwm0_reload1_ISRPriority = pwm0_reload1_prio.str
+%assign pwm0_comp2_prio   = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "2", "63")
+%assign pwm0_comp2_ISRPriority = pwm0_comp2_prio.str
+%assign pwm0_reload2_prio = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "2", "4096")
+%assign pwm0_reload2_ISRPriority = pwm0_reload2_prio.str
+%assign pwm0_comp3_prio   = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "3", "63")
+%assign pwm0_comp3_ISRPriority = pwm0_comp3_prio.str
+%assign pwm0_reload3_prio = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "3", "4096")
+%assign pwm0_reload3_ISRPriority = pwm0_reload3_prio.str
+
+%assign pwm0_rerr0_ISRPriority   = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "0", "8192")
+%assign pwm0_rerr1_ISRPriority   = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "1", "8192")
+%assign pwm0_rerr2_ISRPriority   = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "2", "8192")
+%assign pwm0_rerr3_ISRPriority   = FEVAL("rappid_564xl_pwm_interrupt_pri", "0", "3", "8192")
+
+%assign pwm0_rerr_prio = pwm0_rerr0_ISRPriority.val
+%assign pwm0_rerr_ISRPriority = pwm0_rerr0_ISRPriority.str
+%if pwm0_rerr1_ISRPriority.val > pwm0_rerr_prio
+    %assign pwm0_rerr_prio = pwm0_rerr1_ISRPriority.val
+	%assign pwm0_rerr_ISRPriority = pwm0_rerr1_ISRPriority.str
+%endif
+%if pwm0_rerr2_ISRPriority.val > pwm0_rerr_prio
+    %assign pwm0_rerr_prio = pwm0_rerr2_ISRPriority.val
+	%assign pwm0_rerr_ISRPriority = pwm0_rerr2_ISRPriority.str
+%endif
+%if pwm0_rerr3_ISRPriority.val > pwm0_rerr_prio
+    %assign pwm0_rerr_prio = pwm0_rerr3_ISRPriority.val
+	%assign pwm0_rerr_ISRPriority = pwm0_rerr3_ISRPriority.str
+%endif
+
+%assign pwm1_comp0_prio   = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "0", "63")
+%assign pwm1_comp0_ISRPriority = pwm1_comp0_prio.str
+%assign pwm1_reload0_prio = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "0", "4096")
+%assign pwm1_reload0_ISRPriority = pwm1_reload0_prio.str
+%assign pwm1_comp1_prio   = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "1", "63")
+%assign pwm1_comp1_ISRPriority = pwm1_comp1_prio.str
+%assign pwm1_reload1_prio = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "1", "4096")
+%assign pwm1_reload1_ISRPriority = pwm1_reload1_prio.str
+%assign pwm1_comp2_prio   = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "2", "63")
+%assign pwm1_comp2_ISRPriority = pwm1_comp2_prio.str
+%assign pwm1_reload2_prio = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "2", "4096")
+%assign pwm1_reload2_ISRPriority = pwm1_reload2_prio.str
+%assign pwm1_comp3_prio   = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "3", "63")
+%assign pwm1_comp3_ISRPriority = pwm1_comp3_prio.str
+%assign pwm1_reload3_prio = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "3", "4096")
+%assign pwm1_reload3_ISRPriority = pwm1_reload3_prio.str
+
+%assign pwm1_rerr0_ISRPriority   = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "0", "8192")
+%assign pwm1_rerr1_ISRPriority   = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "1", "8192")
+%assign pwm1_rerr2_ISRPriority   = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "2", "8192")
+%assign pwm1_rerr3_ISRPriority   = FEVAL("rappid_564xl_pwm_interrupt_pri", "1", "3", "8192")
+
+%assign pwm1_rerr_prio = pwm1_rerr0_ISRPriority.val
+%assign pwm1_rerr_ISRPriority = pwm1_rerr0_ISRPriority.str
+%if pwm1_rerr1_ISRPriority.val > pwm1_rerr_prio
+    %assign pwm1_rerr_prio = pwm1_rerr1_ISRPriority.val
+	%assign pwm1_rerr_ISRPriority = pwm1_rerr1_ISRPriority.str
+%endif
+%if pwm1_rerr2_ISRPriority.val > pwm1_rerr_prio
+    %assign pwm1_rerr_prio = pwm1_rerr2_ISRPriority.val
+	%assign pwm1_rerr_ISRPriority = pwm1_rerr2_ISRPriority.str
+%endif
+%if pwm1_rerr3_ISRPriority.val > pwm1_rerr_prio
+    %assign pwm1_rerr_prio = pwm1_rerr3_ISRPriority.val
+	%assign pwm1_rerr_ISRPriority = pwm1_rerr3_ISRPriority.str
+%endif
+
+%assign CTU_msr_ISRpriority      = FEVAL("rappid_564xl_ctu_interrupt_pri", "16384")
+%assign CTU_error_ISRpriority    = FEVAL("rappid_564xl_ctu_interrupt_pri", "32768")
+%assign CTU_adc_ISRpriority      = FEVAL("rappid_564xl_ctu_interrupt_pri", "0")
+%assign CTU_trigger0_ISRpriority = FEVAL("rappid_564xl_ctu_interrupt_pri", "128")
+%assign CTU_trigger1_ISRpriority = FEVAL("rappid_564xl_ctu_interrupt_pri", "64")
+%assign CTU_trigger2_ISRpriority = FEVAL("rappid_564xl_ctu_interrupt_pri", "32")
+%assign CTU_trigger3_ISRpriority = FEVAL("rappid_564xl_ctu_interrupt_pri", "16")
+%assign CTU_trigger4_ISRpriority = FEVAL("rappid_564xl_ctu_interrupt_pri", "8")
+%assign CTU_trigger5_ISRpriority = FEVAL("rappid_564xl_ctu_interrupt_pri", "4")
+%assign CTU_trigger6_ISRpriority = FEVAL("rappid_564xl_ctu_interrupt_pri", "2")
+%assign CTU_trigger7_ISRpriority = FEVAL("rappid_564xl_ctu_interrupt_pri", "1")
+
+%%---------------------------------------------------------------------------------------------------
+%% Initialization for PIL application instead of initialization in main() for stand-alone application
+%%---------------------------------------------------------------------------------------------------
+%if !EXISTS("_PIL_MAIN_INIT_CONFIG_")
+  %assign ::_PIL_MAIN_INIT_CONFIG_ = 1
+  
+  %assign pilEnabled = FEVAL("rappid_564xl_pil_status")
+  %if (pilEnabled == 1)
+    %assign fname = LibCreateSourceFile("Source", "Custom", "main_init")
+    %openfile tmpFcnBuf 
+	
+    %assign adcBlock = FEVAL("rappid_564xl_adc_block")
+    %assign adcConfig = FEVAL("rappid_564xl_adc_config_block")
+    %assign flexPWMBlock = FEVAL("rappid_564xl_flexpwm_block")
+	%assign fmInterface = FEVAL("rappid_564xl_fmaster_interface")
+	%assign globalIntPriority = FEVAL("rappid_564xl_global_intc_pri")
+
+#include "target.h"
+	
+void hw_init_fnc (void)
+{
+     /* Shut Down Software Watchdog Timer */
+     /* remove the SWT Soft lock  */
+      SWT.SR.R = 0x0000C520;
+      SWT.SR.R = 0x0000D928;
+     /* Disable SWT  */
+      SWT.CR.B.WEN = 0x0;
+ 
+      sys_init_fnc();           /* Disable Watchdog */
+	  
+	%if(adcBlock == 1)
+		adc_init_fnc();			/* Adc configuration */
+		%if(adcConfig)
+			%assign adcNumConf1 = FEVAL("rappid_564xl_adc_config_num","1")
+			%assign adcNumConf2 = FEVAL("rappid_564xl_adc_config_num","2")
+			%if(adcNumConf1)
+			adc0_config();
+			%endif
+			%if(adcNumConf2)
+			adc1_config();
+			%endif
+		%endif
+		adc_normal_start_fnc();
+	%endif
+	
+    %if(flexPWMBlock==1)
+        flexpwm_init_fnc();   /* General FlexPWM initialization */ 
+    %endif
+	
+       linflex_init_fnc();
+       linflex_siu_init();
+
+    %if( FEVAL("strcmp", fmInterface, "CAN") != 0)
+       flexcan_init_fnc();
+    %endif
+	
+       INTC.CPR.B.PRI = 0; 	/* Ensure INTC's current priority is 0 */
+       intc_init_fnc();
+       asm(" wrteei 1");    /* Enable IRQ */
+ 	    
+       INTC.CPR.R = %<globalIntPriority>;  /* Global Minimum Interrupt Priority */
+}
+   %closefile tmpFcnBuf
+   %<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)>
+  %endif
+%endif
+
+%if !EXISTS("_RAPPID_INTERRUPT_CONFIG_")
+  %assign ::_RAPPID_INTERRUPT_CONFIG_ = 1
+
+%assign fname = LibCreateSourceFile("Source", "Custom", "intc_init")
+%openfile tmpFcnBuf 
+
+/********************  Dependent Include files here **********************/
+#include "rappid_ref.h"
+#include "intc_init.h"
+extern uint32_t IntcIsrVectorTable [];
+
+/*********************  Initialization Function(s) ************************/
+void intc_init_fnc (void)
+{
+  e200zX_Interrupt_Setup();
+
+  INTC.MCR.B.HVEN_PRC0 = 0;	                     /* Initialize INTC for software vector mode */
+  INTC.MCR.B.VTES_PRC0 = 0;                      /* Use default vector table entry offsets of 4 B */
+
+  INTC.IACKR.R = (uint32_t) &ISRVectorTable[0];  /* Set INTC ISR vector table base address */
+  
+  INTC.PSR[79].R = 14;                           /* LIN_0 Rx for PIL */
+  
+  INTC.PSR[59].R = %<pitCh0ISRPriority>;
+  INTC.PSR[60].R = %<pitCh1ISRPriority>;
+  INTC.PSR[61].R = %<pitCh2ISRPriority>;
+  INTC.PSR[127].R = %<pitCh3ISRPriority>;
+  
+  INTC.PSR[62].R = %<adc1_EOCISRpriority>;
+  INTC.PSR[64].R = %<adc1_WDGISRpriority>;
+  INTC.PSR[82].R = %<adc2_EOCISRpriority>;
+  INTC.PSR[84].R = %<adc2_WDGISRpriority>;
+  
+  INTC.PSR[78].R = %<dspi0_ISRPriority>;
+  INTC.PSR[98].R = %<dspi1_ISRPriority>;
+  INTC.PSR[118].R = %<dspi2_ISRPriority>;
+  
+  INTC.PSR[74].R = %<dspi0_IsrPrioTFUF>;
+  INTC.PSR[75].R = %<dspi0_IsrPrioEOQF>;
+  INTC.PSR[76].R = %<dspi0_IsrPrioTFFF>;
+  INTC.PSR[77].R = %<dspi0_IsrPrioTCF>;
+
+  INTC.PSR[94].R = %<dspi1_IsrPrioTFUF>;
+  INTC.PSR[95].R = %<dspi1_IsrPrioEOQF>;
+  INTC.PSR[96].R = %<dspi1_IsrPrioTFFF>;
+  INTC.PSR[97].R = %<dspi1_IsrPrioTCF>;
+
+  INTC.PSR[114].R = %<dspi2_IsrPrioTFUF>;
+  INTC.PSR[115].R = %<dspi2_IsrPrioEOQF>;
+  INTC.PSR[116].R = %<dspi2_IsrPrioTFFF>;
+  INTC.PSR[117].R = %<dspi2_IsrPrioTCF>;
+    
+  INTC.PSR[65].R = %<can_0_ERRISRPriority>;
+  INTC.PSR[85].R = %<can_1_ERRISRPriority>;
+
+  INTC.PSR[66].R = %<can_0_WRNISRPriority>;
+  INTC.PSR[86].R = %<can_1_WRNISRPriority>;
+
+  INTC.PSR[68].R = %<can_0_Buff_0_3_ISRPriority>;
+  INTC.PSR[69].R = %<can_0_Buff_4_7_ISRPriority>;
+  INTC.PSR[70].R = %<can_0_Buff_8_11_ISRPriority>;
+  INTC.PSR[71].R = %<can_0_Buff_12_15_ISRPriority>;
+  INTC.PSR[72].R = %<can_0_Buff_16_31_ISRPriority>;
+  INTC.PSR[88].R = %<can_1_Buff_0_3_ISRPriority>;
+  INTC.PSR[89].R = %<can_1_Buff_4_7_ISRPriority>;
+  INTC.PSR[90].R = %<can_1_Buff_8_11_ISRPriority>;
+  INTC.PSR[91].R = %<can_1_Buff_12_15_ISRPriority>;
+  INTC.PSR[92].R = %<can_1_Buff_16_31_ISRPriority>;
+  
+
+  INTC.PSR[157].R = %<eTimer0_0_EOCISRpriority>;
+  INTC.PSR[158].R = %<eTimer0_1_EOCISRpriority>;
+  INTC.PSR[159].R = %<eTimer0_2_EOCISRpriority>;
+  INTC.PSR[160].R = %<eTimer0_3_EOCISRpriority>;
+  INTC.PSR[161].R = %<eTimer0_4_EOCISRpriority>;
+  INTC.PSR[162].R = %<eTimer0_5_EOCISRpriority>;
+  INTC.PSR[168].R = %<eTimer1_0_EOCISRpriority>;
+  INTC.PSR[169].R = %<eTimer1_1_EOCISRpriority>;
+  INTC.PSR[170].R = %<eTimer1_2_EOCISRpriority>;
+  INTC.PSR[171].R = %<eTimer1_3_EOCISRpriority>;
+  INTC.PSR[172].R = %<eTimer1_4_EOCISRpriority>;
+  INTC.PSR[173].R = %<eTimer1_5_EOCISRpriority>;
+  INTC.PSR[222].R = %<eTimer2_0_EOCISRpriority>;
+  INTC.PSR[223].R = %<eTimer2_1_EOCISRpriority>;
+  INTC.PSR[224].R = %<eTimer2_2_EOCISRpriority>;
+  INTC.PSR[225].R = %<eTimer2_3_EOCISRpriority>;
+  INTC.PSR[226].R = %<eTimer2_4_EOCISRpriority>;
+  INTC.PSR[227].R = %<eTimer2_5_EOCISRpriority>;
+  
+  INTC.PSR[180].R = %<pwm0_comp0_ISRPriority>;
+  INTC.PSR[179].R = %<pwm0_reload0_ISRPriority>;
+  INTC.PSR[183].R = %<pwm0_comp1_ISRPriority>;
+  INTC.PSR[182].R = %<pwm0_reload1_ISRPriority>;
+  INTC.PSR[186].R = %<pwm0_comp2_ISRPriority>;
+  INTC.PSR[185].R = %<pwm0_reload2_ISRPriority>;
+  INTC.PSR[189].R = %<pwm0_comp3_ISRPriority>;
+  INTC.PSR[188].R = %<pwm0_reload3_ISRPriority>;
+  INTC.PSR[192].R = %<pwm0_rerr_ISRPriority>;
+  
+  INTC.PSR[193].R = %<CTU_msr_ISRpriority>;
+  INTC.PSR[194].R = %<CTU_trigger0_ISRpriority>;
+  INTC.PSR[195].R = %<CTU_trigger1_ISRpriority>;
+  INTC.PSR[196].R = %<CTU_trigger2_ISRpriority>;
+  INTC.PSR[197].R = %<CTU_trigger3_ISRpriority>;
+  INTC.PSR[198].R = %<CTU_trigger4_ISRpriority>;
+  INTC.PSR[199].R = %<CTU_trigger5_ISRpriority>;
+  INTC.PSR[200].R = %<CTU_trigger6_ISRpriority>;
+  INTC.PSR[201].R = %<CTU_trigger7_ISRpriority>;
+  INTC.PSR[206].R = %<CTU_adc_ISRpriority>;
+  INTC.PSR[207].R = %<CTU_error_ISRpriority>;
+  
+  INTC.PSR[234].R = %<pwm1_comp0_ISRPriority>;
+  INTC.PSR[233].R = %<pwm1_reload0_ISRPriority>;
+  INTC.PSR[237].R = %<pwm1_comp1_ISRPriority>;
+  INTC.PSR[236].R = %<pwm1_reload1_ISRPriority>;
+  INTC.PSR[240].R = %<pwm1_comp2_ISRPriority>;
+  INTC.PSR[239].R = %<pwm1_reload2_ISRPriority>;
+  INTC.PSR[243].R = %<pwm1_comp3_ISRPriority>;
+  INTC.PSR[242].R = %<pwm1_reload3_ISRPriority>;
+  INTC.PSR[246].R = %<pwm1_rerr_ISRPriority>;
+}
+
+/*
+ *######################################################################
+ *                           End of File
+ *######################################################################
+ */
+
+%closefile tmpFcnBuf
+%<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)>
+
+%endif
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Generate Clock parameters File  sysclk.h 
+%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%if !EXISTS("_CLOCK_CONFIG_")
+  %assign ::_CLOCK_CONFIG_ = 1
+
+  %assign systemClock = FEVAL("rappid_564xl_get_sys_clock")
+  %assign sysXTAL  = FEVAL("rappid_564xl_get_sys_xtal")
+
+  %assign MC_freq_val = FEVAL("rappid_564xl_get_MC_clock")
+  %assign MC_DIV_val = FEVAL("rappid_564xl_get_MC_CLC_divider")
+  %assign SWG_freq_val = FEVAL("rappid_564xl_get_SWG_clock")
+  %assign SW_DIV_val     = FEVAL("rappid_564xl_get_SWG_CLC_divider")
+  
+  %assign fname = LibCreateSourceFile("Header", "Custom", "sysclk")
+  %openfile tmpFcnBuf 
+  
+  %if (systemClock==120000000)
+    %if (sysXTAL==8000000)
+/*                                    Parameters for 8Mhz XTAL 120Mhz Clk  */
+
+#define IDF_0                1 - 1    /* Input Division Factor: 1   */
+#define ODF_0                1         /* Output Division Factor: 4   */
+#define NDIV_0               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_8MHz / 1 / 4 * 60 = 120MHz  */
+
+#define IDF_1                1 - 1    /* Input Division Factor: 1   */
+#define ODF_1                1         /* Output Division Factor: 4   */
+#define NDIV_1               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_8MHz / 1 / 4 * 60 = 120MHz  */
+    %elseif (sysXTAL==40000000)
+/*                                    Parameters for 40Mhz XTAL 120Mhz Clk   */
+
+#define IDF_0                4 - 1    /* Input Division Factor: 4   */
+#define ODF_0                1         /* Output Division Factor: 4   */
+#define NDIV_0               48        /* Loop Division Factor: 48    */
+                                       /* XTAL_40MHz / 4 / 4 * 48 = 120MHz  */
+
+#define IDF_1                4 - 1    /* Input Division Factor: 4   */
+#define ODF_1                1         /* Output Division Factor: 4   */
+#define NDIV_1               48        /* Loop Division Factor: 48    */
+                                       /* XTAL_40MHz / 4 / 4 * 48 = 120MHz  */
+
+    %elseif (sysXTAL==16000000)
+/*                                    Parameters for 16Mhz XTAL 120Mhz Clk   */
+
+#define IDF_0                2 - 1    /* Input Division Factor: 2   */
+#define ODF_0                1         /* Output Division Factor: 4   */
+#define NDIV_0               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_16MHz / 2 / 4 * 60 = 120MHz  */
+
+#define IDF_1                2 - 1    /* Input Division Factor: 2   */
+#define ODF_1                1         /* Output Division Factor: 4   */
+#define NDIV_1               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_16MHz / 2 / 4 * 60 = 120MHz  */
+
+
+    %endif
+  %elseif (systemClock==80000000)
+    %if (sysXTAL==8000000)
+/*                                    Parameters for 8Mhz XTAL 80Mhz Clk  */
+
+#define IDF_0                2 - 1    /* Input Division Factor: 2   */
+#define ODF_0                1         /* Output Division Factor: 4   */
+#define NDIV_0               80        /* Loop Division Factor: 80    */
+                                       /* XTAL_8MHz / 2 / 4 * 80 = 80MHz  */
+
+#define IDF_1                2 - 1    /* Input Division Factor: 2   */
+#define ODF_1                1         /* Output Division Factor: 4   */
+#define NDIV_1               80        /* Loop Division Factor: 80    */
+                                       /* XTAL_8MHz / 2 / 4 * 80 = 80MHz  */
+
+
+    %elseif (sysXTAL==40000000)
+/*                                    Parameters for 40Mhz XTAL 80Mhz Clk   */
+
+#define IDF_0                5 - 1    /* Input Division Factor: 5   */
+#define ODF_0                1         /* Output Division Factor: 4   */
+#define NDIV_0               40        /* Loop Division Factor: 40    */
+                                       /* XTAL_40MHz / 10 / 2 * 40 = 80MHz  */
+
+#define IDF_1                5 - 1    /* Input Division Factor: 5   */
+#define ODF_1                1         /* Output Division Factor: 4   */
+#define NDIV_1               40        /* Loop Division Factor: 40    */
+                                       /* XTAL_40MHz / 10 / 2 * 40 = 80MHz  */
+
+    %elseif (sysXTAL==16000000)
+/*                                    Parameters for 16Mhz XTAL 80Mhz Clk  */
+
+#define IDF_0                4 - 1    /* Input Division Factor: 4   */
+#define ODF_0                1         /* Output Division Factor: 4   */
+#define NDIV_0               80        /* Loop Division Factor: 80    */
+                                       /* XTAL_16MHz / 4 / 4 * 80 = 80MHz  */
+
+#define IDF_1                4 - 1    /* Input Division Factor: 4   */
+#define ODF_1                1         /* Output Division Factor: 4   */
+#define NDIV_1               80        /* Loop Division Factor: 80    */
+                                       /* XTAL_16MHz / 4 / 4 * 80 = 80MHz  */
+
+
+    %endif
+  %elseif (systemClock==60000000)
+    %if (sysXTAL==8000000)
+/*                                    Parameters for 8Mhz XTAL 60Mhz Clk  */
+
+#define IDF_0                1 - 1    /* Input Division Factor: 1   */
+#define ODF_0                2         /* Output Division Factor: 8   */
+#define NDIV_0               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_8MHz / 1 / 8 * 60 = 60MHz  */
+
+
+#define IDF_1                1 - 1    /* Input Division Factor: 1   */
+#define ODF_1                2         /* Output Division Factor: 8   */
+#define NDIV_1               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_8MHz / 1 / 8 * 60 = 60MHz  */
+
+    %elseif (sysXTAL==40000000)
+/*                                    Parameters for 40Mhz XTAL 60Mhz Clk   */
+
+#define IDF_0                5 - 1    /* Input Division Factor: 5   */
+#define ODF_0                2         /* Output Division Factor: 8   */
+#define NDIV_0               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_40MHz / 5 / 8 * 60 = 60MHz  */
+
+
+#define IDF_1                5 - 1    /* Input Division Factor: 5   */
+#define ODF_1                2         /* Output Division Factor: 8   */
+#define NDIV_1               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_40MHz / 5 / 8 * 60 = 60MHz  */
+
+    %elseif (sysXTAL==16000000)
+/*                                    Parameters for 16Mhz XTAL 60Mhz Clk  */
+
+#define IDF_0                2 - 1    /* Input Division Factor: 2   */
+#define ODF_0                2         /* Output Division Factor: 8   */
+#define NDIV_0               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_16MHz / 2 / 8 * 60 = 60MHz  */
+
+
+#define IDF_1                2 - 1    /* Input Division Factor: 2   */
+#define ODF_1                2         /* Output Division Factor: 8   */
+#define NDIV_1               60        /* Loop Division Factor: 60    */
+                                       /* XTAL_16MHz / 2 / 8 * 60 = 60MHz  */
+
+    %endif
+  %endif
+#define MC_DIV     %<MC_DIV_val>       /* Motor Control Clock Divider Value: (%<MC_DIV_val> + 1), Frequency %<MC_freq_val> Hz */	
+#define SW_DIV     %<SW_DIV_val>       /* Sinewave Generator Clock Divider Value: (%<SW_DIV_val> + 1), Frequency %<SWG_freq_val> Hz */	
+
+#define MC_CLOCK %<MC_freq_val>       /* Motor Control Clock */
+#define SWG_CLOCK %<SWG_freq_val>     /* Sinewave Generator Clock */
+
+  %closefile tmpFcnBuf
+  %<LibSetSourceFileSection(fname , "Defines", tmpFcnBuf)>   
+%endif
+
+
+%assign fmInterface = FEVAL("rappid_564xl_fmaster_interface")
+%assign fmDev = FEVAL("rappid_564xl_fmaster_device")
+%assign pilEnabled = FEVAL("rappid_564xl_pil_status")
+
+%if (pilEnabled==1)
+ %assign fmDevice = "0"
+%else
+ %if (fmDev==1)
+  %assign fmDevice = "1"
+ %else
+  %assign fmDevice = "0"
+ %endif 
+%endif 
+
+%if(( FEVAL("strcmp", fmInterface, "Serial") != 0)||( pilEnabled == 1))
+
+%if( FEVAL("strcmp", fmInterface, "Serial") != 0)
+  %assign linBaudRate = FEVAL("rappid_564xl_fmaster_baud")
+%else
+  %assign linBaudRate = FEVAL("rappid_564xl_pil_baud")
+%endif
+%assign systemClock = FEVAL("rappid_564xl_get_sys_clock")
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Generate Freemaster LINFlex UART0 Configuration Code File  linflex_init.c 
+%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%if !EXISTS("_RAPPID_FMASTER_CONFIG_")
+  %assign ::_FMASTER_CONFIG_ = 1
+
+%assign fname = LibCreateSourceFile("Source", "Custom", "linflex_init")
+%openfile tmpFcnBuf 
+
+
+/********************  Dependent Include files here **********************/
+
+#include "linflex_init.h"
+
+/**********************  Initialization Function(s) *************************/
+
+void linflex_init_fnc (void)
+{
+
+    LINFLEX_%<fmDevice>.LINCR1.B.INIT = 1;
+        /*Initialization Request: Set */
+
+    LINFLEX_%<fmDevice>.LINCR1.B.SLEEP = 0;
+        /*Sleep Request: Clear */
+
+    LINFLEX_%<fmDevice>.UARTCR.B.UART= 1;
+        /* UART Mode: Enabled */
+/*----------------------------------------------------------- */
+/*        LIN control register 2   (LINFLEX_X_LINCR2)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINCR2.R = 0x0000;
+        /* Idle on Bit Error: Disabled*/
+        /* Idle on Identifier Parity Error: Disabled*/
+
+%if( linBaudRate==57600) 
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0056;
+        /* Integer Baud Rate Factor: 86*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x000D;
+        /* Fractional Baud Rate Factor: 13*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0082;
+        /* Integer Baud Rate Factor: 130*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0003;
+        /* Fractional Baud Rate Factor: 3*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0041;
+        /* Integer Baud Rate Factor: 65*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0002;
+        /* Fractional Baud Rate Factor: 2*/
+  %endif
+  
+%elseif(linBaudRate==19200)
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0104;
+        /* Integer Baud Rate Factor: 260*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0007;
+        /* Fractional Baud Rate Factor: 7*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0186;
+        /* Integer Baud Rate Factor: 390*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x000A;
+        /* Fractional Baud Rate Factor: 10*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x00C3;
+        /* Integer Baud Rate Factor: 195*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0005;
+        /* Fractional Baud Rate Factor: 5*/
+  %endif
+  
+%elseif(linBaudRate==38400)
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0082;
+        /* Integer Baud Rate Factor: 130*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0003;
+        /* Fractional Baud Rate Factor: 3*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x00C3;
+        /* Integer Baud Rate Factor: 195*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0005;
+        /* Fractional Baud Rate Factor: 5*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0061;
+        /* Integer Baud Rate Factor: 97*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x000A;
+        /* Fractional Baud Rate Factor: 10*/
+  %endif
+  
+%elseif(linBaudRate==115200)
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x002B;
+        /* Integer Baud Rate Factor: 43*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0006;
+        /* Fractional Baud Rate Factor: 6*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0041;
+        /* Integer Baud Rate Factor: 65*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0002;
+        /* Fractional Baud Rate Factor: 2*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0020;
+        /* Integer Baud Rate Factor: 32*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0009;
+        /* Fractional Baud Rate Factor: 9*/
+  %endif
+
+%elseif(linBaudRate==230400)
+  %if (systemClock==80000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0015;
+        /* Integer Baud Rate Factor: 21*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x000B;
+        /* Fractional Baud Rate Factor: 11*/
+  %elseif (systemClock==120000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0020;
+        /* Integer Baud Rate Factor: 32*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0009;
+        /* Fractional Baud Rate Factor: 9*/
+  %elseif (systemClock==60000000)
+/*----------------------------------------------------------- */
+/*        LIN integer baudrate register  (LINFLEX_X_LINIBRR)   */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINIBRR.R = 0x0010;
+        /* Integer Baud Rate Factor: 16*/
+
+/*----------------------------------------------------------- */
+/*        LIN fractional baudrate register  (LINFLEX_X_LINFBRR)*/
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.LINFBRR.R = 0x0004;
+        /* Fractional Baud Rate Factor: 4*/
+  %endif
+%endif 
+
+/*----------------------------------------------------------- */
+/*        Identifier filter mode register  (LINFLEX_X_IFMR)         */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.IFMR.R = 0x0000;
+        /* Filters 0:identifier list mode    */
+        /* Filters 1:identifier list mode    */
+        /* Filters 2:identifier list mode    */
+        /* Filters 3:identifier list mode    */
+        /* Filters 4:identifier list mode    */
+        /* Filters 5:identifier list mode    */
+        /* Filters 6:identifier list mode    */
+        /* Filters 7:identifier list mode    */
+
+/*----------------------------------------------------------- */
+/*        Identifier filter enable register  (LINFLEX_X_IFER)         */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.IFER.R = 0x0000;
+        /* Activate Filter 0:Disabled    */
+        /* Activate Filter 1:Disabled    */
+        /* Activate Filter 2:Disabled    */
+        /* Activate Filter 3:Disabled    */
+        /* Activate Filter 4:Disabled    */
+        /* Activate Filter 5:Disabled    */
+        /* Activate Filter 6:Disabled    */
+        /* Activate Filter 7:Disabled    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR0)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR0.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR1)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR1.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR2)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR2.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR3)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR3.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR4)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR4.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR5)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR5.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR6)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR6.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*    Identifier filter control register  (LINFLEX_0_IFCR7)    */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.IFCR7.R = 0x0000;
+            /* Data Field Length (Bytes): 1    */
+            /* Direction: Receive    */
+            /* Checksum: Enhanced    */
+            /* Identifier: 0b0    */
+
+/*----------------------------------------------------------- */
+/*        UART mode control register  (LINFLEX_X_UARTCR)        */
+/*----------------------------------------------------------- */
+    LINFLEX_%<fmDevice>.UARTCR.R = 0x0033;
+        /* UART Mode: Enable*/
+        /* Parity transmit/check: Disable*/
+        /* Sent parity: Even*/
+        /* Word Length in UART mode: 8 bit data (9 bit if PCE is set)*/
+        /* Transmitter Data Field Length (Bytes): 1*/
+        /* Receiver Data Field Length (Bytes): 1*/
+        /* Transmitter : Enable*/
+        /* Receiver : Enable*/
+
+
+/*----------------------------------------------------------- */
+/*        LIN timeout control status register  (LINFLEX_X_LINTCSR)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINTCSR.R = 0x0000;
+        /* LIN timeout mode: Disabled*/
+        /* Idle on Timeout: Disabled*/
+        /* Timeout Counter: Disabled*/
+
+
+/*----------------------------------------------------------- */
+/*        LIN output compare register  (LINFLEX_X_LINOCR)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINOCR.R = 0xFFFF;
+        /* Output compare Value 1: 255*/
+        /* Output compare Value 2: 255*/
+
+/*----------------------------------------------------------- */
+/*        LIN timeout control register  (LINFLEX_X_LINTOCR)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINTOCR.R = 0x0E2C;
+        /* Header Timeout (Bit Time): 44*/
+        /* Response Timeout Timeout: 14*/
+
+/*----------------------------------------------------------- */
+/*        LIN interrupt enable register  (LINFLEX_X_LINIER)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINIER.R = 0x0000;
+
+        /* Header Received Interrupt: Disabled    */
+        /* Data Transmitted Interrupt: Disabled    */
+        /* Data Reception Complete Interrupt: Disabled    */
+        /* Data Buffer Empty Interrupt: Disabled    */
+        /* Data Buffer Full Interrupt: Disabled    */
+        /* Wakeup Interrupt: Disabled    */
+        /* LIN State Interrupt: Disabled    */
+        /* Buffer Overrun Error Interrupt: Disabled    */
+        /* Frame Error Interrupt:Disabled    */
+        /* Header Error Interrupt:Disabled    */
+        /* Checksum Error Interrupt:Disabled    */
+        /* Bit Error Interrupt:Disabled    */
+        /* Output Compare Interrupt:Disabled    */
+        /* Stuck at Zero Interrupt:Disabled    */
+
+/*----------------------------------------------------------- */
+/*        LIN control register 1   (LINFLEX_X_LINCR1)        */
+/*----------------------------------------------------------- */
+
+    LINFLEX_%<fmDevice>.LINCR1.R = 0x0081;
+        /* Initialization Request: Set  */
+        /* Master Mode Enable: Slave*/
+        /* Receiver Buffer: Not Locked*/
+        /* Loopback Mode: Disabled*/
+        /* Self Test Mode: Disabled*/
+        /* LIN Master Break Length: 10 bits*/
+        /* Slave Mode Break Detection Threshold: 11 bits*/
+        /* Bypass Filter: Enabled*/
+        /* Automatic Wake-Up Mode: Disabled*/
+        /* Checksum field: Enabled*/
+        /* Checksum Calculation: Disabled*/
+        /* LIN Slave Automatic Resynchronization: Disabled*/
+
+
+    LINFLEX_%<fmDevice>.LINCR1.B.INIT = 0;
+        /*Initialization Request: Clear */
+
+}
+
+/*
+ *######################################################################
+ *                           End of File
+ *######################################################################
+*/
+
+%closefile tmpFcnBuf
+%<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)>
+%endif
+%endif
+
+%assign ccpInterface = FEVAL("rappid_564xl_ccp_interface")
+
+%if( FEVAL("strcmp", fmInterface, "CAN") != 0 || FEVAL("strcmp", ccpInterface, "CAN") != 0)
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Generate Freemaster/CCP FlexCAN CAN_0 or CAN_1 Configuration Code File  flexcan_init.c 
+%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%if !EXISTS("_RAPPID_CCPFMASTER_CONFIG_")
+  %assign ::_CCPFMASTER_CONFIG_ = 1
+  
+%assign ccpDev = FEVAL("rappid_564xl_ccp_device")
+%assign ccpEnabled = FEVAL("rappid_564xl_ccp_status")
+
+%if (ccpDev == 0)
+	%assign ccpDevice = "0"
+%else
+	%assign ccpDevice = "1"
+%endif
+
+%assign fname = LibCreateSourceFile("Source", "Custom", "flexcan_init")
+%openfile tmpFcnBuf 
+
+/********************  Dependent Include files here **********************/
+
+#include "target.h"
+
+/**********************  Initialization Function(s) *************************/
+
+void  flexcan_init_fnc (void)
+{
+%if (FEVAL("strcmp", fmInterface, "CAN") != 0)
+{
+   uint8_t status, x, i;
+   CAN_%<fmDevice>.MCR.B.MDIS    = 0;
+   
+   CAN_%<fmDevice>.MCR.B.SOFT_RST = 1;
+   while( CAN_%<fmDevice>.MCR.B.SOFT_RST ==1){}
+   
+   CAN_%<fmDevice>.MCR.B.MDIS  = 1;  
+ 
+   CAN_%<fmDevice>.CR.B.CLK_SRC   = 0;
+ 
+   /*Enable the CAN module */
+   CAN_%<fmDevice>.MCR.B.MDIS    = 0;
+ 
+   /* Set FRZ bit */
+   CAN_%<fmDevice>.MCR.B.FRZ   = 1;
+   /* Set HALT bit */
+   CAN_%<fmDevice>.MCR.B.HALT  = 1;
+   
+   CAN_%<fmDevice>.MCR.R = 1342177343;
+   
+   %if (sysXTAL==8000000)
+   CAN_%<fmDevice>.CR.R  = 0x00DB0086;
+   %elseif (sysXTAL==16000000)
+   CAN_%<fmDevice>.CR.R  = 0x01DB0086;
+   %elseif (sysXTAL==40000000)
+   CAN_%<fmDevice>.CR.R  = 0x04DB0086;
+   %endif
+
+   /* Set the FlexCAN Maximum Buffer Number */
+   CAN_%<fmDevice>.MCR.B.MAXMB  = 32;
+ 
+   /* clear memory from message buffer 0 to 15 */
+   for(x=0; x < 32; x++)
+   {
+    CAN_%<fmDevice>.BUF[x].CS.R = 0;
+    CAN_%<fmDevice>.BUF[x].ID.R = 0;
+    for(i=0; i < 2; i++) 
+    {
+     CAN_%<fmDevice>.BUF[x].DATA.W[i] = 0;
+    }
+   }
+   
+   for( x=0 ; x<32 ; x++)
+   {
+    CAN_%<fmDevice>.RXIMR[x].R = 0xFFFFFFFF;
+   }
+   
+   CAN_%<fmDevice>.IMRL.R  = 0x00000000;
+   
+   CAN_%<fmDevice>.MCR.B.HALT  =  0;
+   CAN_%<fmDevice>.MCR.B.FRZ   =  0;
+ 
+   /* await synchronization (delay) */
+   for( x=1; x < 255; x++){}
+ 
+   if(CAN_%<fmDevice>.MCR.B.NOT_RDY == 1)
+   {
+    status = 1;
+   }
+   else
+   {
+    status = 0;
+   }
+
+/* Can Pins */
+%if (FEVAL("strcmp", fmDevice, "0") != 0)
+   SIU.PCR[16].R = 0x0624;
+   SIU.PCR[17].R = 0x0100;
+   SIU.PSMI[33].R = 0x01;
+%endif
+%if (FEVAL("strcmp", fmDevice, "1") != 0)
+   SIU.PCR[14].R = 0x0624;
+   SIU.PCR[15].R = 0x0100;
+   SIU.PSMI[34].R = 0x00;
+%endif
+}   
+%endif
+
+%assign fmEnabled = FEVAL("rappid_564xl_fmaster_status")
+%if ((ccpEnabled && fmEnabled && FEVAL("strcmp", fmInterface, "CAN")!=0 && ccpDev != fmDev) || (fmEnabled == 0 && ccpEnabled) || (FEVAL("strcmp", fmInterface, "Serial")!=0 && ccpEnabled) )
+{
+
+   uint8_t status, x, i;
+   CAN_%<ccpDevice>.MCR.B.MDIS    = 0;
+   
+   CAN_%<ccpDevice>.MCR.B.SOFT_RST = 1;
+   while( CAN_%<ccpDevice>.MCR.B.SOFT_RST ==1){}
+   
+   CAN_%<ccpDevice>.MCR.B.MDIS  = 1;  
+ 
+   CAN_%<ccpDevice>.CR.B.CLK_SRC   = 0;
+ 
+   /*Enable the CAN module */
+   CAN_%<ccpDevice>.MCR.B.MDIS    = 0;
+ 
+   /* Set FRZ bit */
+   CAN_%<ccpDevice>.MCR.B.FRZ   = 1;
+   /* Set HALT bit */
+   CAN_%<ccpDevice>.MCR.B.HALT  = 1;
+   
+   CAN_%<ccpDevice>.MCR.R = 1342177343;
+   
+   %if (sysXTAL==8000000)
+   CAN_%<ccpDevice>.CR.R  = 0x00DB0086;
+   %elseif (sysXTAL==16000000)
+   CAN_%<ccpDevice>.CR.R  = 0x01DB0086;
+   %elseif (sysXTAL==40000000)
+   CAN_%<ccpDevice>.CR.R  = 0x04DB0086;
+   %endif
+
+   /* Set the FlexCAN Maximum Buffer Number */
+   CAN_%<ccpDevice>.MCR.B.MAXMB  = 32;
+ 
+   /* clear memory from message buffer 0 to 15 */
+   for(x=0; x < 32; x++)
+   {
+    CAN_%<ccpDevice>.BUF[x].CS.R = 0;
+    CAN_%<ccpDevice>.BUF[x].ID.R = 0;
+    for(i=0; i < 2; i++) 
+    {
+     CAN_%<ccpDevice>.BUF[x].DATA.W[i] = 0;
+    }
+   }
+   
+   for( x=0 ; x<32 ; x++)
+   {
+    CAN_%<ccpDevice>.RXIMR[x].R = 0xFFFFFFFF;
+   }
+   
+   CAN_%<ccpDevice>.IMRL.R  = 0x00000000;
+   
+   CAN_%<ccpDevice>.MCR.B.HALT  =  0;
+   CAN_%<ccpDevice>.MCR.B.FRZ   =  0;
+ 
+   /* await synchronization (delay) */
+   for( x=1; x < 255; x++){}
+ 
+   if(CAN_%<ccpDevice>.MCR.B.NOT_RDY == 1)
+   {
+    status = 1;
+   }
+   else
+   {
+    status = 0;
+   }
+
+/* Can Pins */
+%if (FEVAL("strcmp", ccpDevice, "0") != 0)
+   SIU.PCR[16].R = 0x0624;
+   SIU.PCR[17].R = 0x0100;
+   SIU.PSMI[33].R = 0x01;
+%endif
+%if (FEVAL("strcmp", ccpDevice, "1") != 0)
+   SIU.PCR[14].R = 0x0624;
+   SIU.PCR[15].R = 0x0100;
+   SIU.PSMI[34].R = 0x00;
+%endif
+   }
+%endif
+
+}
+
+/*
+ *######################################################################
+ *                           End of File
+ *######################################################################
+*/
+
+%closefile tmpFcnBuf
+%<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)>
+
+%assign fname = LibCreateSourceFile("Header", "Custom", "ccp_init")
+  %openfile tmpFcnBuf 
+  void ccp_init(void);
+  %closefile tmpFcnBuf
+%<LibSetSourceFileSection(fname , "Includes", tmpFcnBuf)>   
+
+
+%assign dto_id = FEVAL("rappid_564xl_ccp_dtoid")
+%assign cro_id = FEVAL("rappid_564xl_ccp_croid")
+%assign dev_id = FEVAL("rappid_564xl_ccp_devid")
+%assign dev_address = FEVAL("rappid_564xl_ccp_devaddr")
+%assign max_odt = FEVAL("rappid_564xl_ccp_odt")
+%assign max_daq = FEVAL("rappid_564xl_ccp_daq")
+%assign tx_mb = FEVAL("rappid_564xl_ccp_mb","1")
+%assign rx_mb = FEVAL("rappid_564xl_ccp_mb","0")
+
+
+%assign fname = LibCreateSourceFile("Header", "Custom", "mcu_specific")
+  %openfile tmpFcnBuf 
+  
+  #include "target.h"
+  
+  %if ( FEVAL("strcmp", ccpInterface, "CAN") != 0)
+  #define USE_FLERXCAN
+  #define FLEXCAN_NUM %<ccpDevice>
+  #define CCP_TESTER_MB %<rx_mb>
+  #define CCP_TX_MB		%<tx_mb>
+  %endif
+  
+  #undef CCP_DTO_ID
+  #define CCP_DTO_ID %<dto_id>
+  #define CCP_TX_ID %<dto_id>
+  
+  #undef CCP_CRO_ID
+  #define CCP_CRO_ID %<cro_id>
+  #define CCP_TESTER_ID %<cro_id>
+  
+  #undef CCP_STATION_ID
+  #define CCP_STATION_ID "%<dev_id>"
+  
+  #undef CCP_STATION_ADDR
+  #define CCP_STATION_ADDR %<dev_address>
+  
+  #define CCP_DISABLE_INTERRUPT asm(" wrteei 0");
+  #define CCP_ENABLE_INTERRUPT asm(" wrteei 1");
+  
+  %if ((%<max_odt> != 0) && (%<max_daq> != 0))
+  #define CCP_DAQ                   /* Enable synchronous data aquisition in ccpDaq() */
+  #define CCP_MAX_ODT %<max_odt>    /* Number of ODTs in each DAQ lists */
+  #define CCP_MAX_DAQ %<max_daq>    /* Number of DAQ lists */
+  %endif
+  
+
+  %closefile tmpFcnBuf
+  %<LibSetSourceFileSection(fname , "Includes", tmpFcnBuf)>  
+
+%endif
+%endif
+
+%if(( FEVAL("strcmp", fmInterface, "Serial") != 0)||( pilEnabled == 1))
+
+%assign fmRxTx = FEVAL("rappid_564xl_fmaster_rx_pin",pilEnabled) 
+
+%assign fname = LibCreateSourceFile("Source", "Custom", "linflex_siu_init")
+%openfile tmpFcnBuf 
+
+/********************  Dependent Include files here **********************/
+
+#include "target.h"
+
+/**********************  Initialization Function(s) *************************/
+
+    void linflex_siu_init(void)
+ 	{ 
+%if( FEVAL("strcmp", fmRxTx.Tx_PCR, "0") == 0)
+          /* ----------------------------------------------------------------------- */
+          /*      Pad Configuration Register PCR[%<fmRxTx.Tx_PCR>]  LIN_TXD */
+          /* ----------------------------------------------------------------------- */
+           SIU.PCR[%<fmRxTx.Tx_PCR>].R = %<fmRxTx.Tx_PCR_VAL>;
+             /*	Selected Function : LIN_TXD_0        */
+             /*	Output Buffers : Enabled          */
+             /*	Input Buffers : Disabled          */
+             /*	Output Drain : Disabled           */
+             /*	Slew Rate Control : Minimum       */
+             /*	Weak Pull Up/Down : Disabled      */
+             /*	Weak Pull Up/Down Select : Down   */
+%endif
+%if( FEVAL("strcmp", fmRxTx.Rx_PCR, "0") == 0)
+          /* ----------------------------------------------------------- */
+          /*      Pad Configuration Register PCR[%<fmRxTx.Rx_PCR>]  LIN_RXD */
+          /* ----------------------------------------------------------- */
+           SIU.PCR[%<fmRxTx.Rx_PCR>].R = 0x0100;
+             /*	Selected Function : PB[3] I        */
+             /*	Output Buffers : Disabled         */
+             /*	Input Buffers : Enabled           */
+             /*	Output Drain : Disabled           */
+             /*	Slew Rate Control : Minimum       */
+             /*	Weak Pull Up/Down : Disabled      */
+             /*	Weak Pull Up/Down Select : Down   */     
+           SIU.PSMI[%<fmRxTx.Rx_PSMI>].B.PADSEL = %<fmRxTx.Rx_PADSEL>;  
+%endif
+	}
+  %closefile tmpFcnBuf
+  %<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)>   
+%endif
+
+%assign fmEnabled = FEVAL("rappid_564xl_fmaster_status")
+
+%if(fmEnabled == 1)
+  %assign fname = LibCreateSourceFile("Header", "Custom", "freemaster_device")
+  %openfile tmpFcnBuf 
+  
+  %if( FEVAL("strcmp", fmInterface, "CAN") != 0)
+    %if (fmDev==1)
+#define FMSTR_CAN_SECOND
+    %endif 
+  %endif
+  %if( FEVAL("strcmp", fmInterface, "Serial") != 0)
+    %if (fmDev==1)
+#define FMSTR_SCI_SECOND
+    %endif 
+  %endif
+  
+  %closefile tmpFcnBuf
+  %<LibSetSourceFileSection(fname , "Defines", tmpFcnBuf)>   
+%endif
+
+%if !EXISTS("_TARGET_CONFIG_")
+  %assign ::_TARGET_CONFIG_ = 1
+
+  %assign fname = LibCreateSourceFile("Header", "Custom", "target")
+  %openfile tmpFcnBuf 
+  #include "mpc5643l.h"
+  %closefile tmpFcnBuf
+  %<LibSetSourceFileSection(fname , "Includes", tmpFcnBuf)>   
+%endif
+
+%endfunction

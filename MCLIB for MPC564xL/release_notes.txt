@@ -1,0 +1,55 @@
+MCLIB_for_MPC564xL_rev_0.91
+============================
+Revision 0.91
+15. August 2011
+
+RELEASE NOTES
+=============
+
+This is the Freescale Release for rev 0.91 of the Motor Control Library Set for MPC564xL, supporting the MPC564xL core based devices.
+
+What's new:
+===========
+- User documentation cleanup.
+- User documentation extended with test method description.
+
+
+Installation instructions:
+==========================
+Run MCLIB_for_MPC564xL_v0.91_<variant>.exe self executable file, in order to
+start the instalation procedure and follow the instruction on the screen. 
+The recommended destination path (the default one) is:
+C:\Program Files\Freescale\MCLIB for MPC564xL v0.91
+
+Release history:
+================
+Rev 0.9
+- Incorrect calculation of GFLIB_Sin and GFLIB_Cos in limit cases has been corrected for GHS version.
+- User documentation available.
+- All functions tested using target-in-loop test method
+
+
+Rev 0.8
+- All function supports single precision floating point arithmetic.
+- All functions tested using MATLAB Bit Accurate Models only.
+- Initial version of documentation available.
+- Figure 3-13: Y-axis caption was renamed.
+- The data type has been corrected in Atan code example.
+- Coefficients indexes corrected in formula 3.2.
+- Coefficients indexes in formula 3.8 and condition in formula 3.12 corrected.
+- Computation intervals in 3.16 corrected and approximation coeficients table add.
+- GFLIB_ATAN_LIMIT macro renamed to GFLIB_TAN_LIMIT.
+- Description of the explicit casting in equation (3.40, 3.39) has been added, casting in equation 3.41 has been removed for non necessity  and NOTE section has been filled in.
+- Equation of the Ramp output has been extended to better understanding.
+- Explanation "The maximum magnitude of the input vector in the following equation is defined by the letter "L" has been added at the beginning of the equation.
+- Overline at non-vector symbols has been removed.
+- Typo in function API overview of GDFLIB_FilterIIR1 and GDFLIB_FilterIIR2 has been changed according to the recommendation.
+- Description of individual components in equation 5.3 has been added.
+- Description of individual components in equation 5.6 has been added.
+- Anti-windup mechanism in GFLIB_ControllerPIrAW corrected.
+- Release numbering schema changed, Release 0.9 renamed to Release 0.8 and Release 1.0 renamed to Release 0.9.
+
+Rev 0.1
+- Initial release with full single precision floating point data type support.
+- Only engineering testing done
+- No documentation available in this release

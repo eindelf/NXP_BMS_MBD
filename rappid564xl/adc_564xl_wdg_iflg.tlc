@@ -1,0 +1,77 @@
+%implements adc_564xl_wdg_iflg "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %if !EXISTS("ADC_564xL_INCLUDED")
+    %assign ::ADC_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"adc_564xl_library.h\"" + "\n")>
+  %endif
+%endif 
+  
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+
+%assign adcNum =  CAST("Number",Parameter[0].Value[0])
+%assign chNum =  CAST("Number",Parameter[0].Value[1])
+%assign iFlgValue = CAST("Number",Parameter[0].Value[2])
+
+
+%assign lowMask = 1<<chNum*2
+%assign highMask = 2<<chNum*2
+{
+uint32_t reg = 0U;
+reg = ADC_%<adcNum>.WTIMR.R;
+
+%if (iFlgValue == 0)
+	reg |= %<lowMask>;
+%elseif (iFlgValue == 1)
+	reg &= ~(%<lowMask>);
+%elseif (iFlgValue == 2)
+	reg |= %<highMask>;
+%elseif (iFlgValue == 3)
+	reg &= ~(%<highMask>);
+%elseif (iFlgValue == 4)
+	reg |= (%<highMask> | %<lowMask>);
+%elseif (iFlgValue == 5)
+	reg &= ~(%<highMask> | %<lowMask>);
+%endif	
+ADC_%<adcNum>.WTIMR.R = reg;
+
+}
+
+%endif
+%endfunction
+
+;

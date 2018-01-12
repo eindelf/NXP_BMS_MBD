@@ -1,0 +1,104 @@
+%implements dspi_564xl_transmit "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %if !EXISTS("DSPI_564xL_INCLUDED")
+    %assign ::DSPI_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"dspi_564xl_library.h\"" + "\n")>
+  %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+%% PINS initialization.
+%assign dspi_Num = CAST("Number", Parameter[0].Value[0])
+%assign dspi_cs_pcr = CAST("Number", Parameter[2].Value[0])
+%assign dspi_sin_pcr = CAST("Number", Parameter[2].Value[1])
+%assign dspi_sout_pcr = CAST("Number", Parameter[2].Value[2])
+%assign dspi_sck_pcr = CAST("Number", Parameter[2].Value[3])
+%assign dspi_strobe = CAST("Number", Parameter[2].Value[4])
+%assign dspi_eoq = CAST("Number", Parameter[2].Value[5])
+
+%assign dspi_Num = dspi_Num - 1
+
+%assign dspi_mode_num = FEVAL("rappid_564xl_dspi_get_mode_num",dspi_Num)
+%assign dspi_mode_txt = FEVAL("rappid_564xl_dspi_get_mode_txt",dspi_Num)
+
+
+%if (dspi_mode_num == 1) %% master
+	%% out
+	dspi_564xl_pin_init(%<dspi_cs_pcr>, 1, %<dspi_Num>);
+	%% in
+	dspi_564xl_pin_init(%<dspi_sin_pcr>, 0, %<dspi_Num>);
+	%% out
+	dspi_564xl_pin_init(%<dspi_sout_pcr>, 1, %<dspi_Num>);
+	%% out
+	dspi_564xl_pin_init(%<dspi_sck_pcr>, 1, %<dspi_Num>);
+	
+	%if (dspi_strobe)
+		//enable strobe signal
+		dspi_564xl_pin_init(%<dspi_strobe>, 1, %<dspi_Num>);
+		DSPI_%<dspi_Num>.MCR.B.PCSSE = 1; // strobe enable
+	%endif
+ %endif
+
+ %if (dspi_mode_num == 0) %% slave
+	%% in
+	dspi_564xl_pin_init(%<dspi_cs_pcr>, 0, %<dspi_Num>);
+	%% in
+	dspi_564xl_pin_init(%<dspi_sin_pcr>, 0, %<dspi_Num>);
+	%% out
+	dspi_564xl_pin_init(%<dspi_sout_pcr>, 1, %<dspi_Num>);
+	%% in
+	dspi_564xl_pin_init(%<dspi_sck_pcr>, 0, %<dspi_Num>);
+ %endif
+%endif
+
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+%assign dspi_Num = CAST("Number",Parameter[0].Value[0])
+%assign dspi_set = CAST("Number",Parameter[1].Value[0])
+%assign dspi_eoq = CAST("Number", Parameter[2].Value[5])
+
+%assign dspi_Num = dspi_Num - 1
+
+%assign dspi_mode_txt = FEVAL("rappid_564xl_dspi_get_mode_txt",dspi_Num)
+%assign dspi_mode_num = FEVAL("rappid_564xl_dspi_get_mode_num",dspi_Num)
+
+{
+	DSPI_PUSHR_32B_tag pushr;
+	pushr.R = 0U;
+	
+	%if (dspi_eoq)
+		pushr.B.EOQ = (uint32_t)%<LibBlockInputSignal(1,"","",0)>;
+	%endif
+
+	pushr.B.TXDATA = %<LibBlockInputSignal(0,"","",0)>;
+	pushr.R |= (uint32_t)%<dspi_set><<16;
+	dspi_564xl_send(%<dspi_Num>,pushr);
+
+}
+%endif
+%endfunction

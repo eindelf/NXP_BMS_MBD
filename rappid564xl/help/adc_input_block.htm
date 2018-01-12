@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>ADC Channel Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">ADC Channel Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">Interface block that provides ability to read data sample from a particular ADC channel. 
+	  On each update, sets the data outputs as read from ADC. If ‘Enable for simulation’ is set, than in simulation 
+	  mode, sets the data outputs as input.
+	</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="adc_input_block_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>Input available for simulation mode only. </li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>(uint16) 0x0000 to 0x0FFF</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="110">Names</td>
+			<th width="110">Selection Types</td>
+			<th width="110">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>ADC converter number</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 1</td>
+			<td>Select the ADC converter number</td>
+		</tr>
+		<tr>
+			<td>ADC Channel</td>
+			<td>Pop-up</td>
+			<td>AN0 &ndash; AN15</td>
+			<td>Select the ADC channel number</td>
+		</tr>
+		<tr>
+			<td>Enable for Simulation</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Input port available in simulation mode, on each update set output port equal to input.</td>
+		</tr>
+		<tr>
+			<td>Interrupt</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Generate interrupt on the end of conversion. ADC ISR block required.</td>
+		</tr>
+		<tr>
+			<td>Mode</td>
+			<td>Pop-up</td>
+			<td>Normal or Injected</td>
+			<td>Mode of functionality.<br>Normal – ADC channel works in SingleShot or FreeRun mode.<br>Injected – ADC channel used only for injected data reading.</td>
+		</tr>
+		<tr>
+			<td>Presampling</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Presampling enable for current channel*</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="adc_input_block_files/image_param.jpg">
+	<h3>Block Dependency</h3>
+	<div>Please do the following:
+		<ol>
+			<li>Configure the ADC with ADC Config block.</li>
+		</ol>
+	</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

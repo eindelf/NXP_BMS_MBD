@@ -1,0 +1,91 @@
+%%
+%% Abstract:
+%%
+%% Copyright Freescale Semiconductor Inc
+%% 2006 All Rights Reserved 
+%%
+%% $Log: CTU_564xL_output.tlc,v $
+%% Revision 1.1  2010/10/28 22:03:35  r61406
+%% Issue:10000
+%% Create Code Base for RAppID Toolbox Lite
+%%
+%% Revision 1.7  2006/07/20 20:52:46  r61406
+%% PWM:Update with copyright notice and Log Tag.
+%%
+%%
+
+%implements CTU_564xL_output "C"
+
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+   %if !EXISTS("CTU_564xL_INCLUDED")
+      %assign ::CTU_564xL_INCLUDED = 1
+      %<LibCacheIncludes("#include \"CTU_564xL_library.h\"" + "\n")>
+   %endif 
+%endif 
+   
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+
+   %assign Mode            = CAST("Number",Parameter[0].Value[0])
+   %assign InputSelection  = CAST("Number",Parameter[1].Value[0])
+   %assign TriggerOutput_1 = CAST("Number",Parameter[2].Value[0])
+   %assign TriggerOutput_2 = CAST("Number",Parameter[3].Value[0])
+   %assign MRS             = CAST("Number",Parameter[4].Value[0])
+   %assign MaxDelay        = CAST("Number",Parameter[5].Value[0])
+   
+   %foreach tIndex=8
+      %assign T%<tIndex>_Delay = CAST("Number",Parameter[6].Value[%<tIndex>])
+   %endforeach   
+   
+   %assign ADC_CmdIndex_1  = CAST("Number",Parameter[7].Value[0])
+   %assign ADC_CmdIndex_2  = CAST("Number",Parameter[8].Value[0])
+
+   %foreach cIndex=24
+      %assign ADC_Cmd_%<cIndex> = CAST("Number",Parameter[9].Value[%<cIndex>])
+   %endforeach   
+   
+   %assign ExtTrigger_PCR  = CAST("Number",Parameter[10].Value[0])
+   %assign ExtInput_PCR    = CAST("Number",Parameter[11].Value[0])
+   
+   ctu_init_pcr_out_564xL(%<ExtTrigger_PCR>, %<ExtInput_PCR>);
+   {  
+	 static uint16_t triggerDelay[8] = { %<T0_Delay>,%<T1_Delay>,%<T2_Delay>,%<T3_Delay>,%<T4_Delay>,%<T5_Delay>,%<T6_Delay>,%<T7_Delay> };
+     static uint32_t TriggerOutput[2] = { %<TriggerOutput_1>,%<TriggerOutput_2> };
+     static uint16_t ADCcommands[24] = { 
+        %<ADC_Cmd_0>, %<ADC_Cmd_1>, %<ADC_Cmd_2>, %<ADC_Cmd_3>, %<ADC_Cmd_4>, %<ADC_Cmd_5>,
+        %<ADC_Cmd_6>, %<ADC_Cmd_7>, %<ADC_Cmd_8>, %<ADC_Cmd_9>, %<ADC_Cmd_10>,%<ADC_Cmd_11>,
+        %<ADC_Cmd_11>,%<ADC_Cmd_13>,%<ADC_Cmd_14>,%<ADC_Cmd_15>,%<ADC_Cmd_16>,%<ADC_Cmd_17>,
+        %<ADC_Cmd_18>,%<ADC_Cmd_18>,%<ADC_Cmd_20>,%<ADC_Cmd_21>,%<ADC_Cmd_22>,%<ADC_Cmd_23> 
+	 };
+	 static uint32_t ADC_CmdIndex[2] = { %<ADC_CmdIndex_1>,%<ADC_CmdIndex_2> };
+	 ctu_init_564xL (%<Mode>, %<InputSelection>, TriggerOutput, %<MRS>, %<MaxDelay>, triggerDelay, ADC_CmdIndex, ADCcommands);
+   }
+%endif 
+ 
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction

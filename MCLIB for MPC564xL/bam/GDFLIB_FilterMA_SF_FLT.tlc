@@ -1,0 +1,71 @@
+
+%implements GDFLIB_FilterMA_SF_FLT "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+   %if !EXISTS("GDFLIB_INCLUDED")
+      %assign ::GDFLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gdflib.h\"" + "\n")>
+   %endif 
+   
+   %assign ::cntMA = 0
+   %assign ::cntInitMA = 0
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+   %assign ::cntInitMA = %<::cntInitMA> + 1
+	 
+%assign fFIRparams = LibCreateSourceFile("Source", "Custom", "FIRparams")
+%openfile tmpParamBuf 
+   %if !EXISTS("GDFLIB_INCLUDED_TO_FIRPARAM")
+      %assign ::GDFLIB_INCLUDED_TO_FIRPARAM = 1
+      #include "gdflib.h"
+   %endif 
+    GDFLIB_FILTER_MA_T trMyFilterMA_%<::cntInitMA> = GDFLIB_FILTER_MA_DEFAULT ;
+%closefile tmpParamBuf
+%<LibSetSourceFileSection(fFIRparams , "Definitions", tmpParamBuf)>
+
+    %assign u16NSamples   = CAST("Real32",Parameter[0].Value[0])
+	
+	trMyFilterMA_%<::cntInitMA>.u16NSamples = %<u16NSamples>;  
+	 
+    GDFLIB_FilterMAInit (&trMyFilterMA_%<::cntInitMA>);
+   
+%openfile tmpParamExternBuf 
+    extern GDFLIB_FILTER_MA_T trMyFilterMA_%<::cntInitMA>;
+%closefile tmpParamExternBuf
+%<LibCacheExtern(tmpParamExternBuf)>   
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+    %assign ::cntMA = %<::cntMA> + 1
+   
+    %assign x = LibBlockInputSignal(0, "", "", 0)
+    %assign y = LibBlockOutputSignal(0, "", "", 0)
+    %assign y1 = LibBlockOutputSignal(1, "", "", 0)
+   
+    %<y> = GDFLIB_FilterMA (%<x>,&trMyFilterMA_%<::cntMA>);
+	%<y1> = trMyFilterMA_%<::cntMA>.s32Acc;
+
+%endfunction

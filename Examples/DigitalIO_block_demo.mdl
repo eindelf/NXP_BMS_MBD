@@ -1,0 +1,3549 @@
+Model {
+  Name			  "DigitalIO_block_demo"
+  Version		  8.1
+  MdlSubVersion		  0
+  GraphicalInterface {
+    NumRootInports	    4
+    Inport {
+      BusObject		      ""
+      SignalName	      "In"
+      Name		      "In1"
+    }
+    Inport {
+      BusObject		      ""
+      Name		      "In2"
+    }
+    Inport {
+      BusObject		      ""
+      Name		      "In3"
+    }
+    Inport {
+      BusObject		      ""
+      Name		      "In4"
+    }
+    NumRootOutports	    8
+    Outport {
+      BusObject		      ""
+      BusOutputAsStruct	      "off"
+      SignalName	      "Out"
+      Name		      "Out1"
+    }
+    Outport {
+      BusObject		      ""
+      BusOutputAsStruct	      "off"
+      SignalName	      "count"
+      Name		      "Out2"
+    }
+    Outport {
+      BusObject		      ""
+      BusOutputAsStruct	      "off"
+      Name		      "Out3"
+    }
+    Outport {
+      BusObject		      ""
+      BusOutputAsStruct	      "off"
+      Name		      "Out4"
+    }
+    Outport {
+      BusObject		      ""
+      BusOutputAsStruct	      "off"
+      Name		      "Out5"
+    }
+    Outport {
+      BusObject		      ""
+      BusOutputAsStruct	      "off"
+      Name		      "Out6"
+    }
+    Outport {
+      BusObject		      ""
+      BusOutputAsStruct	      "off"
+      Name		      "Out7"
+    }
+    Outport {
+      BusObject		      ""
+      BusOutputAsStruct	      "off"
+      Name		      "Out8"
+    }
+    ParameterArgumentNames  ""
+    ComputedModelVersion    "1.173"
+    NumModelReferences	    0
+    NumTestPointedSignals   0
+  }
+  SavedCharacterEncoding  "windows-1252"
+  SaveDefaultBlockParams  on
+  ScopeRefreshTime	  0.035000
+  OverrideScopeRefreshTime on
+  DisableAllScopes	  off
+  DataTypeOverride	  "UseLocalSettings"
+  DataTypeOverrideAppliesTo "AllNumericTypes"
+  MinMaxOverflowLogging	  "UseLocalSettings"
+  MinMaxOverflowArchiveMode "Overwrite"
+  FPTRunName		  "Run 1"
+  MaxMDLFileLineLength	  120
+  Object {
+    $PropName		    "BdWindowsInfo"
+    $ObjectID		    1
+    $ClassName		    "Simulink.BDWindowsInfo"
+    Object {
+      $PropName		      "WindowsInfo"
+      $ObjectID		      2
+      $ClassName	      "Simulink.WindowInfo"
+      IsActive		      [1]
+      Location		      [209.0, 52.0, 1049.0, 872.0]
+      Object {
+	$PropName		"ModelBrowserInfo"
+	$ObjectID		3
+	$ClassName		"Simulink.ModelBrowserInfo"
+	Visible			[0]
+	DockPosition		"Left"
+	Width			[50]
+	Height			[50]
+	Filter			[8]
+      }
+      Object {
+	$PropName		"ExplorerBarInfo"
+	$ObjectID		4
+	$ClassName		"Simulink.ExplorerBarInfo"
+	Visible			[0]
+      }
+      Object {
+	$PropName		"EditorsInfo"
+	$ObjectID		5
+	$ClassName		"Simulink.EditorInfo"
+	IsActive		[1]
+	ViewObjType		"SimulinkTopLevel"
+	LoadSaveID		"0"
+	Extents			[999.0, 728.0]
+	ZoomFactor		[1.0]
+	Offset			[0.0, -1.0]
+      }
+    }
+  }
+  Created		  "Sat Apr 09 13:39:31 2011"
+  Creator		  "r61406"
+  UpdateHistory		  "UpdateHistoryNever"
+  ModifiedByFormat	  "%<Auto>"
+  LastModifiedBy	  "evarshavskaya"
+  ModifiedDateFormat	  "%<Auto>"
+  LastModifiedDate	  "Fri Aug 28 18:11:21 2015"
+  RTWModifiedTimeStamp	  293481969
+  ModelVersionFormat	  "1.%<AutoIncrement:173>"
+  ConfigurationManager	  "None"
+  SampleTimeColors	  on
+  SampleTimeAnnotations	  off
+  LibraryLinkDisplay	  "all"
+  WideLines		  on
+  ShowLineDimensions	  on
+  ShowPortDataTypes	  on
+  ShowDesignRanges	  off
+  ShowLoopsOnError	  on
+  IgnoreBidirectionalLines off
+  ShowStorageClass	  off
+  ShowTestPointIcons	  on
+  ShowSignalResolutionIcons on
+  ShowViewerIcons	  on
+  SortedOrder		  on
+  ExecutionContextIcon	  off
+  ShowLinearizationAnnotations on
+  BlockNameDataTip	  off
+  BlockParametersDataTip  off
+  BlockDescriptionStringDataTip	off
+  ToolBar		  on
+  StatusBar		  on
+  BrowserShowLibraryLinks on
+  BrowserLookUnderMasks	  on
+  SimulationMode	  "normal"
+  LinearizationMsg	  "none"
+  Profile		  off
+  ParamWorkspaceSource	  "MATLABWorkspace"
+  AccelSystemTargetFile	  "accel.tlc"
+  AccelTemplateMakefile	  "accel_default_tmf"
+  AccelMakeCommand	  "make_rtw"
+  TryForcingSFcnDF	  off
+  Object {
+    $PropName		    "DataLoggingOverride"
+    $ObjectID		    6
+    $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
+    model_		    "DigitalIO_block_demo"
+    Array {
+      Type		      "Cell"
+      Dimension		      1
+      Cell		      "DigitalIO_block_demo"
+      PropName		      "logAsSpecifiedByModels_"
+    }
+    Array {
+      Type		      "Cell"
+      Dimension		      1
+      Cell		      ""
+      PropName		      "logAsSpecifiedByModelsSSIDs_"
+    }
+  }
+  RecordCoverage	  off
+  CovPath		  "/"
+  CovSaveName		  "covdata"
+  CovMetricSettings	  "dw"
+  CovNameIncrementing	  off
+  CovHtmlReporting	  on
+  CovForceBlockReductionOff on
+  covSaveCumulativeToWorkspaceVar on
+  CovSaveSingleToWorkspaceVar on
+  CovCumulativeVarName	  "covCumulativeData"
+  CovCumulativeReport	  off
+  CovReportOnPause	  on
+  CovModelRefEnable	  "Off"
+  CovExternalEMLEnable	  off
+  ExtModeBatchMode	  off
+  ExtModeEnableFloating	  on
+  ExtModeTrigType	  "manual"
+  ExtModeTrigMode	  "normal"
+  ExtModeTrigPort	  "1"
+  ExtModeTrigElement	  "any"
+  ExtModeTrigDuration	  1000
+  ExtModeTrigDurationFloating "auto"
+  ExtModeTrigHoldOff	  0
+  ExtModeTrigDelay	  0
+  ExtModeTrigDirection	  "rising"
+  ExtModeTrigLevel	  0
+  ExtModeArchiveMode	  "off"
+  ExtModeAutoIncOneShot	  off
+  ExtModeIncDirWhenArm	  off
+  ExtModeAddSuffixToVar	  off
+  ExtModeWriteAllDataToWs off
+  ExtModeArmWhenConnect	  on
+  ExtModeSkipDownloadWhenConnect off
+  ExtModeLogAll		  on
+  ExtModeAutoUpdateStatusClock on
+  BufferReuse		  on
+  ShowModelReferenceBlockVersion off
+  ShowModelReferenceBlockIO off
+  Array {
+    Type		    "Handle"
+    Dimension		    1
+    Simulink.ConfigSet {
+      $ObjectID		      7
+      Version		      "1.13.0"
+      Array {
+	Type			"Handle"
+	Dimension		8
+	Simulink.SolverCC {
+	  $ObjectID		  8
+	  Version		  "1.13.0"
+	  StartTime		  "0.0"
+	  StopTime		  "10.0"
+	  AbsTol		  "auto"
+	  FixedStep		  "0.050"
+	  InitialStep		  "auto"
+	  MaxNumMinSteps	  "-1"
+	  MaxOrder		  5
+	  ZcThreshold		  "auto"
+	  ConsecutiveZCsStepRelTol "10*128*eps"
+	  MaxConsecutiveZCs	  "1000"
+	  ExtrapolationOrder	  4
+	  NumberNewtonIterations  1
+	  MaxStep		  "auto"
+	  MinStep		  "auto"
+	  MaxConsecutiveMinStep	  "1"
+	  RelTol		  "1e-3"
+	  SolverMode		  "Auto"
+	  EnableConcurrentExecution off
+	  ConcurrentTasks	  off
+	  Solver		  "FixedStepDiscrete"
+	  SolverName		  "FixedStepDiscrete"
+	  SolverJacobianMethodControl "auto"
+	  ShapePreserveControl	  "DisableAll"
+	  ZeroCrossControl	  "UseLocalSettings"
+	  ZeroCrossAlgorithm	  "Nonadaptive"
+	  AlgebraicLoopSolver	  "TrustRegion"
+	  SolverResetMethod	  "Fast"
+	  PositivePriorityOrder	  on
+	  AutoInsertRateTranBlk	  on
+	  SampleTimeConstraint	  "Unconstrained"
+	  InsertRTBMode		  "Whenever possible"
+	}
+	Simulink.DataIOCC {
+	  $ObjectID		  9
+	  Version		  "1.13.0"
+	  Decimation		  "1"
+	  ExternalInput		  "off"
+	  FinalStateName	  "xFinal"
+	  InitialState		  "off"
+	  LimitDataPoints	  off
+	  MaxDataPoints		  "1000"
+	  LoadExternalInput	  off
+	  LoadInitialState	  off
+	  SaveFinalState	  off
+	  SaveCompleteFinalSimState off
+	  SaveFormat		  "Array"
+	  SignalLoggingSaveFormat "ModelDataLogs"
+	  SaveOutput		  off
+	  SaveState		  off
+	  SignalLogging		  off
+	  DSMLogging		  on
+	  InspectSignalLogs	  off
+	  SaveTime		  off
+	  ReturnWorkspaceOutputs  off
+	  StateSaveName		  "xout"
+	  TimeSaveName		  "tout"
+	  OutputSaveName	  "yout"
+	  SignalLoggingName	  "logsout"
+	  DSMLoggingName	  "dsmout"
+	  OutputOption		  "RefineOutputTimes"
+	  OutputTimes		  "[]"
+	  ReturnWorkspaceOutputsName "out"
+	  Refine		  "1"
+	}
+	Simulink.OptimizationCC {
+	  $ObjectID		  10
+	  Version		  "1.13.0"
+	  BlockReduction	  on
+	  BooleanDataType	  on
+	  ConditionallyExecuteInputs on
+	  InlineParams		  on
+	  UseIntDivNetSlope	  off
+	  UseFloatMulNetSlope	  off
+	  UseSpecifiedMinMax	  off
+	  InlineInvariantSignals  off
+	  OptimizeBlockIOStorage  on
+	  BufferReuse		  on
+	  EnhancedBackFolding	  off
+	  StrengthReduction	  off
+	  ExpressionFolding	  on
+	  BooleansAsBitfields	  off
+	  BitfieldContainerType	  "uint_T"
+	  EnableMemcpy		  off
+	  MemcpyThreshold	  64
+	  PassReuseOutputArgsAs	  "Structure reference"
+	  ExpressionDepthLimit	  2147483647
+	  FoldNonRolledExpr	  on
+	  LocalBlockOutputs	  on
+	  RollThreshold		  5
+	  SystemCodeInlineAuto	  off
+	  StateBitsets		  off
+	  DataBitsets		  off
+	  UseTempVars		  off
+	  ZeroExternalMemoryAtStartup on
+	  ZeroInternalMemoryAtStartup on
+	  InitFltsAndDblsToZero	  on
+	  NoFixptDivByZeroProtection off
+	  EfficientFloat2IntCast  off
+	  EfficientMapNaN2IntZero on
+	  OptimizeModelRefInitCode on
+	  LifeSpan		  "1"
+	  MaxStackSize		  "Inherit from target"
+	  BufferReusableBoundary  on
+	  SimCompilerOptimization "Off"
+	  AccelVerboseBuild	  off
+	  ParallelExecutionInRapidAccelerator on
+	}
+	Simulink.DebuggingCC {
+	  $ObjectID		  11
+	  Version		  "1.13.0"
+	  RTPrefix		  "error"
+	  ConsistencyChecking	  "none"
+	  ArrayBoundsChecking	  "none"
+	  SignalInfNanChecking	  "none"
+	  SignalRangeChecking	  "none"
+	  ReadBeforeWriteMsg	  "UseLocalSettings"
+	  WriteAfterWriteMsg	  "UseLocalSettings"
+	  WriteAfterReadMsg	  "UseLocalSettings"
+	  AlgebraicLoopMsg	  "warning"
+	  ArtificialAlgebraicLoopMsg "warning"
+	  SaveWithDisabledLinksMsg "warning"
+	  SaveWithParameterizedLinksMsg	"warning"
+	  CheckSSInitialOutputMsg on
+	  UnderspecifiedInitializationDetection	"Classic"
+	  MergeDetectMultiDrivingBlocksExec "none"
+	  CheckExecutionContextPreStartOutputMsg off
+	  CheckExecutionContextRuntimeOutputMsg	off
+	  SignalResolutionControl "UseLocalSettings"
+	  BlockPriorityViolationMsg "warning"
+	  MinStepSizeMsg	  "warning"
+	  TimeAdjustmentMsg	  "none"
+	  MaxConsecutiveZCsMsg	  "error"
+	  MaskedZcDiagnostic	  "warning"
+	  IgnoredZcDiagnostic	  "warning"
+	  SolverPrmCheckMsg	  "warning"
+	  InheritedTsInSrcMsg	  "none"
+	  DiscreteInheritContinuousMsg "warning"
+	  MultiTaskDSMMsg	  "error"
+	  MultiTaskCondExecSysMsg "error"
+	  MultiTaskRateTransMsg	  "error"
+	  SingleTaskRateTransMsg  "error"
+	  TasksWithSamePriorityMsg "warning"
+	  SigSpecEnsureSampleTimeMsg "warning"
+	  CheckMatrixSingularityMsg "none"
+	  IntegerOverflowMsg	  "warning"
+	  Int32ToFloatConvMsg	  "warning"
+	  ParameterDowncastMsg	  "error"
+	  ParameterOverflowMsg	  "error"
+	  ParameterUnderflowMsg	  "none"
+	  ParameterPrecisionLossMsg "warning"
+	  ParameterTunabilityLossMsg "warning"
+	  FixptConstUnderflowMsg  "none"
+	  FixptConstOverflowMsg	  "none"
+	  FixptConstPrecisionLossMsg "none"
+	  UnderSpecifiedDataTypeMsg "none"
+	  UnnecessaryDatatypeConvMsg "none"
+	  VectorMatrixConversionMsg "none"
+	  InvalidFcnCallConnMsg	  "error"
+	  FcnCallInpInsideContextMsg "UseLocalSettings"
+	  SignalLabelMismatchMsg  "none"
+	  UnconnectedInputMsg	  "error"
+	  UnconnectedOutputMsg	  "error"
+	  UnconnectedLineMsg	  "error"
+	  SFcnCompatibilityMsg	  "none"
+	  FrameProcessingCompatibilityMsg "warning"
+	  UniqueDataStoreMsg	  "none"
+	  BusObjectLabelMismatch  "warning"
+	  RootOutportRequireBusObject "warning"
+	  AssertControl		  "UseLocalSettings"
+	  EnableOverflowDetection off
+	  ModelReferenceIOMsg	  "none"
+	  ModelReferenceMultiInstanceNormalModeStructChecksumCheck "error"
+	  ModelReferenceVersionMismatchMessage "none"
+	  ModelReferenceIOMismatchMessage "none"
+	  ModelReferenceCSMismatchMessage "none"
+	  UnknownTsInhSupMsg	  "error"
+	  ModelReferenceDataLoggingMessage "warning"
+	  ModelReferenceSymbolNameMessage "warning"
+	  ModelReferenceExtraNoncontSigs "error"
+	  StateNameClashWarn	  "warning"
+	  SimStateInterfaceChecksumMismatchMsg "warning"
+	  SimStateOlderReleaseMsg "error"
+	  InitInArrayFormatMsg	  "warning"
+	  StrictBusMsg		  "Warning"
+	  BusNameAdapt		  "WarnAndRepair"
+	  NonBusSignalsTreatedAsBus "none"
+	  LoggingUnavailableSignals "error"
+	  BlockIODiagnostic	  "none"
+	  SFUnusedDataAndEventsDiag "warning"
+	  SFUnexpectedBacktrackingDiag "warning"
+	  SFInvalidInputDataAccessInChartInitDiag "warning"
+	  SFNoUnconditionalDefaultTransitionDiag "warning"
+	  SFTransitionOutsideNaturalParentDiag "warning"
+	  SFUnconditionalTransitionShadowingDiag "warning"
+	  SFUndirectedBroadcastEventsDiag "warning"
+	  SFTransitionActionBeforeConditionDiag	"warning"
+	}
+	Simulink.HardwareCC {
+	  $ObjectID		  12
+	  Version		  "1.13.0"
+	  ProdBitPerChar	  8
+	  ProdBitPerShort	  16
+	  ProdBitPerInt		  32
+	  ProdBitPerLong	  32
+	  ProdBitPerLongLong	  64
+	  ProdBitPerFloat	  32
+	  ProdBitPerDouble	  64
+	  ProdBitPerPointer	  32
+	  ProdLargestAtomicInteger "Long"
+	  ProdLargestAtomicFloat  "Double"
+	  ProdIntDivRoundTo	  "Zero"
+	  ProdEndianess		  "BigEndian"
+	  ProdWordSize		  32
+	  ProdShiftRightIntArith  on
+	  ProdLongLongMode	  off
+	  ProdHWDeviceType	  "Freescale->32-bit PowerPC"
+	  TargetBitPerChar	  8
+	  TargetBitPerShort	  16
+	  TargetBitPerInt	  32
+	  TargetBitPerLong	  32
+	  TargetBitPerLongLong	  64
+	  TargetBitPerFloat	  32
+	  TargetBitPerDouble	  64
+	  TargetBitPerPointer	  32
+	  TargetLargestAtomicInteger "Char"
+	  TargetLargestAtomicFloat "None"
+	  TargetShiftRightIntArith on
+	  TargetLongLongMode	  off
+	  TargetIntDivRoundTo	  "Undefined"
+	  TargetEndianess	  "Unspecified"
+	  TargetWordSize	  32
+	  TargetTypeEmulationWarnSuppressLevel 0
+	  TargetPreprocMaxBitsSint 32
+	  TargetPreprocMaxBitsUint 32
+	  TargetHWDeviceType	  "Specified"
+	  TargetUnknown		  off
+	  ProdEqTarget		  on
+	}
+	Simulink.ModelReferenceCC {
+	  $ObjectID		  13
+	  Version		  "1.13.0"
+	  UpdateModelReferenceTargets "IfOutOfDateOrStructuralChange"
+	  CheckModelReferenceTargetMessage "error"
+	  EnableParallelModelReferenceBuilds off
+	  ParallelModelReferenceErrorOnInvalidPool on
+	  ParallelModelReferenceMATLABWorkerInit "None"
+	  ModelReferenceNumInstancesAllowed "Multi"
+	  PropagateVarSize	  "Infer from blocks in model"
+	  ModelReferencePassRootInputsByReference on
+	  ModelReferenceMinAlgLoopOccurrences off
+	  PropagateSignalLabelsOutOfModel off
+	  SupportModelReferenceSimTargetCustomCode off
+	}
+	Simulink.SFSimCC {
+	  $ObjectID		  14
+	  Version		  "1.13.0"
+	  SFSimEnableDebug	  on
+	  SFSimOverflowDetection  on
+	  SFSimEcho		  on
+	  SimBlas		  on
+	  SimCtrlC		  on
+	  SimExtrinsic		  on
+	  SimIntegrity		  on
+	  SimUseLocalCustomCode	  off
+	  SimParseCustomCode	  on
+	  SimBuildMode		  "sf_incremental_build"
+	}
+	Simulink.RTWCC {
+	  $BackupClass		  "Simulink.RTWCC"
+	  $ObjectID		  15
+	  Version		  "1.13.0"
+	  SystemTargetFile	  "rappid564xl.tlc"
+	  GenCodeOnly		  off
+	  MakeCommand		  "rappid_564xl_make_rtw"
+	  GenerateMakefile	  on
+	  PackageGeneratedCodeAndArtifacts off
+	  TemplateMakefile	  "rappid_564xl_default_tmf"
+	  PostCodeGenCommand	  "rappid_analyzegencode(buildInfo)"
+	  Description		  "RAppID Toolbox MPC564xL Code Generation Target (rappid)"
+	  GenerateReport	  off
+	  SaveLog		  off
+	  RTWVerbose		  on
+	  RetainRTWFile		  off
+	  ProfileTLC		  off
+	  TLCDebug		  off
+	  TLCCoverage		  off
+	  TLCAssert		  off
+	  ProcessScriptMode	  "Default"
+	  ConfigurationMode	  "Optimized"
+	  ProcessScript		  "rappid564xl_make_rtw_hook"
+	  ConfigAtBuild		  off
+	  RTWUseLocalCustomCode	  off
+	  RTWUseSimCustomCode	  off
+	  IncludeHyperlinkInReport off
+	  LaunchReport		  off
+	  PortableWordSizes	  off
+	  GenerateErtSFunction	  off
+	  CreateSILPILBlock	  "None"
+	  CodeExecutionProfiling  off
+	  CodeExecutionProfileVariable "executionProfile"
+	  CodeProfilingSaveOptions "SummaryOnly"
+	  CodeProfilingInstrumentation off
+	  SILDebugging		  off
+	  TargetLang		  "C"
+	  IncludeBusHierarchyInRTWFileBlockHierarchyMap	off
+	  IncludeERTFirstTime	  off
+	  GenerateTraceInfo	  off
+	  GenerateTraceReport	  off
+	  GenerateTraceReportSl	  off
+	  GenerateTraceReportSf	  off
+	  GenerateTraceReportEml  off
+	  GenerateCodeInfo	  off
+	  GenerateWebview	  off
+	  GenerateCodeMetricsReport off
+	  GenerateCodeReplacementReport	off
+	  RTWCompilerOptimization "Off"
+	  CheckMdlBeforeBuild	  "Off"
+	  CustomRebuildMode	  "OnUpdate"
+	  Array {
+	    Type		    "Handle"
+	    Dimension		    2
+	    Simulink.CodeAppCC {
+	      $ObjectID		      16
+	      Version		      "1.13.0"
+	      ForceParamTrailComments off
+	      GenerateComments	      on
+	      IgnoreCustomStorageClasses off
+	      IgnoreTestpoints	      off
+	      IncHierarchyInIds	      off
+	      MaxIdLength	      31
+	      PreserveName	      off
+	      PreserveNameWithParent  off
+	      ShowEliminatedStatement on
+	      OperatorAnnotations     off
+	      IncAutoGenComments      off
+	      SimulinkDataObjDesc     off
+	      SFDataObjDesc	      off
+	      MATLABFcnDesc	      off
+	      IncDataTypeInIds	      off
+	      MangleLength	      1
+	      CustomSymbolStrGlobalVar "$R$N$M"
+	      CustomSymbolStrType     "$N$R$M"
+	      CustomSymbolStrField    "$N$M"
+	      CustomSymbolStrFcn      "$R$N$M$F"
+	      CustomSymbolStrFcnArg   "rt$I$N$M"
+	      CustomSymbolStrBlkIO    "rtb_$N$M"
+	      CustomSymbolStrTmpVar   "$N$M"
+	      CustomSymbolStrMacro    "$R$N$M"
+	      DefineNamingRule	      "None"
+	      ParamNamingRule	      "None"
+	      SignalNamingRule	      "None"
+	      InsertBlockDesc	      off
+	      InsertPolySpaceComments off
+	      SimulinkBlockComments   on
+	      MATLABSourceComments    off
+	      EnableCustomComments    off
+	      InternalIdentifier      "Classic"
+	      InlinedPrmAccess	      "Literals"
+	      ReqsInCode	      off
+	      UseSimReservedNames     off
+	    }
+	    Simulink.STFCustomTargetCC {
+	      $BackupClass	      "Simulink.TargetCC"
+	      $ObjectID		      17
+	      Version		      "1.13.0"
+	      TargetFcnLib	      "ansi_tfl_table_tmw.mat"
+	      TargetLibSuffix	      ""
+	      TargetPreCompLibLocation ""
+	      CodeReplacementLibrary  "ANSI_C"
+	      UtilityFuncGeneration   "Auto"
+	      ERTMultiwordTypeDef     "System defined"
+	      ERTMultiwordLength      256
+	      MultiwordLength	      2048
+	      GenerateFullHeader      on
+	      GenerateSampleERTMain   off
+	      GenerateTestInterfaces  off
+	      IsPILTarget	      off
+	      ModelReferenceCompliant off
+	      ParMdlRefBuildCompliant off
+	      CompOptLevelCompliant   off
+	      ConcurrentExecutionCompliant off
+	      IncludeMdlTerminateFcn  on
+	      GeneratePreprocessorConditionals "Use local settings"
+	      CombineOutputUpdateFcns on
+	      CombineSignalStateStructs	off
+	      SuppressErrorStatus     on
+	      ERTFirstTimeCompliant   off
+	      IncludeFileDelimiter    "Auto"
+	      ERTCustomFileBanners    on
+	      SupportAbsoluteTime     on
+	      LogVarNameModifier      "rt_"
+	      MatFileLogging	      off
+	      MultiInstanceERTCode    off
+	      SupportNonFinite	      on
+	      SupportComplex	      on
+	      PurelyIntegerCode	      off
+	      SupportContinuousTime   off
+	      SupportNonInlinedSFcns  off
+	      SupportVariableSizeSignals off
+	      EnableShiftOperators    on
+	      ParenthesesLevel	      "Nominal"
+	      MATLABClassNameForMDSCustomization "Simulink.SoftwareTarget.ERTCustomization"
+	      ModelStepFunctionPrototypeControlCompliant off
+	      CPPClassGenCompliant    off
+	      AutosarCompliant	      off
+	      GRTInterface	      off
+	      GenerateAllocFcn	      off
+	      SystemTargetFile	      "rappid564xl.tlc"
+	      DialogCategory	      0
+	      Array {
+		Type			"Handle"
+		Dimension		1
+		Simulink.ERTTargetCC {
+		  $BackupClass		  "Simulink.TargetCC"
+		  $ObjectID		  18
+		  Version		  "1.13.0"
+		  TargetFcnLib		  "ansi_tfl_table_tmw.mat"
+		  TargetLibSuffix	  ""
+		  TargetPreCompLibLocation ""
+		  CodeReplacementLibrary  "ANSI_C"
+		  UtilityFuncGeneration	  "Auto"
+		  ERTMultiwordTypeDef	  "System defined"
+		  ERTMultiwordLength	  256
+		  MultiwordLength	  2048
+		  GenerateFullHeader	  on
+		  GenerateSampleERTMain	  off
+		  GenerateTestInterfaces  off
+		  IsPILTarget		  off
+		  ModelReferenceCompliant off
+		  ParMdlRefBuildCompliant off
+		  CompOptLevelCompliant	  off
+		  ConcurrentExecutionCompliant off
+		  IncludeMdlTerminateFcn  on
+		  GeneratePreprocessorConditionals "Use local settings"
+		  CombineOutputUpdateFcns on
+		  CombineSignalStateStructs off
+		  SuppressErrorStatus	  on
+		  ERTFirstTimeCompliant	  off
+		  IncludeFileDelimiter	  "Auto"
+		  ERTCustomFileBanners	  on
+		  SupportAbsoluteTime	  on
+		  LogVarNameModifier	  "rt_"
+		  MatFileLogging	  off
+		  MultiInstanceERTCode	  off
+		  SupportNonFinite	  on
+		  SupportComplex	  on
+		  PurelyIntegerCode	  off
+		  SupportContinuousTime	  off
+		  SupportNonInlinedSFcns  off
+		  SupportVariableSizeSignals off
+		  EnableShiftOperators	  on
+		  ParenthesesLevel	  "Nominal"
+		  MATLABClassNameForMDSCustomization "Simulink.SoftwareTarget.ERTCustomization"
+		  ModelStepFunctionPrototypeControlCompliant off
+		  CPPClassGenCompliant	  off
+		  AutosarCompliant	  off
+		  GRTInterface		  off
+		  GenerateAllocFcn	  off
+		  GenerateASAP2		  off
+		  ExtMode		  off
+		  ExtModeTransport	  0
+		  ExtModeStaticAlloc	  off
+		  ExtModeStaticAllocSize  1000000
+		  ExtModeTesting	  off
+		  ExtModeMexFile	  "ext_comm"
+		  ExtModeIntrfLevel	  "Level1"
+		  InlinedParameterPlacement "NonHierarchical"
+		  TargetOS		  "BareBoardExample"
+		  MultiInstanceErrorCode  "Error"
+		  RateGroupingCode	  on
+		  RootIOFormat		  "Individual arguments"
+		  RTWCAPISignals	  off
+		  RTWCAPIParams		  off
+		  RTWCAPIStates		  off
+		  RTWCAPIRootIO		  off
+		  ERTSrcFileBannerTemplate "ert_code_template.cgt"
+		  ERTHdrFileBannerTemplate "ert_code_template.cgt"
+		  ERTDataSrcFileTemplate  "ert_code_template.cgt"
+		  ERTDataHdrFileTemplate  "ert_code_template.cgt"
+		  ERTCustomFileTemplate	  "example_file_process.tlc"
+		  EnableDataOwnership	  off
+		  SignalDisplayLevel	  10
+		  ParamTuneLevel	  10
+		  GlobalDataDefinition	  "Auto"
+		  DataDefinitionFile	  "global.c"
+		  GlobalDataReference	  "Auto"
+		  ERTFilePackagingFormat  "Modular"
+		  DataReferenceFile	  "global.h"
+		  PreserveExpressionOrder off
+		  PreserveIfCondition	  off
+		  ConvertIfToSwitch	  off
+		  PreserveExternInFcnDecls on
+		  SuppressUnreachableDefaultCases off
+		  EnableUserReplacementTypes off
+		  Array {
+		    Type		    "Struct"
+		    Dimension		    1
+		    MATStruct {
+		    double		    ""
+		    single		    ""
+		    int32		    ""
+		    int16		    ""
+		    int8		    ""
+		    uint32		    ""
+		    uint16		    ""
+		    uint8		    ""
+		    boolean		    ""
+		    int			    ""
+		    uint		    ""
+		    char		    ""
+		    }
+		    PropName		    "ReplacementTypes"
+		  }
+		  MemSecPackage		  "--- None ---"
+		  MemSecDataConstants	  "Default"
+		  MemSecDataIO		  "Default"
+		  MemSecDataInternal	  "Default"
+		  MemSecDataParameters	  "Default"
+		  MemSecFuncInitTerm	  "Default"
+		  MemSecFuncExecute	  "Default"
+		  MemSecFuncSharedUtil	  "Default"
+		}
+		PropName		"Components"
+	      }
+	    }
+	    PropName		    "Components"
+	  }
+	}
+	PropName		"Components"
+      }
+      Name		      "Configuration"
+      CurrentDlgPage	      "Solver"
+      ConfigPrmDlgPosition     [ 167, 91, 857, 630 ] 
+    }
+    PropName		    "ConfigurationSets"
+  }
+  Simulink.ConfigSet {
+    $PropName		    "ActiveConfigurationSet"
+    $ObjectID		    7
+  }
+  Object {
+    $PropName		    "DataTransfer"
+    $ObjectID		    19
+    $ClassName		    "Simulink.GlobalDataTransfer"
+    DefaultTransitionBetweenSyncTasks "Ensure deterministic transfer (maximum delay)"
+    DefaultTransitionBetweenAsyncTasks "Ensure data integrity only"
+    DefaultTransitionBetweenContTasks "Ensure deterministic transfer (minimum delay)"
+    DefaultExtrapolationMethodBetweenContTasks "None"
+    AutoInsertRateTranBlk   [0]
+  }
+  ExplicitPartitioning	  off
+  BlockDefaults {
+    ForegroundColor	    "black"
+    BackgroundColor	    "white"
+    DropShadow		    off
+    NamePlacement	    "normal"
+    FontName		    "Helvetica"
+    FontSize		    10
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+    ShowName		    on
+    BlockRotation	    0
+    BlockMirror		    off
+  }
+  AnnotationDefaults {
+    HorizontalAlignment	    "center"
+    VerticalAlignment	    "middle"
+    ForegroundColor	    "black"
+    BackgroundColor	    "white"
+    DropShadow		    off
+    FontName		    "Helvetica"
+    FontSize		    10
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+    UseDisplayTextAsClickCallback off
+  }
+  LineDefaults {
+    FontName		    "Helvetica"
+    FontSize		    9
+    FontWeight		    "normal"
+    FontAngle		    "normal"
+  }
+  MaskDefaults {
+    SelfModifiable	    "off"
+    IconFrame		    "on"
+    IconOpaque		    "on"
+    RunInitForIconRedraw    "off"
+    IconRotate		    "none"
+    PortRotate		    "default"
+    IconUnits		    "autoscale"
+  }
+  MaskParameterDefaults {
+    Evaluate		    "on"
+    Tunable		    "on"
+    NeverSave		    "off"
+    Internal		    "off"
+    ReadOnly		    "off"
+    Enabled		    "on"
+    Visible		    "on"
+    ToolTip		    "on"
+  }
+  BlockParameterDefaults {
+    Block {
+      BlockType		      Demux
+      Outputs		      "4"
+      DisplayOption	      "none"
+      BusSelectionMode	      off
+    }
+    Block {
+      BlockType		      Gain
+      Gain		      "1"
+      Multiplication	      "Element-wise(K.*u)"
+      ParamMin		      "[]"
+      ParamMax		      "[]"
+      ParamDataTypeStr	      "Inherit: Same as input"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: Same as input"
+      LockScale		      off
+      RndMeth		      "Floor"
+      SaturateOnIntegerOverflow	on
+      SampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Ground
+    }
+    Block {
+      BlockType		      Inport
+      Port		      "1"
+      OutputFunctionCall      off
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: auto"
+      LockScale		      off
+      BusOutputAsStruct	      off
+      PortDimensions	      "-1"
+      VarSizeSig	      "Inherit"
+      SampleTime	      "-1"
+      SignalType	      "auto"
+      SamplingMode	      "auto"
+      LatchByDelayingOutsideSignal off
+      LatchInputForFeedbackSignals off
+      Interpolate	      on
+    }
+    Block {
+      BlockType		      Logic
+      Operator		      "AND"
+      Inputs		      "2"
+      IconShape		      "rectangular"
+      AllPortsSameDT	      on
+      OutDataTypeStr	      "Inherit: Logical (see Configuration Parameters: Optimization)"
+      SampleTime	      "-1"
+    }
+    Block {
+      BlockType		      Outport
+      Port		      "1"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: auto"
+      LockScale		      off
+      BusOutputAsStruct	      off
+      PortDimensions	      "-1"
+      VarSizeSig	      "Inherit"
+      SampleTime	      "-1"
+      SignalType	      "auto"
+      SamplingMode	      "auto"
+      SourceOfInitialOutputValue "Dialog"
+      OutputWhenDisabled      "held"
+      InitialOutput	      "[]"
+    }
+    Block {
+      BlockType		      S-Function
+      FunctionName	      "system"
+      SFunctionModules	      "''"
+      PortCounts	      "[]"
+      SFunctionDeploymentMode off
+    }
+    Block {
+      BlockType		      SubSystem
+      ShowPortLabels	      "FromPortIcon"
+      Permissions	      "ReadWrite"
+      PermitHierarchicalResolution "All"
+      TreatAsAtomicUnit	      off
+      CheckFcnCallInpInsideContextMsg off
+      SystemSampleTime	      "-1"
+      RTWFcnNameOpts	      "Auto"
+      RTWFileNameOpts	      "Auto"
+      FunctionInterfaceSpec   "void_void"
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      SimViewingDevice	      off
+      DataTypeOverride	      "UseLocalSettings"
+      DataTypeOverrideAppliesTo	"AllNumericTypes"
+      MinMaxOverflowLogging   "UseLocalSettings"
+      SFBlockType	      "NONE"
+      Variant		      off
+      GeneratePreprocessorConditionals off
+    }
+    Block {
+      BlockType		      Terminator
+    }
+    Block {
+      BlockType		      TriggerPort
+      TriggerType	      "rising"
+      StatesWhenEnabling      "inherit"
+      PropagateVarSize	      "During execution"
+      ShowOutputPort	      off
+      OutputDataType	      "auto"
+      SampleTimeType	      "triggered"
+      SampleTime	      "1"
+      ZeroCross		      on
+      PortDimensions	      "-1"
+      TriggerSignalSampleTime "-1"
+      OutMin		      "[]"
+      OutMax		      "[]"
+      OutDataTypeStr	      "Inherit: auto"
+      Interpolate	      on
+    }
+  }
+  System {
+    Name		    "DigitalIO_block_demo"
+    Location		    [209, 52, 1258, 924]
+    Open		    on
+    ModelBrowserVisibility  off
+    ModelBrowserWidth	    212
+    ScreenColor		    "white"
+    PaperOrientation	    "landscape"
+    PaperPositionMode	    "auto"
+    PaperType		    "usletter"
+    PaperUnits		    "inches"
+    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
+    TiledPageScale	    1
+    ShowPageBoundaries	    off
+    ZoomFactor		    "100"
+    ReportName		    "simulink-default.rpt"
+    SIDHighWatermark	    "56"
+    Block {
+      BlockType		      Inport
+      Name		      "In1"
+      SID		      "1"
+      Position		      [65, 273, 95, 287]
+      ZOrder		      -1
+      IconDisplay	      "Port number"
+      Port {
+	PortNumber		1
+	Name			"In"
+	Object {
+	  $PropName		  "SignalObject"
+	  $ObjectID		  20
+	  $ClassName		  "Simulink.Signal"
+	  Simulink.CoderInfo {
+	    $PropName		    "CoderInfo"
+	    $ObjectID		    21
+	    StorageClass	    "ExportedGlobal"
+	    Alignment		    -1
+	    CSCPackageName	    "Simulink"
+	    ParameterOrSignal	    "Signal"
+	    CustomStorageClass	    "Default"
+	    SimulinkCSC.AttribClass_Simulink_Default {
+	      $PropName		      "CustomAttributes"
+	      $ObjectID		      22
+	    }
+	  }
+	  Description		  ""
+	  DataType		  "auto"
+	  Min			  []
+	  Max			  []
+	  DocUnits		  ""
+	  Dimensions		  [-1.0]
+	  DimensionsMode	  "auto"
+	  Complexity		  "auto"
+	  SampleTime		  [-1.0]
+	  SamplingMode		  "auto"
+	  InitialValue		  ""
+	  Simulink.LoggingInfo {
+	    $PropName		    "LoggingInfo"
+	    $ObjectID		    23
+	    DataLogging		    0
+	    NameMode		    0
+	    LoggingName		    ""
+	    DecimateData	    0
+	    Decimation		    2
+	    LimitDataPoints	    0
+	    MaxPoints		    5000
+	  }
+	}
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+    }
+    Block {
+      BlockType		      Inport
+      Name		      "In2"
+      SID		      "2"
+      Position		      [175, 463, 205, 477]
+      ZOrder		      -2
+      Port		      "2"
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      Inport
+      Name		      "In3"
+      SID		      "3"
+      Position		      [175, 598, 205, 612]
+      ZOrder		      -3
+      Port		      "3"
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      Inport
+      Name		      "In4"
+      SID		      "4"
+      Position		      [635, 598, 665, 612]
+      ZOrder		      -4
+      Port		      "4"
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Chart"
+      SID		      "5"
+      Ports		      [0, 2]
+      Position		      [380, 271, 440, 324]
+      ZOrder		      -5
+      ErrorFcn		      "Stateflow.Translate.translate"
+      PermitHierarchicalResolution "ExplicitOnly"
+      TreatAsAtomicUnit	      on
+      MinAlgLoopOccurrences   off
+      PropExecContextOutsideSubsystem off
+      RTWSystemCode	      "Auto"
+      FunctionWithSeparateData off
+      Opaque		      off
+      RequestExecContextInheritance off
+      MaskHideContents	      off
+      SFBlockType	      "Chart"
+      Port {
+	PortNumber		1
+	Name			"count"
+	PropagatedSignals	"count"
+	Object {
+	  $PropName		  "SignalObject"
+	  $ObjectID		  24
+	  $ClassName		  "Simulink.Signal"
+	  Simulink.CoderInfo {
+	    $PropName		    "CoderInfo"
+	    $ObjectID		    25
+	    StorageClass	    "ExportedGlobal"
+	    Alignment		    -1
+	    CSCPackageName	    "Simulink"
+	    ParameterOrSignal	    "Signal"
+	    CustomStorageClass	    "Default"
+	    SimulinkCSC.AttribClass_Simulink_Default {
+	      $PropName		      "CustomAttributes"
+	      $ObjectID		      26
+	    }
+	  }
+	  Description		  ""
+	  DataType		  "auto"
+	  Min			  []
+	  Max			  []
+	  DocUnits		  ""
+	  Dimensions		  [-1.0]
+	  DimensionsMode	  "auto"
+	  Complexity		  "auto"
+	  SampleTime		  [-1.0]
+	  SamplingMode		  "auto"
+	  InitialValue		  ""
+	  Simulink.LoggingInfo {
+	    $PropName		    "LoggingInfo"
+	    $ObjectID		    27
+	    DataLogging		    0
+	    NameMode		    0
+	    LoggingName		    ""
+	    DecimateData	    0
+	    Decimation		    2
+	    LimitDataPoints	    0
+	    MaxPoints		    5000
+	  }
+	}
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+      System {
+	Name			"Chart"
+	Location		[227, 345, 838, 789]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
+	ZoomFactor		"100"
+	SIDHighWatermark	"14"
+	Block {
+	  BlockType		  Demux
+	  Name			  " Demux "
+	  SID			  "5::12"
+	  Ports			  [1, 1]
+	  Position		  [270, 230, 320, 270]
+	  ZOrder		  2
+	  Outputs		  "1"
+	}
+	Block {
+	  BlockType		  Ground
+	  Name			  " Ground "
+	  SID			  "5::14"
+	  Position		  [20, 131, 40, 149]
+	  ZOrder		  4
+	}
+	Block {
+	  BlockType		  S-Function
+	  Name			  " SFunction "
+	  SID			  "5::11"
+	  Tag			  "Stateflow S-Function DigitalIO_block_demo 1"
+	  Ports			  [1, 3]
+	  Position		  [180, 100, 230, 180]
+	  ZOrder		  1
+	  FunctionName		  "sf_sfun"
+	  PortCounts		  "[1 3]"
+	  EnableBusSupport	  off
+	  Port {
+	    PortNumber		    2
+	    Name		    "count"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    3
+	    Name		    "A"
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	}
+	Block {
+	  BlockType		  Terminator
+	  Name			  " Terminator "
+	  SID			  "5::13"
+	  Position		  [460, 241, 480, 259]
+	  ZOrder		  3
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "count"
+	  SID			  "5::5"
+	  Position		  [460, 101, 480, 119]
+	  ZOrder		  -5
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "A"
+	  SID			  "5::6"
+	  Position		  [460, 136, 480, 154]
+	  ZOrder		  -6
+	  Port			  "2"
+	  IconDisplay		  "Port number"
+	}
+	Line {
+	  Name			  "count"
+	  Labels		  [0, 0]
+	  SrcBlock		  " SFunction "
+	  SrcPort		  2
+	  DstBlock		  "count"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "A"
+	  Labels		  [0, 0]
+	  SrcBlock		  " SFunction "
+	  SrcPort		  3
+	  DstBlock		  "A"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  " Ground "
+	  SrcPort		  1
+	  DstBlock		  " SFunction "
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  " Demux "
+	  SrcPort		  1
+	  DstBlock		  " Terminator "
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  " SFunction "
+	  SrcPort		  1
+	  DstBlock		  " Demux "
+	  DstPort		  1
+	}
+      }
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "Digital Input"
+      SID		      "6"
+      Ports		      [0, 1]
+      Position		      [380, 343, 565, 397]
+      ZOrder		      -6
+      LibraryVersion	      "1.212"
+      SourceBlock	      "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Digital Input"
+      SourceType	      "GPIO_564xL_Input"
+      gpio_outputs	      "51  : PD3  : [ 128 ] : [ A7 ]"
+      pinNum		      "[ 128 ]"
+      pcrNum		      "51"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "Digital Output 1"
+      SID		      "7"
+      Ports		      [1]
+      Position		      [720, 333, 920, 397]
+      ZOrder		      -7
+      LibraryVersion	      "1.212"
+      SourceBlock	      "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Digital Output "
+      SourceType	      "GPIO_564xL_Output"
+      gpio_outputs	      "55  : PD7  : [ 37 ] : [ R4 ]"
+      pinNum		      "[ 37 ]"
+      pcrNum		      "55"
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Function-Call\nSubsystem"
+      SID		      "8"
+      Ports		      [1, 3, 0, 1]
+      Position		      [275, 449, 375, 491]
+      ZOrder		      -8
+      TreatAsAtomicUnit	      on
+      MinAlgLoopOccurrences   off
+      PropExecContextOutsideSubsystem off
+      RTWSystemCode	      "Nonreusable function"
+      FunctionWithSeparateData off
+      Opaque		      off
+      RequestExecContextInheritance off
+      MaskHideContents	      off
+      Port {
+	PortNumber		2
+	PropagatedSignals	"countX"
+	ShowPropagatedSignals	"on"
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+      Port {
+	PortNumber		3
+	PropagatedSignals	"StateA"
+	ShowPropagatedSignals	"on"
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+      System {
+	Name			"Function-Call\nSubsystem"
+	Location		[399, 69, 1196, 638]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	212
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
+	ZoomFactor		"112"
+	Block {
+	  BlockType		  Inport
+	  Name			  "In1"
+	  SID			  "9"
+	  Position		  [110, 103, 140, 117]
+	  ZOrder		  -1
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  TriggerPort
+	  Name			  "function"
+	  SID			  "10"
+	  Ports			  []
+	  Position		  [210, 15, 230, 35]
+	  ZOrder		  -2
+	  TriggerType		  "function-call"
+	  StatesWhenEnabling	  "held"
+	}
+	Block {
+	  BlockType		  SubSystem
+	  Name			  "Chart"
+	  SID			  "11"
+	  Ports			  [0, 2]
+	  Position		  [110, 176, 170, 229]
+	  ZOrder		  -3
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  MinAlgLoopOccurrences	  off
+	  PropExecContextOutsideSubsystem off
+	  RTWSystemCode		  "Auto"
+	  FunctionWithSeparateData off
+	  Opaque		  off
+	  RequestExecContextInheritance	off
+	  MaskHideContents	  off
+	  SFBlockType		  "Chart"
+	  Port {
+	    PortNumber		    1
+	    Name		    "countX"
+	    PropagatedSignals	    "countX"
+	    Object {
+	      $PropName		      "SignalObject"
+	      $ObjectID		      28
+	      $ClassName	      "Simulink.Signal"
+	      Simulink.CoderInfo {
+		$PropName		"CoderInfo"
+		$ObjectID		29
+		StorageClass		"ExportedGlobal"
+		Alignment		-1
+		CSCPackageName		"Simulink"
+		ParameterOrSignal	"Signal"
+		CustomStorageClass	"Default"
+		SimulinkCSC.AttribClass_Simulink_Default {
+		  $PropName		  "CustomAttributes"
+		  $ObjectID		  30
+		}
+	      }
+	      Description	      ""
+	      DataType		      "auto"
+	      Min		      []
+	      Max		      []
+	      DocUnits		      ""
+	      Dimensions	      [-1.0]
+	      DimensionsMode	      "auto"
+	      Complexity	      "auto"
+	      SampleTime	      [-1.0]
+	      SamplingMode	      "auto"
+	      InitialValue	      ""
+	      Simulink.LoggingInfo {
+		$PropName		"LoggingInfo"
+		$ObjectID		31
+		DataLogging		0
+		NameMode		0
+		LoggingName		""
+		DecimateData		0
+		Decimation		2
+		LimitDataPoints		0
+		MaxPoints		5000
+	      }
+	    }
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  Port {
+	    PortNumber		    2
+	    Name		    "StateA"
+	    PropagatedSignals	    "A"
+	    Object {
+	      $PropName		      "SignalObject"
+	      $ObjectID		      32
+	      $ClassName	      "Simulink.Signal"
+	      Simulink.CoderInfo {
+		$PropName		"CoderInfo"
+		$ObjectID		33
+		StorageClass		"ExportedGlobal"
+		Alignment		-1
+		CSCPackageName		"Simulink"
+		ParameterOrSignal	"Signal"
+		CustomStorageClass	"Default"
+		SimulinkCSC.AttribClass_Simulink_Default {
+		  $PropName		  "CustomAttributes"
+		  $ObjectID		  34
+		}
+	      }
+	      Description	      ""
+	      DataType		      "auto"
+	      Min		      []
+	      Max		      []
+	      DocUnits		      ""
+	      Dimensions	      [-1.0]
+	      DimensionsMode	      "auto"
+	      Complexity	      "auto"
+	      SampleTime	      [-1.0]
+	      SamplingMode	      "auto"
+	      InitialValue	      ""
+	      Simulink.LoggingInfo {
+		$PropName		"LoggingInfo"
+		$ObjectID		35
+		DataLogging		0
+		NameMode		0
+		LoggingName		""
+		DecimateData		0
+		Decimation		2
+		LimitDataPoints		0
+		MaxPoints		5000
+	      }
+	    }
+	    RTWStorageClass	    "Auto"
+	    DataLoggingNameMode	    "SignalName"
+	  }
+	  System {
+	    Name		    "Chart"
+	    Location		    [227, 345, 838, 789]
+	    Open		    off
+	    ModelBrowserVisibility  off
+	    ModelBrowserWidth	    200
+	    ScreenColor		    "white"
+	    PaperOrientation	    "landscape"
+	    PaperPositionMode	    "auto"
+	    PaperType		    "usletter"
+	    PaperUnits		    "inches"
+	    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
+	    TiledPageScale	    1
+	    ShowPageBoundaries	    off
+	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "14"
+	    Block {
+	      BlockType		      Demux
+	      Name		      " Demux "
+	      SID		      "11::12"
+	      Ports		      [1, 1]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
+	      Outputs		      "1"
+	    }
+	    Block {
+	      BlockType		      Ground
+	      Name		      " Ground "
+	      SID		      "11::14"
+	      Position		      [20, 131, 40, 149]
+	      ZOrder		      4
+	    }
+	    Block {
+	      BlockType		      S-Function
+	      Name		      " SFunction "
+	      SID		      "11::11"
+	      Tag		      "Stateflow S-Function DigitalIO_block_demo 2"
+	      Ports		      [1, 3]
+	      Position		      [180, 100, 230, 180]
+	      ZOrder		      1
+	      FunctionName	      "sf_sfun"
+	      PortCounts	      "[1 3]"
+	      EnableBusSupport	      off
+	      Port {
+		PortNumber		2
+		Name			"countX"
+		RTWStorageClass		"Auto"
+		DataLoggingNameMode	"SignalName"
+	      }
+	      Port {
+		PortNumber		3
+		Name			"A"
+		RTWStorageClass		"Auto"
+		DataLoggingNameMode	"SignalName"
+	      }
+	    }
+	    Block {
+	      BlockType		      Terminator
+	      Name		      " Terminator "
+	      SID		      "11::13"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
+	    }
+	    Block {
+	      BlockType		      Outport
+	      Name		      "countX"
+	      SID		      "11::5"
+	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -5
+	      IconDisplay	      "Port number"
+	    }
+	    Block {
+	      BlockType		      Outport
+	      Name		      "A"
+	      SID		      "11::6"
+	      Position		      [460, 136, 480, 154]
+	      ZOrder		      -6
+	      Port		      "2"
+	      IconDisplay	      "Port number"
+	    }
+	    Line {
+	      Name		      "countX"
+	      Labels		      [0, 0]
+	      SrcBlock		      " SFunction "
+	      SrcPort		      2
+	      DstBlock		      "countX"
+	      DstPort		      1
+	    }
+	    Line {
+	      Name		      "A"
+	      Labels		      [0, 0]
+	      SrcBlock		      " SFunction "
+	      SrcPort		      3
+	      DstBlock		      "A"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      " Ground "
+	      SrcPort		      1
+	      DstBlock		      " SFunction "
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      " Demux "
+	      SrcPort		      1
+	      DstBlock		      " Terminator "
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      " SFunction "
+	      SrcPort		      1
+	      DstBlock		      " Demux "
+	      DstPort		      1
+	    }
+	  }
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Digital Input1"
+	  SID			  "12"
+	  Ports			  [0, 1]
+	  Position		  [65, 253, 250, 307]
+	  ZOrder		  -4
+	  LibraryVersion	  "1.212"
+	  SourceBlock		  "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Digital Input"
+	  SourceType		  "GPIO_564xL_Input"
+	  gpio_outputs		  "48  : PD0  : [ 125 ] : [ B8 ]"
+	  pinNum		  "[ 125 ]"
+	  pcrNum		  "48"
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Digital Output 1"
+	  SID			  "13"
+	  Ports			  [1]
+	  Position		  [485, 243, 685, 307]
+	  ZOrder		  -5
+	  LibraryVersion	  "1.212"
+	  SourceBlock		  "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Digital Output "
+	  SourceType		  "GPIO_564xL_Output"
+	  gpio_outputs		  "52  : PD4  : [ 129 ] : [ B7 ]"
+	  pinNum		  "[ 129 ]"
+	  pcrNum		  "52"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain"
+	  SID			  "14"
+	  Position		  [210, 95, 240, 125]
+	  ZOrder		  -6
+	  Gain			  "2"
+	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Logic
+	  Name			  "Logical\nOperator"
+	  SID			  "15"
+	  Ports			  [2, 1]
+	  Position		  [400, 257, 430, 288]
+	  ZOrder		  -7
+	  AllPortsSameDT	  off
+	  OutDataTypeStr	  "boolean"
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Profiler Function "
+	  SID			  "16"
+	  Ports			  []
+	  Position		  [465, 30, 650, 89]
+	  ZOrder		  -8
+	  LibraryVersion	  "1.212"
+	  FontName		  "Arial"
+	  FontSize		  12
+	  SourceBlock		  "rappid_564xl_ec_toolbox/MPC564xL/Utility Blocks/Profiler Function "
+	  SourceType		  "Profile_564xL_Func"
+	  profile_indx		  "0"
+	  showOut		  off
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out1"
+	  SID			  "17"
+	  Position		  [360, 103, 390, 117]
+	  ZOrder		  -9
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out2"
+	  SID			  "18"
+	  Position		  [290, 183, 320, 197]
+	  ZOrder		  -10
+	  Port			  "2"
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out3"
+	  SID			  "19"
+	  Position		  [370, 208, 400, 222]
+	  ZOrder		  -11
+	  Port			  "3"
+	  IconDisplay		  "Port number"
+	}
+	Line {
+	  SrcBlock		  "In1"
+	  SrcPort		  1
+	  DstBlock		  "Gain"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Gain"
+	  SrcPort		  1
+	  DstBlock		  "Out1"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "countX"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Chart"
+	  SrcPort		  1
+	  DstBlock		  "Out2"
+	  DstPort		  1
+	}
+	Line {
+	  Name			  "StateA"
+	  Labels		  [0, 0]
+	  SrcBlock		  "Chart"
+	  SrcPort		  2
+	  Points		  [155, 0]
+	  Branch {
+	    DstBlock		    "Out3"
+	    DstPort		    1
+	  }
+	  Branch {
+	    Points		    [0, 50]
+	    DstBlock		    "Logical\nOperator"
+	    DstPort		    1
+	  }
+	}
+	Line {
+	  Labels		  [0, 0]
+	  SrcBlock		  "Digital Input1"
+	  SrcPort		  1
+	  DstBlock		  "Logical\nOperator"
+	  DstPort		  2
+	}
+	Line {
+	  Labels		  [0, 0]
+	  SrcBlock		  "Logical\nOperator"
+	  SrcPort		  1
+	  DstBlock		  "Digital Output 1"
+	  DstPort		  1
+	}
+      }
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Function-Call\nSubsystem1"
+      SID		      "20"
+      Ports		      [1, 1, 0, 1]
+      Position		      [280, 584, 380, 626]
+      ZOrder		      -9
+      TreatAsAtomicUnit	      on
+      MinAlgLoopOccurrences   off
+      PropExecContextOutsideSubsystem off
+      RTWSystemCode	      "Nonreusable function"
+      FunctionWithSeparateData off
+      Opaque		      off
+      RequestExecContextInheritance off
+      MaskHideContents	      off
+      System {
+	Name			"Function-Call\nSubsystem1"
+	Location		[361, 190, 1186, 728]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "In1"
+	  SID			  "21"
+	  Position		  [110, 103, 140, 117]
+	  ZOrder		  -1
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  TriggerPort
+	  Name			  "function"
+	  SID			  "22"
+	  Ports			  []
+	  Position		  [210, 15, 230, 35]
+	  ZOrder		  -2
+	  TriggerType		  "function-call"
+	  StatesWhenEnabling	  "held"
+	}
+	Block {
+	  BlockType		  SubSystem
+	  Name			  "Chart"
+	  SID			  "23"
+	  Ports			  [0, 2]
+	  Position		  [65, 176, 125, 229]
+	  ZOrder		  -3
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  MinAlgLoopOccurrences	  off
+	  PropExecContextOutsideSubsystem off
+	  RTWSystemCode		  "Auto"
+	  FunctionWithSeparateData off
+	  Opaque		  off
+	  RequestExecContextInheritance	off
+	  MaskHideContents	  off
+	  SFBlockType		  "Chart"
+	  System {
+	    Name		    "Chart"
+	    Location		    [227, 345, 838, 789]
+	    Open		    off
+	    ModelBrowserVisibility  off
+	    ModelBrowserWidth	    200
+	    ScreenColor		    "white"
+	    PaperOrientation	    "landscape"
+	    PaperPositionMode	    "auto"
+	    PaperType		    "usletter"
+	    PaperUnits		    "inches"
+	    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
+	    TiledPageScale	    1
+	    ShowPageBoundaries	    off
+	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "14"
+	    Block {
+	      BlockType		      Demux
+	      Name		      " Demux "
+	      SID		      "23::12"
+	      Ports		      [1, 1]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
+	      Outputs		      "1"
+	    }
+	    Block {
+	      BlockType		      Ground
+	      Name		      " Ground "
+	      SID		      "23::14"
+	      Position		      [20, 131, 40, 149]
+	      ZOrder		      4
+	    }
+	    Block {
+	      BlockType		      S-Function
+	      Name		      " SFunction "
+	      SID		      "23::11"
+	      Tag		      "Stateflow S-Function DigitalIO_block_demo 3"
+	      Ports		      [1, 3]
+	      Position		      [180, 100, 230, 180]
+	      ZOrder		      1
+	      FunctionName	      "sf_sfun"
+	      PortCounts	      "[1 3]"
+	      EnableBusSupport	      off
+	      Port {
+		PortNumber		2
+		Name			"count"
+		RTWStorageClass		"Auto"
+		DataLoggingNameMode	"SignalName"
+	      }
+	      Port {
+		PortNumber		3
+		Name			"A"
+		RTWStorageClass		"Auto"
+		DataLoggingNameMode	"SignalName"
+	      }
+	    }
+	    Block {
+	      BlockType		      Terminator
+	      Name		      " Terminator "
+	      SID		      "23::13"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
+	    }
+	    Block {
+	      BlockType		      Outport
+	      Name		      "count"
+	      SID		      "23::5"
+	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -5
+	      IconDisplay	      "Port number"
+	    }
+	    Block {
+	      BlockType		      Outport
+	      Name		      "A"
+	      SID		      "23::6"
+	      Position		      [460, 136, 480, 154]
+	      ZOrder		      -6
+	      Port		      "2"
+	      IconDisplay	      "Port number"
+	    }
+	    Line {
+	      Name		      "count"
+	      Labels		      [0, 0]
+	      SrcBlock		      " SFunction "
+	      SrcPort		      2
+	      DstBlock		      "count"
+	      DstPort		      1
+	    }
+	    Line {
+	      Name		      "A"
+	      Labels		      [0, 0]
+	      SrcBlock		      " SFunction "
+	      SrcPort		      3
+	      DstBlock		      "A"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      " Ground "
+	      SrcPort		      1
+	      DstBlock		      " SFunction "
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      " Demux "
+	      SrcPort		      1
+	      DstBlock		      " Terminator "
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      " SFunction "
+	      SrcPort		      1
+	      DstBlock		      " Demux "
+	      DstPort		      1
+	    }
+	  }
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Digital Input1"
+	  SID			  "24"
+	  Ports			  [0, 1]
+	  Position		  [55, 253, 240, 307]
+	  ZOrder		  -4
+	  LibraryVersion	  "1.212"
+	  SourceBlock		  "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Digital Input"
+	  SourceType		  "GPIO_564xL_Input"
+	  gpio_outputs		  "49  : PD1  : [ 3 ] : [ E3 ]"
+	  pinNum		  "[ 3 ]"
+	  pcrNum		  "49"
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Digital Output 1"
+	  SID			  "25"
+	  Ports			  [1]
+	  Position		  [460, 243, 660, 307]
+	  ZOrder		  -5
+	  LibraryVersion	  "1.212"
+	  SourceBlock		  "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Digital Output "
+	  SourceType		  "GPIO_564xL_Output"
+	  gpio_outputs		  "53  : PD5  : [ 33 ] : [ N3 ]"
+	  pinNum		  "[ 33 ]"
+	  pcrNum		  "53"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain"
+	  SID			  "26"
+	  Position		  [210, 95, 240, 125]
+	  ZOrder		  -6
+	  Gain			  "2"
+	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Logic
+	  Name			  "Logical\nOperator"
+	  SID			  "27"
+	  Ports			  [2, 1]
+	  Position		  [385, 257, 415, 288]
+	  ZOrder		  -7
+	  AllPortsSameDT	  off
+	  OutDataTypeStr	  "boolean"
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Profiler Function "
+	  SID			  "28"
+	  Ports			  []
+	  Position		  [320, 15, 505, 74]
+	  ZOrder		  -8
+	  LibraryVersion	  "1.212"
+	  FontName		  "Arial"
+	  FontSize		  12
+	  SourceBlock		  "rappid_564xl_ec_toolbox/MPC564xL/Utility Blocks/Profiler Function "
+	  SourceType		  "Profile_564xL_Func"
+	  profile_indx		  "2"
+	  showOut		  off
+	}
+	Block {
+	  BlockType		  Terminator
+	  Name			  "Terminator"
+	  SID			  "29"
+	  Position		  [180, 175, 200, 195]
+	  ZOrder		  -9
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out1"
+	  SID			  "30"
+	  Position		  [360, 103, 390, 117]
+	  ZOrder		  -10
+	  IconDisplay		  "Port number"
+	}
+	Line {
+	  SrcBlock		  "Gain"
+	  SrcPort		  1
+	  DstBlock		  "Out1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "In1"
+	  SrcPort		  1
+	  DstBlock		  "Gain"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Chart"
+	  SrcPort		  2
+	  Points		  [0, 5; 220, 0; 0, 45]
+	  DstBlock		  "Logical\nOperator"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Chart"
+	  SrcPort		  1
+	  Points		  [15, 0; 0, -5]
+	  DstBlock		  "Terminator"
+	  DstPort		  1
+	}
+	Line {
+	  Labels		  [0, 0]
+	  SrcBlock		  "Digital Input1"
+	  SrcPort		  1
+	  DstBlock		  "Logical\nOperator"
+	  DstPort		  2
+	}
+	Line {
+	  Labels		  [0, 0]
+	  SrcBlock		  "Logical\nOperator"
+	  SrcPort		  1
+	  DstBlock		  "Digital Output 1"
+	  DstPort		  1
+	}
+      }
+    }
+    Block {
+      BlockType		      SubSystem
+      Name		      "Function-Call\nSubsystem2"
+      SID		      "31"
+      Ports		      [1, 1, 0, 1]
+      Position		      [730, 584, 830, 626]
+      ZOrder		      -10
+      TreatAsAtomicUnit	      on
+      MinAlgLoopOccurrences   off
+      PropExecContextOutsideSubsystem off
+      RTWSystemCode	      "Nonreusable function"
+      FunctionWithSeparateData off
+      Opaque		      off
+      RequestExecContextInheritance off
+      MaskHideContents	      off
+      System {
+	Name			"Function-Call\nSubsystem2"
+	Location		[347, 387, 1290, 907]
+	Open			off
+	ModelBrowserVisibility	off
+	ModelBrowserWidth	200
+	ScreenColor		"white"
+	PaperOrientation	"landscape"
+	PaperPositionMode	"auto"
+	PaperType		"usletter"
+	PaperUnits		"inches"
+	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
+	TiledPageScale		1
+	ShowPageBoundaries	off
+	ZoomFactor		"100"
+	Block {
+	  BlockType		  Inport
+	  Name			  "In1"
+	  SID			  "32"
+	  Position		  [110, 103, 140, 117]
+	  ZOrder		  -1
+	  IconDisplay		  "Port number"
+	}
+	Block {
+	  BlockType		  TriggerPort
+	  Name			  "function"
+	  SID			  "33"
+	  Ports			  []
+	  Position		  [210, 15, 230, 35]
+	  ZOrder		  -2
+	  TriggerType		  "function-call"
+	  StatesWhenEnabling	  "held"
+	}
+	Block {
+	  BlockType		  SubSystem
+	  Name			  "Chart"
+	  SID			  "34"
+	  Ports			  [0, 2]
+	  Position		  [80, 171, 140, 224]
+	  ZOrder		  -3
+	  ErrorFcn		  "Stateflow.Translate.translate"
+	  PermitHierarchicalResolution "ExplicitOnly"
+	  TreatAsAtomicUnit	  on
+	  MinAlgLoopOccurrences	  off
+	  PropExecContextOutsideSubsystem off
+	  RTWSystemCode		  "Auto"
+	  FunctionWithSeparateData off
+	  Opaque		  off
+	  RequestExecContextInheritance	off
+	  MaskHideContents	  off
+	  SFBlockType		  "Chart"
+	  System {
+	    Name		    "Chart"
+	    Location		    [227, 345, 838, 789]
+	    Open		    off
+	    ModelBrowserVisibility  off
+	    ModelBrowserWidth	    200
+	    ScreenColor		    "white"
+	    PaperOrientation	    "landscape"
+	    PaperPositionMode	    "auto"
+	    PaperType		    "usletter"
+	    PaperUnits		    "inches"
+	    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
+	    TiledPageScale	    1
+	    ShowPageBoundaries	    off
+	    ZoomFactor		    "100"
+	    SIDHighWatermark	    "14"
+	    Block {
+	      BlockType		      Demux
+	      Name		      " Demux "
+	      SID		      "34::12"
+	      Ports		      [1, 1]
+	      Position		      [270, 230, 320, 270]
+	      ZOrder		      2
+	      Outputs		      "1"
+	    }
+	    Block {
+	      BlockType		      Ground
+	      Name		      " Ground "
+	      SID		      "34::14"
+	      Position		      [20, 131, 40, 149]
+	      ZOrder		      4
+	    }
+	    Block {
+	      BlockType		      S-Function
+	      Name		      " SFunction "
+	      SID		      "34::11"
+	      Tag		      "Stateflow S-Function DigitalIO_block_demo 4"
+	      Ports		      [1, 3]
+	      Position		      [180, 100, 230, 180]
+	      ZOrder		      1
+	      FunctionName	      "sf_sfun"
+	      PortCounts	      "[1 3]"
+	      EnableBusSupport	      off
+	      Port {
+		PortNumber		2
+		Name			"count"
+		RTWStorageClass		"Auto"
+		DataLoggingNameMode	"SignalName"
+	      }
+	      Port {
+		PortNumber		3
+		Name			"A"
+		RTWStorageClass		"Auto"
+		DataLoggingNameMode	"SignalName"
+	      }
+	    }
+	    Block {
+	      BlockType		      Terminator
+	      Name		      " Terminator "
+	      SID		      "34::13"
+	      Position		      [460, 241, 480, 259]
+	      ZOrder		      3
+	    }
+	    Block {
+	      BlockType		      Outport
+	      Name		      "count"
+	      SID		      "34::5"
+	      Position		      [460, 101, 480, 119]
+	      ZOrder		      -5
+	      IconDisplay	      "Port number"
+	    }
+	    Block {
+	      BlockType		      Outport
+	      Name		      "A"
+	      SID		      "34::6"
+	      Position		      [460, 136, 480, 154]
+	      ZOrder		      -6
+	      Port		      "2"
+	      IconDisplay	      "Port number"
+	    }
+	    Line {
+	      Name		      "count"
+	      Labels		      [0, 0]
+	      SrcBlock		      " SFunction "
+	      SrcPort		      2
+	      DstBlock		      "count"
+	      DstPort		      1
+	    }
+	    Line {
+	      Name		      "A"
+	      Labels		      [0, 0]
+	      SrcBlock		      " SFunction "
+	      SrcPort		      3
+	      DstBlock		      "A"
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      " Ground "
+	      SrcPort		      1
+	      DstBlock		      " SFunction "
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      " Demux "
+	      SrcPort		      1
+	      DstBlock		      " Terminator "
+	      DstPort		      1
+	    }
+	    Line {
+	      SrcBlock		      " SFunction "
+	      SrcPort		      1
+	      DstBlock		      " Demux "
+	      DstPort		      1
+	    }
+	  }
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Digital Input1"
+	  SID			  "35"
+	  Ports			  [0, 1]
+	  Position		  [45, 243, 230, 297]
+	  ZOrder		  -4
+	  LibraryVersion	  "1.212"
+	  SourceBlock		  "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Digital Input"
+	  SourceType		  "GPIO_564xL_Input"
+	  gpio_outputs		  "50  : PD2  : [ 140 ] : [ C5 ]"
+	  pinNum		  "[ 140 ]"
+	  pcrNum		  "50"
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Digital Output 1"
+	  SID			  "36"
+	  Ports			  [1]
+	  Position		  [470, 233, 670, 297]
+	  ZOrder		  -5
+	  LibraryVersion	  "1.212"
+	  SourceBlock		  "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Digital Output "
+	  SourceType		  "GPIO_564xL_Output"
+	  gpio_outputs		  "54  : PD6  : [ 34 ] : [ P3 ]"
+	  pinNum		  "[ 34 ]"
+	  pcrNum		  "54"
+	}
+	Block {
+	  BlockType		  Gain
+	  Name			  "Gain"
+	  SID			  "37"
+	  Position		  [210, 95, 240, 125]
+	  ZOrder		  -6
+	  Gain			  "2"
+	  ParamDataTypeStr	  "Inherit: Inherit via internal rule"
+	  OutDataTypeStr	  "Inherit: Inherit via internal rule"
+	  SaturateOnIntegerOverflow off
+	}
+	Block {
+	  BlockType		  Logic
+	  Name			  "Logical\nOperator"
+	  SID			  "38"
+	  Ports			  [2, 1]
+	  Position		  [380, 247, 410, 278]
+	  ZOrder		  -7
+	  AllPortsSameDT	  off
+	  OutDataTypeStr	  "boolean"
+	}
+	Block {
+	  BlockType		  Reference
+	  Name			  "Profiler Function "
+	  SID			  "39"
+	  Ports			  []
+	  Position		  [305, 30, 490, 89]
+	  ZOrder		  -8
+	  LibraryVersion	  "1.212"
+	  FontName		  "Arial"
+	  FontSize		  12
+	  SourceBlock		  "rappid_564xl_ec_toolbox/MPC564xL/Utility Blocks/Profiler Function "
+	  SourceType		  "Profile_564xL_Func"
+	  profile_indx		  "3"
+	  showOut		  off
+	}
+	Block {
+	  BlockType		  Terminator
+	  Name			  "Terminator"
+	  SID			  "40"
+	  Position		  [195, 170, 215, 190]
+	  ZOrder		  -9
+	}
+	Block {
+	  BlockType		  Outport
+	  Name			  "Out1"
+	  SID			  "41"
+	  Position		  [360, 103, 390, 117]
+	  ZOrder		  -10
+	  IconDisplay		  "Port number"
+	}
+	Line {
+	  SrcBlock		  "In1"
+	  SrcPort		  1
+	  DstBlock		  "Gain"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Gain"
+	  SrcPort		  1
+	  DstBlock		  "Out1"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Chart"
+	  SrcPort		  2
+	  Points		  [195, 0; 0, 45]
+	  DstBlock		  "Logical\nOperator"
+	  DstPort		  1
+	}
+	Line {
+	  SrcBlock		  "Chart"
+	  SrcPort		  1
+	  Points		  [15, 0; 0, -5]
+	  DstBlock		  "Terminator"
+	  DstPort		  1
+	}
+	Line {
+	  Labels		  [0, 0]
+	  SrcBlock		  "Digital Input1"
+	  SrcPort		  1
+	  DstBlock		  "Logical\nOperator"
+	  DstPort		  2
+	}
+	Line {
+	  Labels		  [0, 0]
+	  SrcBlock		  "Logical\nOperator"
+	  SrcPort		  1
+	  DstBlock		  "Digital Output 1"
+	  DstPort		  1
+	}
+      }
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Gain"
+      SID		      "42"
+      Position		      [190, 265, 220, 295]
+      ZOrder		      -11
+      Gain		      "2"
+      ParamDataTypeStr	      "Inherit: Inherit via internal rule"
+      OutDataTypeStr	      "Inherit: Inherit via internal rule"
+      SaturateOnIntegerOverflow	off
+      Port {
+	PortNumber		1
+	Name			"Out"
+	Object {
+	  $PropName		  "SignalObject"
+	  $ObjectID		  36
+	  $ClassName		  "Simulink.Signal"
+	  Simulink.CoderInfo {
+	    $PropName		    "CoderInfo"
+	    $ObjectID		    37
+	    StorageClass	    "ExportedGlobal"
+	    Alignment		    -1
+	    CSCPackageName	    "Simulink"
+	    ParameterOrSignal	    "Signal"
+	    CustomStorageClass	    "Default"
+	    SimulinkCSC.AttribClass_Simulink_Default {
+	      $PropName		      "CustomAttributes"
+	      $ObjectID		      38
+	    }
+	  }
+	  Description		  ""
+	  DataType		  "auto"
+	  Min			  []
+	  Max			  []
+	  DocUnits		  ""
+	  Dimensions		  [-1.0]
+	  DimensionsMode	  "auto"
+	  Complexity		  "auto"
+	  SampleTime		  [-1.0]
+	  SamplingMode		  "auto"
+	  InitialValue		  ""
+	  Simulink.LoggingInfo {
+	    $PropName		    "LoggingInfo"
+	    $ObjectID		    39
+	    DataLogging		    0
+	    NameMode		    0
+	    LoggingName		    ""
+	    DecimateData	    0
+	    Decimation		    2
+	    LimitDataPoints	    0
+	    MaxPoints		    5000
+	  }
+	}
+	RTWStorageClass		"Auto"
+	DataLoggingNameMode	"SignalName"
+      }
+    }
+    Block {
+      BlockType		      Logic
+      Name		      "Logical\nOperator"
+      SID		      "43"
+      Ports		      [2, 1]
+      Position		      [650, 347, 680, 378]
+      ZOrder		      -12
+      AllPortsSameDT	      off
+      OutDataTypeStr	      "boolean"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "Periodic Interrupt Timer1"
+      SID		      "44"
+      Ports		      [0, 1]
+      Position		      [65, 517, 245, 573]
+      ZOrder		      -13
+      LibraryVersion	      "1.212"
+      SourceBlock	      "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Periodic Interrupt Timer"
+      SourceType	      "timer_564xl_pit_block"
+      pit_chan		      "2"
+      pit_timeout	      "100"
+      int_priority	      "12"
+      pit_timeout_val	      "11999999"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "Periodic Interrupt Timer2"
+      SID		      "45"
+      Ports		      [0, 1]
+      Position		      [515, 517, 695, 573]
+      ZOrder		      -14
+      LibraryVersion	      "1.212"
+      SourceBlock	      "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Periodic Interrupt Timer"
+      SourceType	      "timer_564xl_pit_block"
+      pit_chan		      "3"
+      pit_timeout	      "250"
+      int_priority	      "12"
+      pit_timeout_val	      "29999999"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "Periodic Interrupt Timer3"
+      SID		      "46"
+      Ports		      [0, 1]
+      Position		      [55, 372, 235, 428]
+      ZOrder		      -15
+      LibraryVersion	      "1.212"
+      SourceBlock	      "rappid_564xl_ec_toolbox/MPC564xL/General Purpose Blocks/Periodic Interrupt Timer"
+      SourceType	      "timer_564xl_pit_block"
+      pit_chan		      "1"
+      pit_timeout	      "200"
+      int_priority	      "12"
+      pit_timeout_val	      "23999999"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "Profiler Function "
+      SID		      "47"
+      Ports		      []
+      Position		      [535, 155, 720, 214]
+      ZOrder		      -16
+      LibraryVersion	      "1.212"
+      FontName		      "Arial"
+      FontSize		      12
+      SourceBlock	      "rappid_564xl_ec_toolbox/MPC564xL/Utility Blocks/Profiler Function "
+      SourceType	      "Profile_564xL_Func"
+      profile_indx	      "1"
+      showOut		      off
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "RAppID_564xL_Config"
+      SID		      "48"
+      Ports		      []
+      Position		      [57, 13, 505, 219]
+      ZOrder		      -17
+      LibraryVersion	      "1.212"
+      FontName		      "Arial"
+      FontSize		      14
+      SourceBlock	      "rappid_564xl_ec_toolbox/MPC564xL/RAppID_564xL_Config"
+      SourceType	      "RAppID_EC_564xL"
+      SystemClock	      "120"
+      XTAL		      "40"
+      MC_clock_60	      "12"
+      MC_clock_80	      "16"
+      MC_clock_120	      "10"
+      SWG_clock_60	      "20"
+      SWG_clock_80	      "13.334"
+      SWG_clock_120	      "20"
+      Compiler		      "CodeWarrior"
+      MemTarget		      "RAM"
+      Part		      "MPC5643L"
+      Package		      "144 LQFP"
+      global_int_priority     "10"
+      base_tick_priority      "14"
+      sys_task_supress	      off
+      exception_handlers      off
+      stored_mdl_name	      "rappid_564xl_ec_toolbox"
+      freemaster_interface    "Oops"
+      freemaster_rx_pin	      "LINFlex_0 Rx Pin 116 : \"PB[3]\""
+      freemaster_tx_pin	      "LINFlex_0 Tx Pin 114 : \"PB[2]\""
+      freemaster_interface_1  "None"
+      freemaster_enable	      off
+      freemaster_rate	      "57600"
+      freemaster_tx0_pin      "18 : B[2] : 114 : A14"
+      freemaster_rx0_pin      "19 : B[3] : 116 : B13"
+      freemaster_tx1_pin      "57 : D[9] : 26 : L3"
+      freemaster_rx1_pin      "29 : B[13] : 60 : R10"
+      freemaster_can_channel  "1CH"
+      freemater_can_speed     "500K"
+      freemaster_can_msgig    "0x7AA"
+      ccp_interface	      "None"
+      ccp_enable	      off
+      ccp_can_channel	      "CH1 (MB 0 - 1)"
+      ccp_can_speed	      "500K"
+      ccp_can_cro_id	      "256"
+      ccp_can_dto_id	      "257"
+      ccp_dev_id	      "RappID"
+      ccp_dev_addr	      "0"
+      ccp_odt		      "3"
+      ccp_daq		      "3"
+      pil_enable	      off
+      pil_bam		      on
+      comport		      "1"
+      pil_rate		      "57600"
+      bam_password_def	      on
+      bam_password	      "0xFEEDFACECAFEBEEF"
+      bam_sa_cs		      off
+      bam_start_address	      "0x0"
+      bam_code_size	      "0x7000"
+      cons_dspi		      on
+      cons_can		      on
+      cons_adc		      on
+      cons_pwm		      on
+      cons_ctu		      on
+      cons_swg		      on
+      cons_eTimer	      on
+      cons_fm		      on
+    }
+    Block {
+      BlockType		      Outport
+      Name		      "Out1"
+      SID		      "49"
+      Position		      [320, 273, 350, 287]
+      ZOrder		      -18
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      Outport
+      Name		      "Out2"
+      SID		      "50"
+      Position		      [600, 278, 630, 292]
+      ZOrder		      -19
+      Port		      "2"
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      Outport
+      Name		      "Out3"
+      SID		      "51"
+      Position		      [435, 448, 465, 462]
+      ZOrder		      -20
+      Port		      "3"
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      Outport
+      Name		      "Out4"
+      SID		      "52"
+      Position		      [435, 598, 465, 612]
+      ZOrder		      -21
+      Port		      "4"
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      Outport
+      Name		      "Out5"
+      SID		      "53"
+      Position		      [870, 598, 900, 612]
+      ZOrder		      -22
+      Port		      "5"
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      Outport
+      Name		      "Out6"
+      SID		      "54"
+      Position		      [480, 463, 510, 477]
+      ZOrder		      -23
+      Port		      "6"
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      Outport
+      Name		      "Out7"
+      SID		      "55"
+      Position		      [650, 303, 680, 317]
+      ZOrder		      -24
+      Port		      "7"
+      IconDisplay	      "Port number"
+    }
+    Block {
+      BlockType		      Outport
+      Name		      "Out8"
+      SID		      "56"
+      Position		      [440, 478, 470, 492]
+      ZOrder		      -25
+      Port		      "8"
+      IconDisplay	      "Port number"
+    }
+    Line {
+      Name		      "In"
+      Labels		      [0, 0]
+      SrcBlock		      "In1"
+      SrcPort		      1
+      DstBlock		      "Gain"
+      DstPort		      1
+    }
+    Line {
+      Name		      "Out"
+      Labels		      [0, 0]
+      SrcBlock		      "Gain"
+      SrcPort		      1
+      DstBlock		      "Out1"
+      DstPort		      1
+    }
+    Line {
+      Name		      "count"
+      Labels		      [0, 0]
+      SrcBlock		      "Chart"
+      SrcPort		      1
+      DstBlock		      "Out2"
+      DstPort		      1
+    }
+    Line {
+      Labels		      [1, 0]
+      SrcBlock		      "Function-Call\nSubsystem"
+      SrcPort		      1
+      DstBlock		      "Out3"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "In2"
+      SrcPort		      1
+      DstBlock		      "Function-Call\nSubsystem"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Periodic Interrupt Timer3"
+      SrcPort		      1
+      Points		      [85, 0]
+      DstBlock		      "Function-Call\nSubsystem"
+      DstPort		      trigger
+    }
+    Line {
+      SrcBlock		      "Function-Call\nSubsystem1"
+      SrcPort		      1
+      DstBlock		      "Out4"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "In3"
+      SrcPort		      1
+      DstBlock		      "Function-Call\nSubsystem1"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Periodic Interrupt Timer1"
+      SrcPort		      1
+      Points		      [80, 0]
+      DstBlock		      "Function-Call\nSubsystem1"
+      DstPort		      trigger
+    }
+    Line {
+      SrcBlock		      "Function-Call\nSubsystem2"
+      SrcPort		      1
+      DstBlock		      "Out5"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "In4"
+      SrcPort		      1
+      DstBlock		      "Function-Call\nSubsystem2"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Periodic Interrupt Timer2"
+      SrcPort		      1
+      Points		      [80, 0]
+      DstBlock		      "Function-Call\nSubsystem2"
+      DstPort		      trigger
+    }
+    Line {
+      SrcBlock		      "Chart"
+      SrcPort		      2
+      Points		      [135, 0]
+      Branch {
+	DstBlock		"Out7"
+	DstPort			1
+      }
+      Branch {
+	Points			[0, 45]
+	DstBlock		"Logical\nOperator"
+	DstPort			1
+      }
+    }
+    Line {
+      Labels		      [1, 1]
+      SrcBlock		      "Function-Call\nSubsystem"
+      SrcPort		      2
+      DstBlock		      "Out6"
+      DstPort		      1
+    }
+    Line {
+      Labels		      [0, 0]
+      SrcBlock		      "Function-Call\nSubsystem"
+      SrcPort		      3
+      DstBlock		      "Out8"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Logical\nOperator"
+      SrcPort		      1
+      DstBlock		      "Digital Output 1"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Digital Input"
+      SrcPort		      1
+      DstBlock		      "Logical\nOperator"
+      DstPort		      2
+    }
+  }
+}
+# Finite State Machines
+#
+#    Stateflow Version 7.6 (R2013a) dated Jan 19 2013, 14:32:20
+#
+#
+
+Stateflow {
+  machine {
+    id			    1
+    name		    "DigitalIO_block_demo"
+    created		    "09-Apr-2011 17:00:56"
+    isLibrary		    0
+    firstTarget		    46
+    sfVersion		    76014001.0015
+  }
+  chart {
+    id			    2
+    name		    "Chart"
+    windowPosition	    [25 114.75 906 597]
+    viewLimits		    [34.534 711.034 0.75 313.5]
+    screen		    [1 1 1280 1024 1.333333333333333]
+    treeNode		    [0 5 0 0]
+    viewObj		    2
+    machine		    1
+    subviewS {
+      x1		      34.534
+      y1		      0.75
+    }
+    ssIdHighWaterMark	    25
+    decomposition	    SET_CHART
+    firstData		    15
+    chartFileNumber	    1
+    userSpecifiedStateTransitionExecutionOrder 1
+    disableImplicitCasting  1
+    supportVariableSizing   0
+  }
+  state {
+    id			    3
+    labelString		    "A"
+    position		    [140.75 102.75 90 60]
+    fontSize		    12
+    chart		    2
+    treeNode		    [5 0 0 4]
+    subviewer		    2
+    ssIdNumber		    3
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+    outputData		    16
+    activeStateOutput {
+      activityMode	      SELF_ACTIVITY
+    }
+  }
+  state {
+    id			    4
+    labelString		    "A1"
+    position		    [143.125 193.125 90 60]
+    fontSize		    12
+    chart		    2
+    treeNode		    [5 0 3 0]
+    subviewer		    2
+    ssIdNumber		    6
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+  }
+  state {
+    id			    5
+    labelString		    "A"
+    position		    [76.4087 18.75 279.875 271.125]
+    fontSize		    12
+    chart		    2
+    treeNode		    [2 3 0 6]
+    firstTransition	    7
+    subviewer		    2
+    ssIdNumber		    11
+    type		    AND_STATE
+    decomposition	    CLUSTER_STATE
+    executionOrder	    1
+  }
+  state {
+    id			    6
+    labelString		    "A1"
+    position		    [389.2837 24.375 279.875 271.125]
+    fontSize		    12
+    chart		    2
+    treeNode		    [2 0 5 0]
+    firstTransition	    12
+    firstJunction	    10
+    subviewer		    2
+    ssIdNumber		    12
+    type		    AND_STATE
+    decomposition	    CLUSTER_STATE
+    executionOrder	    2
+  }
+  transition {
+    id			    7
+    labelPosition	    [183.022 64.406 8.246 14.971]
+    fontSize		    12
+    src {
+      intersection	      [0 0.7071 0.7071 0 141.2868 47.0368 0 0]
+    }
+    dst {
+      id		      3
+      intersection	      [1 0 -1 0.5333 188.75 102.75 0 0]
+    }
+    midPoint		    [172.7413 69.096]
+    chart		    2
+    linkNode		    [5 0 8]
+    dataLimits		    [141.287 191.15 47.037 102.75]
+    subviewer		    2
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    1
+  }
+  transition {
+    id			    8
+    labelPosition	    [177.5 175.955 8.246 14.971]
+    fontSize		    12
+    src {
+      id		      3
+      intersection	      [3 -0 1 0.5917 177.497 162.75 0 9.75]
+    }
+    dst {
+      id		      4
+      intersection	      [1 0 -1 0.3819 177.497 193.125 0 -8.25]
+    }
+    midPoint		    [177.5 174.3371]
+    chart		    2
+    linkNode		    [5 7 9]
+    dataLimits		    [175.097 179.897 162.75 193.125]
+    stampAngle		    NaN
+    subviewer		    2
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    7
+  }
+  transition {
+    id			    9
+    labelString		    "{ count = count + 0.01;}"
+    labelPosition	    [205.375 172.875 119.192 14.971]
+    fontSize		    12
+    src {
+      id		      4
+      intersection	      [1 0 -1 0.6153 198.503 193.125 0 10.375]
+    }
+    dst {
+      id		      3
+      intersection	      [3 -0 1 0.3583 198.503 162.75 0 -10.375]
+    }
+    midPoint		    [198.5 181.5379]
+    chart		    2
+    linkNode		    [5 8 0]
+    dataLimits		    [196.103 200.903 162.75 193.125]
+    stampAngle		    NaN
+    subviewer		    2
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    8
+  }
+  junction {
+    id			    10
+    position		    [478.1084 82.1997 7]
+    chart		    2
+    linkNode		    [6 0 11]
+    subviewer		    2
+    quantum		    [12 0 0 0]
+    ssIdNumber		    14
+    type		    CONNECTIVE_JUNCTION
+  }
+  junction {
+    id			    11
+    position		    [496.4834 168.8247 7]
+    chart		    2
+    linkNode		    [6 10 0]
+    subviewer		    2
+    ssIdNumber		    16
+    type		    CONNECTIVE_JUNCTION
+  }
+  transition {
+    id			    12
+    labelString		    "{a=0;}"
+    labelPosition	    [481.72 36.652 32.234 14.971]
+    fontSize		    12
+    src {
+      id		      6
+      intersection	      [1 0 1 0.3174 478.1084 24.375 0 0]
+    }
+    dst {
+      id		      10
+      intersection	      [1 0 -1 0 478.1084 75.1997 0 0]
+    }
+    midPoint		    [478.1084 46.6316]
+    chart		    2
+    linkNode		    [6 0 13]
+    dataLimits		    [475.708 480.508 24.375 75.2]
+    subviewer		    2
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    13
+  }
+  transition {
+    id			    13
+    labelString		    "[a < 100]\n{a=a+1;}"
+    labelPosition	    [546.784 103.125 47.227 28.444]
+    fontSize		    12
+    src {
+      id		      10
+      intersection	      [2 0.9949 -0.1006 0 485.0729 81.4953 0 0]
+    }
+    dst {
+      id		      11
+      intersection	      [2 0.9501 -0.3119 0 503.1341 166.6411 0 0]
+    }
+    midPoint		    [534.4199 115.4574]
+    chart		    2
+    linkNode		    [6 12 14]
+    dataLimits		    [485.073 535.272 81.39 166.641]
+    stampAngle		    -1.4626
+    subviewer		    2
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    17
+  }
+  transition {
+    id			    14
+    labelString		    "{a=0;}"
+    labelPosition	    [402.044 116.852 32.234 14.971]
+    fontSize		    12
+    src {
+      id		      10
+      intersection	      [4 -0.8942 0.4478 0 471.8493 85.334 0 0]
+    }
+    dst {
+      id		      11
+      intersection	      [4 -0.9989 -0.0462 0 489.4909 168.5014 0 0]
+    }
+    midPoint		    [444.4028 134.6276]
+    chart		    2
+    linkNode		    [6 13 0]
+    dataLimits		    [443.684 489.491 85.334 170.529]
+    stampAngle		    1.3156
+    subviewer		    2
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    2
+    ssIdNumber		    21
+  }
+  data {
+    id			    15
+    ssIdNumber		    9
+    name		    "count"
+    linkNode		    [2 0 16]
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      range {
+	minimum			"0"
+	maximum			"10000"
+      }
+      type {
+	primitive		SF_DOUBLE_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      frame		      SF_FRAME_NO
+    }
+    dataType		    "double"
+  }
+  data {
+    id			    16
+    ssIdNumber		    10
+    name		    "A"
+    linkNode		    [2 15 17]
+    scope		    OUTPUT_DATA
+    outputState		    3
+    machine		    1
+    props {
+      range {
+	minimum			"0"
+	maximum			"1"
+      }
+      type {
+	primitive		SF_BOOLEAN_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      frame		      SF_FRAME_NO
+    }
+    dataType		    "boolean"
+  }
+  data {
+    id			    17
+    ssIdNumber		    25
+    name		    "a"
+    linkNode		    [2 16 0]
+    scope		    LOCAL_DATA
+    machine		    1
+    props {
+      range {
+	minimum			"0"
+	maximum			"100"
+      }
+      type {
+	primitive		SF_DOUBLE_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+    }
+    dataType		    "double"
+  }
+  instance {
+    id			    18
+    name		    "Chart"
+    machine		    1
+    chart		    2
+  }
+  chart {
+    id			    19
+    name		    "Function-Call\nSubsystem/Chart"
+    windowPosition	    [184 88 502 597]
+    viewLimits		    [54.155 427.655 0 312.75]
+    screen		    [1 1 1280 1024 1.333333333333333]
+    treeNode		    [0 20 0 0]
+    firstTransition	    24
+    viewObj		    19
+    machine		    1
+    subviewS {
+      x1		      54.155
+    }
+    ssIdHighWaterMark	    10
+    decomposition	    CLUSTER_CHART
+    firstData		    22
+    chartFileNumber	    2
+    userSpecifiedStateTransitionExecutionOrder 1
+    disableImplicitCasting  1
+    supportVariableSizing   0
+  }
+  state {
+    id			    20
+    labelString		    "A"
+    position		    [140.75 102.75 90 60]
+    fontSize		    12
+    chart		    19
+    treeNode		    [19 0 0 21]
+    subviewer		    19
+    ssIdNumber		    3
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+    outputData		    23
+    activeStateOutput {
+      activityMode	      SELF_ACTIVITY
+    }
+  }
+  state {
+    id			    21
+    labelString		    "A1"
+    position		    [143.125 193.125 90 60]
+    fontSize		    12
+    chart		    19
+    treeNode		    [19 0 20 0]
+    subviewer		    19
+    ssIdNumber		    6
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+  }
+  data {
+    id			    22
+    ssIdNumber		    9
+    name		    "countX"
+    linkNode		    [19 0 23]
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      range {
+	minimum			"0"
+	maximum			"10000"
+      }
+      type {
+	primitive		SF_SINGLE_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      frame		      SF_FRAME_NO
+    }
+    dataType		    "single"
+  }
+  data {
+    id			    23
+    ssIdNumber		    10
+    name		    "A"
+    linkNode		    [19 22 0]
+    scope		    OUTPUT_DATA
+    outputState		    20
+    machine		    1
+    props {
+      range {
+	minimum			"0"
+	maximum			"1"
+      }
+      type {
+	primitive		SF_BOOLEAN_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      frame		      SF_FRAME_NO
+    }
+    dataType		    "boolean"
+  }
+  transition {
+    id			    24
+    labelPosition	    [183.022 64.406 8.246 14.971]
+    fontSize		    12
+    src {
+      intersection	      [0 0.7071 0.7071 0 141.2868 47.0368 0 0]
+    }
+    dst {
+      id		      20
+      intersection	      [1 0 -1 0.5333 188.75 102.75 0 0]
+    }
+    midPoint		    [172.7413 69.096]
+    chart		    19
+    linkNode		    [19 0 25]
+    dataLimits		    [141.287 191.15 47.037 102.75]
+    subviewer		    19
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    1
+  }
+  transition {
+    id			    25
+    labelPosition	    [177.5 175.955 8.246 14.971]
+    fontSize		    12
+    src {
+      id		      20
+      intersection	      [3 0 1 0.5917 177.496 162.75 0 9.75]
+    }
+    dst {
+      id		      21
+      intersection	      [1 -0 -1 0.3819 177.496 193.125 0 -8.25]
+    }
+    midPoint		    [177.5 174.3371]
+    chart		    19
+    linkNode		    [19 24 26]
+    dataLimits		    [175.096 179.896 162.75 193.125]
+    stampAngle		    NaN
+    subviewer		    19
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    7
+  }
+  transition {
+    id			    26
+    labelString		    "{ countX = countX + 0.01;}"
+    labelPosition	    [205.375 172.875 135.684 14.971]
+    fontSize		    12
+    src {
+      id		      21
+      intersection	      [1 -0 -1 0.6153 198.502 193.125 0 10.375]
+    }
+    dst {
+      id		      20
+      intersection	      [3 0 1 0.3583 198.502 162.75 0 -10.375]
+    }
+    midPoint		    [198.5 181.5379]
+    chart		    19
+    linkNode		    [19 25 0]
+    dataLimits		    [196.102 200.902 162.75 193.125]
+    stampAngle		    NaN
+    subviewer		    19
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    8
+  }
+  instance {
+    id			    27
+    name		    "Function-Call\nSubsystem/Chart"
+    machine		    1
+    chart		    19
+  }
+  chart {
+    id			    28
+    name		    "Function-Call\nSubsystem1/Chart"
+    windowPosition	    [136 -72.25 778 784]
+    viewLimits		    [0 580.5 0 453]
+    screen		    [1 1 1280 1024 1.333333333333333]
+    treeNode		    [0 29 0 0]
+    firstTransition	    33
+    viewObj		    28
+    machine		    1
+    ssIdHighWaterMark	    10
+    decomposition	    CLUSTER_CHART
+    firstData		    31
+    chartFileNumber	    3
+    userSpecifiedStateTransitionExecutionOrder 1
+    disableImplicitCasting  1
+    supportVariableSizing   0
+  }
+  state {
+    id			    29
+    labelString		    "A"
+    position		    [140.75 102.75 90 60]
+    fontSize		    12
+    chart		    28
+    treeNode		    [28 0 0 30]
+    subviewer		    28
+    ssIdNumber		    3
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+    outputData		    32
+    activeStateOutput {
+      activityMode	      SELF_ACTIVITY
+    }
+  }
+  state {
+    id			    30
+    labelString		    "A1"
+    position		    [144.75 240 90 60]
+    fontSize		    12
+    chart		    28
+    treeNode		    [28 0 29 0]
+    subviewer		    28
+    ssIdNumber		    6
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+  }
+  data {
+    id			    31
+    ssIdNumber		    9
+    name		    "count"
+    linkNode		    [28 0 32]
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      range {
+	minimum			"0"
+	maximum			"10000"
+      }
+      type {
+	primitive		SF_DOUBLE_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      frame		      SF_FRAME_NO
+    }
+    dataType		    "double"
+  }
+  data {
+    id			    32
+    ssIdNumber		    10
+    name		    "A"
+    linkNode		    [28 31 0]
+    scope		    OUTPUT_DATA
+    outputState		    29
+    machine		    1
+    props {
+      range {
+	minimum			"0"
+	maximum			"1"
+      }
+      type {
+	primitive		SF_BOOLEAN_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      frame		      SF_FRAME_NO
+    }
+    dataType		    "boolean"
+  }
+  transition {
+    id			    33
+    labelString		    "{count =0;}"
+    labelPosition	    [176.909 60 56.223 14.971]
+    fontSize		    12
+    src {
+      intersection	      [0 0 1 0 176.1587 35.25 0 0]
+    }
+    dst {
+      id		      29
+      intersection	      [1 0 -1 0.3934 176.1587 102.75 0 0]
+    }
+    midPoint		    [176.1587 66.2067]
+    chart		    28
+    linkNode		    [28 0 34]
+    dataLimits		    [173.759 178.559 35.25 102.75]
+    subviewer		    28
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    1
+  }
+  transition {
+    id			    34
+    labelPosition	    [179.122 204.073 8.246 14.971]
+    fontSize		    12
+    src {
+      id		      29
+      intersection	      [3 0 1 0.5736 179.122 162.75 0 9.75]
+    }
+    dst {
+      id		      30
+      intersection	      [1 0 -1 0.3819 179.122 240 0 -8.25]
+    }
+    midPoint		    [179.122 198.7936]
+    chart		    28
+    linkNode		    [28 33 35]
+    dataLimits		    [176.722 181.522 162.75 240]
+    stampAngle		    NaN
+    subviewer		    28
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    7
+  }
+  transition {
+    id			    35
+    labelString		    "{ count = count + 1;}"
+    labelPosition	    [207.003 172.875 102.7 14.971]
+    fontSize		    12
+    src {
+      id		      30
+      intersection	      [1 0 -1 0.6153 200.128 240 0 10.375]
+    }
+    dst {
+      id		      29
+      intersection	      [3 0 1 0.3402 200.128 162.75 0 -10.375]
+    }
+    midPoint		    [200.128 203.9564]
+    chart		    28
+    linkNode		    [28 34 0]
+    dataLimits		    [197.728 202.528 162.75 240]
+    stampAngle		    NaN
+    subviewer		    28
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    8
+  }
+  instance {
+    id			    36
+    name		    "Function-Call\nSubsystem1/Chart"
+    machine		    1
+    chart		    28
+  }
+  chart {
+    id			    37
+    name		    "Function-Call\nSubsystem2/Chart"
+    windowPosition	    [224 114.75 502 597]
+    viewLimits		    [45.909 419.409 0 312.75]
+    screen		    [1 1 1280 1024 1.333333333333333]
+    treeNode		    [0 38 0 0]
+    firstTransition	    42
+    viewObj		    37
+    machine		    1
+    subviewS {
+      x1		      45.909
+    }
+    ssIdHighWaterMark	    10
+    decomposition	    CLUSTER_CHART
+    firstData		    40
+    chartFileNumber	    4
+    userSpecifiedStateTransitionExecutionOrder 1
+    disableImplicitCasting  1
+    supportVariableSizing   0
+  }
+  state {
+    id			    38
+    labelString		    "A"
+    position		    [140.75 102.75 90 60]
+    fontSize		    12
+    chart		    37
+    treeNode		    [37 0 0 39]
+    subviewer		    37
+    ssIdNumber		    3
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+    outputData		    41
+    activeStateOutput {
+      activityMode	      SELF_ACTIVITY
+    }
+  }
+  state {
+    id			    39
+    labelString		    "A1"
+    position		    [143.125 193.125 90 60]
+    fontSize		    12
+    chart		    37
+    treeNode		    [37 0 38 0]
+    subviewer		    37
+    ssIdNumber		    6
+    type		    OR_STATE
+    decomposition	    CLUSTER_STATE
+  }
+  data {
+    id			    40
+    ssIdNumber		    9
+    name		    "count"
+    linkNode		    [37 0 41]
+    scope		    OUTPUT_DATA
+    machine		    1
+    props {
+      range {
+	minimum			"0"
+	maximum			"10000"
+      }
+      type {
+	primitive		SF_DOUBLE_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      frame		      SF_FRAME_NO
+    }
+    dataType		    "double"
+  }
+  data {
+    id			    41
+    ssIdNumber		    10
+    name		    "A"
+    linkNode		    [37 40 0]
+    scope		    OUTPUT_DATA
+    outputState		    38
+    machine		    1
+    props {
+      range {
+	minimum			"0"
+	maximum			"1"
+      }
+      type {
+	primitive		SF_BOOLEAN_TYPE
+	isSigned		1
+	wordLength		"16"
+      }
+      frame		      SF_FRAME_NO
+    }
+    dataType		    "boolean"
+  }
+  transition {
+    id			    42
+    labelPosition	    [183.022 64.406 8.246 14.971]
+    fontSize		    12
+    src {
+      intersection	      [0 0.7071 0.7071 0 141.2868 47.0368 0 0]
+    }
+    dst {
+      id		      38
+      intersection	      [1 0 -1 0.5333 188.75 102.75 0 0]
+    }
+    midPoint		    [172.7413 69.096]
+    chart		    37
+    linkNode		    [37 0 43]
+    dataLimits		    [141.287 191.15 47.037 102.75]
+    subviewer		    37
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    1
+  }
+  transition {
+    id			    43
+    labelPosition	    [177.5 175.955 8.246 14.971]
+    fontSize		    12
+    src {
+      id		      38
+      intersection	      [3 0 1 0.5917 177.5 162.75 0 9.75]
+    }
+    dst {
+      id		      39
+      intersection	      [1 0 -1 0.3819 177.5 193.125 0 -8.25]
+    }
+    midPoint		    [177.5 174.3371]
+    chart		    37
+    linkNode		    [37 42 44]
+    dataLimits		    [175.1 179.9 162.75 193.125]
+    stampAngle		    NaN
+    subviewer		    37
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    7
+  }
+  transition {
+    id			    44
+    labelString		    "{ count = count + 0.01;}"
+    labelPosition	    [205.375 172.875 119.192 14.971]
+    fontSize		    12
+    src {
+      id		      39
+      intersection	      [1 0 -1 0.6153 198.5 193.125 0 10.375]
+    }
+    dst {
+      id		      38
+      intersection	      [3 0 1 0.3583 198.5 162.75 0 -10.375]
+    }
+    midPoint		    [198.5 181.5379]
+    chart		    37
+    linkNode		    [37 43 0]
+    dataLimits		    [196.1 200.9 162.75 193.125]
+    stampAngle		    NaN
+    subviewer		    37
+    drawStyle		    SMART
+    slide {
+      sticky		      BOTH_STICK
+    }
+    executionOrder	    1
+    ssIdNumber		    8
+  }
+  instance {
+    id			    45
+    name		    "Function-Call\nSubsystem2/Chart"
+    machine		    1
+    chart		    37
+  }
+  target {
+    id			    46
+    name		    "sfun"
+    description		    "Default Simulink S-Function Target."
+    machine		    1
+    linkNode		    [1 0 47]
+  }
+  target {
+    id			    47
+    name		    "rtw"
+    machine		    1
+    linkNode		    [1 46 0]
+  }
+}

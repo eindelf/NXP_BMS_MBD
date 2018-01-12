@@ -1,0 +1,515 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>eTimer Configuration Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		table.values { width:400px; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">eTimer Configuration Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">This block is used to configure the eTimer.</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="eTimer_config_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<div class="shifted">The block dialog consists of the following tabs:</div>
+	<ul class="shifted">
+		<li><a href="#General_tab">General</a></li>
+		<li><a href="#CountSource_tab">Count Source</a></li>
+		<li><a href="#OutputSignal_tab">Output Signal</a></li>
+		<li><a href="#CompareCapture_tab">Compare and Capture</a></li>
+		<li><a href="#InitialValues_tab">Initial Values</a></li>
+		<li><a href="#ExternalPin_tab">External Pin</a></li>
+		<li><a href="#Interrupts_tab">Interrupts</a></li>
+	</ul>
+	<ul>
+		<a name="General_tab">	
+			<li>The General tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="110">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="250">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Submodule</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 2</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Channel</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 5</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Count mode</td>
+			<td>Pop-up</td>
+			<td>000 &ndash; No Operation<br>
+				001 &ndash; Count rising edges of primary source<br>
+				010 &ndash; Count rising and falling edges of primary source<br>
+				011 &ndash; Count rising edges of primary source while secondary input high active<br>
+				100 &ndash; Quadrature count mode using primary and secondary sources<br>
+				101 &ndash; Count primary source rising edges while secondary source specifies direction<br>
+				110 &ndash; Edge of secondary source triggers primary count till compare
+				111 &ndash; Cascaded counter mode
+			</td>
+			<td>CNTMODE value of CTRL1 Register</td>
+		</tr>
+		<tr>
+			<td>Count once</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Count repeatedly<br>
+				1 &ndash; Count until compare and then stop
+			</td>
+			<td>ONCE value of CTRL1 Register</td>
+		</tr>
+		<tr>
+			<td>Count length</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Continue counting to roll over<br>
+				1 &ndash; Count until compare and then reinitialize 
+			</td>
+			<td>LENGTH value of CTRL1 Register</td>
+		</tr>
+		<tr>
+			<td>Count Direction</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Count up<br>
+				1 &ndash; Count down
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Output Enable</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; The external pin is configured as an input<br>
+				1 &ndash; Output signal is driven to the external pin
+			</td>
+			<td>OEN value of CTRL2 Register</td>
+		</tr>
+		<tr>
+			<td>Co-channel initialization</td>
+			<td>Pop-up</td>
+			<td>00 &ndash; Other channels cannot force re-initialization of this channel<br>
+				01 &ndash; Other channels may force re-initialization of channel counter with LOAD<br>
+				10 &ndash; Other channels may force re-initialization of channel counter with CMPLD1 or CMPLD2
+			</td>
+			<td>COINIT value of CTRL2 Register</td>
+		</tr>
+		<tr>
+			<td>Stop Action</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Output enable is unaffected by stop mode<br>
+				1 &ndash; Output enable is disabled during stop mode
+			</td>
+			<td>STPEN value of CTRL3 Register</td>
+		</tr>
+		<tr>
+			<td>Reload on Capture</td>
+			<td>Pop-up</td>
+			<td>00 &ndash; Do not reload the counter on a capture event<br>
+				01 &ndash; Reload the counter on a capture 1 event<br>
+				10 &ndash; Reload the counter on a capture 2 event<br>
+				11 &ndash; Reload the counter on both a capture 1 event and a capture 2 event
+			</td>
+			<td>ROC value of CTRL3 Register</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="eTimer_config_files/image_param_1.jpg">
+	<ul>
+		<a name="CountSource_tab">	
+			<li>The Count Source tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="130">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="200">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Primary count source</td>
+			<td>Pop-up</td>
+			<td>See <a href="#CountSource_table">count source values table</a></td>
+			<td>PRISRC value of CTRL1 Register</td>
+		</tr>
+		<tr>
+			<td>Primary source polarity</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; True polarity<br>
+				1 &ndash; Inverted polarity
+			</td>
+			<td>PIPS value of CTRL2 Register</td>
+		</tr>
+		<tr>
+			<td>Secondary count source</td>
+			<td>Pop-up</td>
+			<td>See <a href="#CountSource_table">count source values table</a></td>
+			<td>SECSRC value of CTRL1 Register</td>
+		</tr>
+		<tr>
+			<td>Secondary source polarity</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; True polarity<br>
+				1 &ndash; Inverted polarity
+			</td>
+			<td>SIPS value of CTRL2 Register</td>
+		</tr>
+		<tr>
+			<td>Input Filter Sample Count (0..7)</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 7</td>
+			<td>FILT_CNT value of FILT Register</td>
+		</tr>
+		<tr>
+			<td>Input Filter Sample Period (0..255)</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 255</td>
+			<td>FILT_PER value of FILT Register</td>
+		</tr>
+	</tbody>
+	</table>
+	<ul>
+		<a name="CountSource_table">	
+			<li>Count source values: </li>
+		</a>
+	</ul>
+	<table class="values" rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr><td>00000 &ndash; Counter #0 input pin</td></tr>
+		<tr><td>00001 &ndash; Counter #1 input pin</td></tr>
+		<tr><td>00010 &ndash; Counter #2 input pin</td></tr>
+		<tr><td>00011 &ndash; Counter #3 input pin</td></tr>
+		<tr><td>00100 &ndash; Counter #4 input pin</td></tr>
+		<tr><td>00101 &ndash; Counter #5 input pin</td></tr>
+		<tr><td>01000 &ndash; Auxiliary input #0 pin</td></tr>
+		<tr><td>01001 &ndash; Auxiliary input #1 pin</td></tr>
+		<tr><td>01010 &ndash; Auxiliary input #2 pin</td></tr>
+		<tr><td>10000 &ndash; Counter #0 output</td></tr>
+		<tr><td>10001 &ndash; Counter #1 output</td></tr>
+		<tr><td>10010 &ndash; Counter #2 output</td></tr>
+		<tr><td>10011 &ndash; Counter #3 output</td></tr>
+		<tr><td>10100 &ndash; Counter #4 output</td></tr>
+		<tr><td>10101 &ndash; Counter #5 output</td></tr>
+		<tr><td>11000 &ndash; IP Bus clock divide by 1 prescaler</td></tr>
+		<tr><td>11001 &ndash; IP Bus clock divide by 2 prescaler</td></tr>
+		<tr><td>11010 &ndash; IP Bus clock divide by 4 prescaler</td></tr>
+		<tr><td>11011 &ndash; IP Bus clock divide by 8 prescaler</td></tr>
+		<tr><td>11100 &ndash; IP Bus clock divide by 16 prescaler</td></tr>
+		<tr><td>11101 &ndash; IP Bus clock divide by 32 prescaler</td></tr>
+		<tr><td>11110 &ndash; IP Bus clock divide by 64 prescaler</td></tr>
+		<tr><td>11111 &ndash; IP Bus clock divide by 128 prescaler</td></tr>			
+	</tbody>
+	</table>
+	<img vspace="15" src="eTimer_config_files/image_param_2.jpg">
+	<ul>
+		<a name="OutputSignal_tab">	
+			<li>The Output Signal tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="100">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="280">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Output mode</td>
+			<td>Pop-up</td>
+			<td>0000 &ndash; Software controlled<br>
+				0001 &ndash; Clear output on successful compare (COMP1 or COMP2)<br>
+				0010 &ndash; Set  output on successful compare (COMP1 or COMP2)<br>
+				0011 &ndash; Toggle output on successful compare (COMP1 or COMP2)<br>
+				0100 &ndash; Toggle output using alternating compare registers<br>
+				0101 &ndash; Set output on compare with COMP1 and clear on secondary source input edge<br>
+				0110 &ndash; Set output on compare with COMP2 and clear on secondary source input edge<br>
+				0111 &ndash; Set output on compare and clear on counter roll over<br>
+				1000 &ndash; Set output on compare on COMP1 and clear on compare on COMP2<br>
+				1001 &ndash; Asserted while counter is active and cleared when counter is stopped<br>
+				1010 &ndash; Asserted when counting up and cleared when counting down<br>
+				1111 &ndash; Enable gated clock output while counter is active
+			</td>
+			<td>OUTMODE value of CTRL2 Register</td>
+		</tr>
+		<tr>
+			<td>Output polarity</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; True polarity<br>
+				1 &ndash; Inverted polarity
+			</td>
+			<td>OPS value of CTRL2 Register</td>
+		</tr>
+		<tr>
+			<td>Master mode</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Disable broadcast of this channel output<br>
+				1 &ndash; Enable broadcast of this channel output
+			</td>
+			<td>MSTR value of CTRL2 Register</td>
+		</tr>
+		<tr>
+			<td>Forced output value</td>
+			<td>Pop-up</td>
+			<td>0,1</td>
+			<td>VAL value of CTRL2 Register</td>
+		</tr>
+		<tr>
+			<td>Co-channel output force</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Other channels cannot force this channel output<br>
+				1 &ndash; Other channels may force this channel output
+			</td>
+			<td>COFRC value of CTRL2 Register</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="eTimer_config_files/image_param_3.jpg">
+	<ul>
+		<a name="CompareCapture_tab">	
+			<li>Compare and Capture tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="110">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="250">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Compare Load 1</td>
+			<td>Pop-up</td>
+			<td>See <a href="#CompareLoad_table">Compare Load values table</a></td>
+			<td>CLC1 value of CCCTRL Register</td>
+		</tr>
+		<tr>
+			<td>Compare Load 2</td>
+			<td>Pop-up</td>
+			<td>See <a href="#CompareLoad_table">Compare Load values table</a></td>
+			<td>CLC2 value of CCCTRL Register</td>
+		</tr>
+		<tr>
+			<td>Compare Mode</td>
+			<td>Pop-up</td>
+			<td>00 &ndash; COMP1 and COMP2  are used when the counter is counting up<br>
+				01 &ndash; COMP1  is used when the counter is counting down and COMP2 when counting up<br>
+				10 &ndash; COMP1  is used when the counter is counting up and COMP2 when counting down<br>
+				11 &ndash; COMP1 and COMP2  are used when the counter is counting down
+			</td>
+			<td>CMPMODE value of CCCTRL Register</td>
+		</tr>
+		<tr>
+			<td>Capture 1 Mode</td>
+			<td>Pop-up</td>
+			<td>See <a href="#CaptureModes_table">Capture modes table</a></td>
+			<td>CPT1MODE value of CCCTRL Register</td>
+		</tr>
+		<tr>
+			<td>Capture 2 Mode</td>
+			<td>Pop-up</td>
+			<td>See <a href="#CaptureModes_table">Capture modes table</a></td>
+			<td>CPT2MODE value of CCCTRL Register</td>
+		</tr>
+		<tr>
+			<td>One Shot Capture Mode</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; Free running mode is selected<br>
+				1 &ndash; One shot mode is selected
+			</td>
+			<td>ONESHOT value of CCCTRL Register</td>
+		</tr>
+		<tr>
+			<td>Capture FIFO water mark</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 3</td>
+			<td>CFWM value of CCCTRL Register</td>
+		</tr>
+	</tbody>
+	</table>
+	<ul>
+		<a name="CompareLoad_table">	
+			<li>Compare Load values:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr><td>000 &ndash; COMP1 is never preload</td></tr>
+		<tr><td>010 &ndash; Load COMP1 with CMPLD1 upon successful compare with the value in COMP1</td></tr>
+		<tr><td>011 &ndash; Load COMP1 with CMPLD1 upon successful compare with the value in COMP2</td></tr>
+		<tr><td>100 &ndash; Load COMP1 with CMPLD2 upon successful compare with the value in COMP1</td></tr>
+		<tr><td>101 &ndash; Load COMP1 with CMPLD2 upon successful compare with the value in COMP2</td></tr>
+		<tr><td>110 &ndash; Load CNTR with CMPLD1 upon successful compare with the value in COMP1</td></tr>
+		<tr><td>111 &ndash; Load CNTR with CMPLD1 upon successful compare with the value in COMP2</td></tr>		
+	</tbody>
+	</table>
+	<ul>
+		<a name="CaptureModes_table">	
+			<li>Capture modes:</li>
+		</a>
+	</ul>
+	<table class="values" rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr><td>00 &ndash; Capture disabled</td></tr>
+		<tr><td>01 &ndash; Capture falling edges</td></tr>
+		<tr><td>10 &ndash; Capture rising edges</td></tr>
+		<tr><td>11 &ndash; Capture any edge</td></tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="eTimer_config_files/image_param_4.jpg">
+	<ul>
+		<a name="InitialValues_tab">	
+			<li>Initial Values tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="220">Names</td>
+			<th width="120">Selection Types</td>
+			<th width="120">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Counter initialization value</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 65535</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Comparator 1 initialization value</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 65535</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Comparator 2 initialization value</td>
+			<td>Text-box</td>
+			<td>0 &ndash; 65535</td>
+			<td></td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="eTimer_config_files/image_param_5.jpg">
+	<ul>
+		<a name="ExternalPin_tab">	
+			<li>External Pin tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="160">Names</td>
+			<th width="110">Selection Types</td>
+			<th width="160">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>eTimer #<i>n</i> Counter #<i>x</i> pin<br>
+				<i>n</i> is submodule number<br>
+				<i>x</i> is 0 &ndash; 5
+			</td>
+			<td>Pop-up</td>
+			<td>The list of available pins depends on the selected module.</td>
+			<td>eTimer #<i>n</i> Counter #<i>x</i> pin selection</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="eTimer_config_files/image_param_6.jpg">
+	<ul>
+		<a name="Interrupts_tab">	
+			<li>Interrupts tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="140">Names</td>
+			<th width="100">Selection Types</td>
+			<th width="110">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Compare interrupt</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>TCFIE value of INTDMA register</td>
+		</tr>
+		<tr>
+			<td>Compare 1 interrupt</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>TCF1IE value of INTDMA register</td>
+		</tr>
+		<tr>
+			<td>Compare 2 interrupt</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>TCF2IE value of INTDMA register</td>
+		</tr>
+		<tr>
+			<td>Overflow interrupt</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>TOFIE value of INTDMA register</td>
+		</tr>
+		<tr>
+			<td>Input Low Edge interrupt</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>IELFIE value of INTDMA register</td>
+		</tr>
+		<tr>
+			<td>Input High Edge interrup</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>IEHFIE value of INTDMA register</td>
+		</tr>
+		<tr>
+			<td>Input Capture 1 interrupt</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>ICF1IE value of INTDMA register</td>
+		</tr>
+		<tr>
+			<td>Input Capture 2 interrupt</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>ICF2IE value of INTDMA register</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="eTimer_config_files/image_param_7.jpg">
+	<h3>Block Dependency</h3>
+	<div>None</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

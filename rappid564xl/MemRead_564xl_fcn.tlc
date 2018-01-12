@@ -1,0 +1,43 @@
+%implements MemRead_564xl_fcn "C"
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+
+%function BlockTypeSetup(block, system) void
+	
+%endfunction 
+  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%function Start(block, system) Output
+ 
+
+%endfunction           
+%% Start
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign read_mem_addressUP	= FEVAL("dec2hex", CAST("Number",Parameter[0].Value[0]),4)
+  %assign read_mem_addressLW	= FEVAL("dec2hex", CAST("Number",Parameter[1].Value[0]),4)
+
+/* Memory Address Read          */
+/* Memory Address : Base Address + Offset    */ 
+/* Memory Address : 0x%<read_mem_addressUP>%<read_mem_addressLW>                */
+{
+ uint32_T * (read_mem_address);
+ read_mem_address = (uint32_T *)0x%<read_mem_addressUP>%<read_mem_addressLW>;
+%<LibBlockOutputSignal(0, "", "", 0)> = *(read_mem_address);
+}
+%endif
+ 
+%endfunction
+

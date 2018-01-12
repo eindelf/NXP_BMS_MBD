@@ -1,0 +1,1 @@
+"C:\MCToolbox\rappid564xl\tools\BootLoader\RAppID_BL.exe" "C:\MCToolbox\rappid564xl\tools\BootLoader\\" "C:\MCToolbox\rappid564xl\Examples\can_spi_simple_block_bu_rappid_rtw\can_spi_simple_block_bu.rbl"

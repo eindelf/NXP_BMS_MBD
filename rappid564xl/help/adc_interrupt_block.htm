@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>ADC ISR Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">ADC ISR Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">This block allows call user function on ADC conversion event.</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="adc_interrupt_block_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>Function-call</li>
+		<li>ISR Mask (uint32). Value of the ADC ISR register.*</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="120">Names</td>
+			<th width="110">Selection Types</td>
+			<th width="110">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>ADC converter number</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 1</td>
+			<td>Select the ADC converter number</td>
+		</tr>
+		<tr>
+			<td>ISR Priority</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 15</td>
+			<td>Global ISR priority</td>
+		</tr>
+		<tr>
+			<td>ECH (End of the chain conversion)</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>Generate interrupt on End of the Chain Conversion. This interrupt 
+			    is generated when all channels on this ADC Converter had been converted.</td>
+		</tr>
+		<tr>
+			<td>EOH (End of the channel conversion)</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>Generate interrupt on End of the Chain Conversion ("Interrupt" should be 
+			    enabled in corresponding ADC Channel block)</td>
+		</tr>
+		<tr>
+			<td>JECH (Injected end of the chain conversion)</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>The same as for ECH in Injected mode.</td>
+		</tr>
+		<tr>
+			<td>JEOC (Injected end of the channel conversion)</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>The same as for EOCH in Injected mode.</td>
+		</tr>
+		<tr>
+			<td>EOCTU (End of CTU conversion)</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>ADC finished CTU command conversion.</td>
+		</tr>
+	</tbody>
+	</table>
+	<div>* To get more information refer to Hardware Manual documentation.</div>
+	<img vspace="15" src="adc_interrupt_block_files/image_param.jpg">
+	<h3>Block Dependency</h3>
+	<div>Please do the following:
+		<ol>
+			<li>Configure the ADC</li>
+			<li>Configure ADC Channel</li>
+		</ol>
+	</div>
+	<div><i>Note:</i>
+		<ol>
+			<li>"Interrupt" check-box in ADC Channel block should be enabled.</li>
+		</ol>
+	</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

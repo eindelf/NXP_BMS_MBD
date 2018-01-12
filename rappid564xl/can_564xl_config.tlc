@@ -1,0 +1,101 @@
+%implements can_564xl_config "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign can_unit 	=  CAST("Number",Parameter[0].Value[0])
+  
+  %if !EXISTS("FLEXCAN_564xL_INCLUDED")
+    %assign ::FLEXCAN_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"flexcan_564xl_library.h\"" + "\n")>
+   %endif 
+%endif 
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign flexcan 	=  CAST("Number",Parameter[0].Value[0])
+  %assign MCR 		=  CAST("Number",Parameter[1].Value[0])
+  %assign CTRL 		=  CAST("Number",Parameter[2].Value[0])
+  %assign fmInterface = FEVAL("rappid_564xl_fmaster_interface")
+  %assign fmDev		  = FEVAL("rappid_564xl_fmaster_device")
+  %assign ccpInterface = FEVAL("rappid_564xl_ccp_interface")
+  %assign ccpDev	   = FEVAL("rappid_564xl_ccp_device")
+  %assign ccpMB0	   = FEVAL("rappid_564xl_ccp_mb","0")
+  %assign ccpMB1	   = FEVAL("rappid_564xl_ccp_mb","1")
+  %assign fmDevice = CAST("Number", fmDev)
+  %assign ccpDevice = CAST("Number", ccpDev)
+  
+  %if ( FEVAL("strcmp", fmInterface, "CAN") != 0 && FEVAL("strcmp", ccpInterface, "CAN") != 0)
+		%if (FEVAL("strcmp", "%<fmDevice>", "%<flexcan-1>") != 0 && (FEVAL("strcmp", "%<ccpDevice>", "%<flexcan-1>") != 0))
+			%%Store fmID and ccpID
+			flexcan_564xl_init_CCP_FM(%<flexcan-1>,  %<MCR>,  %<CTRL>, %<ccpMB0>, %<ccpMB1>);
+		%elseif (FEVAL("strcmp", "%<fmDevice>", "%<flexcan-1>") != 0)
+			%%Store fmID
+			flexcan_564xl_init_FM(%<flexcan-1>,  %<MCR>,  %<CTRL>);
+		%elseif (FEVAL("strcmp", "%<ccpDevice>", "%<flexcan-1>") != 0)
+			%%Store ccpID
+			flexcan_564xl_init_CCP(%<flexcan-1>,  %<MCR>,  %<CTRL>, %<ccpMB0>, %<ccpMB1>);
+		%else
+			%%Init CAN
+			flexcan_564xl_init( %<flexcan-1>,  %<MCR>,  %<CTRL>);
+			flexcan_564xl_pin_init( %<flexcan-1>);
+		%endif
+  
+  %elseif (FEVAL("strcmp", fmInterface, "CAN") != 0)
+		%if(FEVAL("strcmp", "%<fmDevice>", "%<flexcan-1>") != 0)
+			%%Store fmID
+			flexcan_564xl_init_FM(%<flexcan-1>,  %<MCR>,  %<CTRL>);
+		%else
+			%%Init CAN
+			flexcan_564xl_init( %<flexcan-1>,  %<MCR>,  %<CTRL>);
+			flexcan_564xl_pin_init( %<flexcan-1>);
+		%endif
+  
+  %elseif (FEVAL("strcmp", ccpInterface, "CAN") != 0)
+		%if (FEVAL("strcmp", "%<ccpDevice>", "%<flexcan-1>") != 0)
+			%%Store ccpID
+			flexcan_564xl_init_CCP(%<flexcan-1>,  %<MCR>,  %<CTRL>, %<ccpMB0>, %<ccpMB1>);
+		%else
+			%%Init CAN
+			flexcan_564xl_init( %<flexcan-1>,  %<MCR>,  %<CTRL>);
+			flexcan_564xl_pin_init( %<flexcan-1>);
+		%endif
+		
+  %else
+	%%Init CAN
+	flexcan_564xl_init( %<flexcan-1>,  %<MCR>,  %<CTRL>);
+	flexcan_564xl_pin_init( %<flexcan-1>);
+  %endif 
+  
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+;

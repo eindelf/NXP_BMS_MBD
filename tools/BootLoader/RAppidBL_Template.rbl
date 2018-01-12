@@ -1,0 +1,60 @@
+*********************************************************************
+*                 RAppID Boot Tool Configuration File
+*********************************************************************
+*********************************************************************
+* This file specifies the format version of the rbl file 
+* This is needed for compatibility checks between tool versions
+* Do not manually change
+*********************************************************************
+[FORMAT_VERSION]
+4
+
+*********************************************************************
+* COMMUNICATION_SETUP - Specifies the specifics of the network HW 
+*		        and settings that are going to be used.
+*	1. Hardware Type    (Vector CANcaseXL, (Vector CANCardXL, IXXAT USBtoCAN, Serial Port)
+*	2. Channel	    (1, 2,...,13)
+*	3. Baud Rate	    (500K, 9600, ...)
+*********************************************************************
+[COMMUNICATION_SETUP]
+
+
+*********************************************************************
+* MCU_SETUP - Specifies the specifics of the ID of the MCU & the
+*	      location, size and content of the software to be flashed 
+*	1. MCU Part Number 	(MPC5604P, MPC5604B, MPC5604S, .....)
+*********************************************************************
+[MCU_SETUP]
+
+
+*********************************************************************
+* BAM_SETUP - Specifies the specifics of the ID of the MCU & the
+*	      location, size and content of the software to be flashed 
+*	1. BAM Status 	(Enabled, Disabled) Is the BAM going to be used
+*	2. Password   	(0xXXXXXXXX) Password required for BAM to unlock MCU	
+*	3. Check Box	If checked then use default password for MCU
+*	4. Skip Prompt	If checked then do not prompt user to reset/POR MCU
+*********************************************************************
+[BAM_SETUP]
+
+
+*********************************************************************
+* FILE_INFO - Specifies the file that contains software to be flashed 
+*	1. File		    (The file that contains the hex info)
+*	2. Start Address (Start Address of the area to be programmed)	
+*	3. Size		     (Size of code to flash in bytes)
+*	4. Check Box	(If checked then auto determine start address and size to be programmed.
+*********************************************************************
+[FILE_INFO]
+
+
+*********************************************************************
+* Operation Setup - Specifies what operation(s) has been selected 
+*	1. Program/Erase	(Erase, EraseProgram)
+*********************************************************************
+[OP_SETUP]
+
+
+*********************************************************************
+* End of File
+*********************************************************************

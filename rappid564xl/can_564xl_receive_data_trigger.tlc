@@ -1,0 +1,219 @@
+%implements can_564xl_receive_data_trigger "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+	%assign canNum =  CAST("Number",Parameter[0].Value[0])
+	%assign chNum  = 	CAST("Number",Parameter[1].Value[0])
+	%assign canNum = %<canNum> - 1
+	%assign chNum = %<chNum> - 1
+  
+	%%================================
+	%assign name = getOutFileName(canNum,chNum)
+	%<LibCacheIncludes("#include \"%<name>.h\"" + "\n")>
+	
+	
+	%%================================
+  
+	%if !EXISTS("FLEXCAN_564xL_INCLUDED")
+		%assign ::FLEXCAN_564xL_INCLUDED = 1
+		%<LibCacheIncludes("#include \"flexcan_564xl_library.h\"" + "\n")>
+	%endif 
+%endif 
+  
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+	%assign canNum =  	CAST("Number",Parameter[0].Value[0])
+	%assign chNum =  	CAST("Number",Parameter[1].Value[0])
+	%assign msgID =  	CAST("Number",Parameter[2].Value[0])
+	%assign canNum = %<canNum> - 1
+	%assign chNum = %<chNum> - 1
+	
+	%assign ext = CAST("Number", FEVAL("rappid_564xl_bitand","%<msgID>","536868864"))
+		
+	%%Init MSG Buffer at startUp code
+	%if ( ext == 0)
+		flexcan_564xl_set_filter_id(%<canNum>, %<chNum>, %<msgID>, 0);
+	%else
+		flexcan_564xl_set_filter_id(%<canNum>, %<chNum>, %<msgID>, 1);
+	%endif
+	
+	%%setup ISR mask
+	CAN_%<canNum>.IMASK1.R |= 1<<%<chNum>;
+	
+	%%Create ISR Routine
+	
+	%assign name = getOutFileName(canNum,chNum)
+	
+	%%ISR Header
+	%openfile isr_h = "%<name>.h"
+		#include "%<CompiledModel.Name + ".h">"
+		#include "%<CompiledModel.Name + "_private.h">"
+
+		extern void %<name>(void);
+
+	%closefile isr_h
+	
+	
+	%%ISR Body
+	
+	%assign fname = LibCreateSourceFile("Source", "Custom", "%<name>")
+	
+	%%top
+	%if !EXISTS("CAN_564xL_ISR_START_%<name>")
+		%assign ::CAN_564xL_ISR_START_%<name> = 1
+			
+		%openfile tmpFcnBuf
+			#include "%<CompiledModel.Name + ".h">"
+			#include "%<CompiledModel.Name + "_private.h">"
+			void %<name>(void)
+			{
+				FLEXCAN_MsgBufferStructure *ptr_FLEXCAN_MsgBufferStructure;
+				FLEXCAN_MsgBufferStructure str_FLEXCAN_MsgBufferStructure;
+			
+				uint32_t isr_mask = CAN_%<canNum>.IFLAG1.R;
+			%closefile tmpFcnBuf
+		
+		%<LibSetSourceFileSection(fname , "UserTop", tmpFcnBuf)>   
+	%endif	
+	
+	
+	%%LOGIC
+	
+		%openfile tmpFcnBuf 
+		
+		%foreach fcnCallIdx = NumSFcnSysOutputCalls
+		%% call the downstream system
+		%with SFcnSystemOutputCall[fcnCallIdx]
+		
+		%% skip unconnected function call outputs
+		%if ISEQUAL(BlockToCall, "unconnected")
+			%continue
+		%endif
+    
+		%assign sysIdx = BlockToCall[0]
+		%assign blkIdx = BlockToCall[1]
+		%assign ssBlock = System[sysIdx].Block[blkIdx]
+	
+	
+	if (isr_mask & 1<<%<chNum>){
+		if (flexcan_564xl_rxbuffull( %<canNum>, %<chNum>))
+		{
+			uint8_t i = 0U;
+		
+			ptr_FLEXCAN_MsgBufferStructure = &(str_FLEXCAN_MsgBufferStructure);
+			memset(ptr_FLEXCAN_MsgBufferStructure,0,sizeof(*ptr_FLEXCAN_MsgBufferStructure));
+		
+			%<LibBlockOutputSignal(1, "", "", 0)> = flexcan_564xl_get_id(%<canNum>, %<chNum>);
+			flexcan_564xl_get_mb(ptr_FLEXCAN_MsgBufferStructure, %<canNum>, %<chNum>);
+			
+			for(i=0;i<ptr_FLEXCAN_MsgBufferStructure->length;i++)
+            {
+                (%<LibBlockOutputSignalAddr(3, "", "", 0)>)[i] = ptr_FLEXCAN_MsgBufferStructure->data[i];
+            }
+			
+			%<LibBlockOutputSignal(2, "", "", 0)> = flexcan_564xl_get_idtype(%<canNum>, %<chNum>);
+			%<LibBlockOutputSignal(4, "", "", 0)> = flexcan_564xl_get_ts(%<canNum>, %<chNum>);
+			
+			flexcan_564xl_release_mb_lock(%<canNum>);
+			flexcan_564xl_clear_mask(%<canNum>, %<chNum>);
+		
+			CAN_%<canNum>.IFLAG1.R = 1<<%<chNum>;
+			
+			%%%CALL SubsytemCode%%%%%%%%%%%%%%%%%%%%%%%%%
+			%<LibExecuteFcnCall(ssBlock, FcnPortElement, ParamSettings.SampleTimesToSet[0][1])>\
+		}
+	}
+	
+	%endwith
+	%endforeach
+	
+	%closefile tmpFcnBuf 
+	
+	%<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)>   
+	
+	%%END LOGIC	
+	
+	%%BOTTOM
+	%if !EXISTS("CAN_564xL_ISR_END_%<name>")
+		%assign ::CAN_564xL_ISR_END_%<name> = 1
+		
+		%openfile tmpFcnBuf
+			}
+		%closefile tmpFcnBuf
+		%<LibSetSourceFileSection(fname , "UserBottom", tmpFcnBuf)>   
+	%endif	
+	%%END BOTTOM
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+
+
+
+
+%%======================Internal functions===========================
+%function getOutFileName(canNum, chNum)
+	%if (chNum < 4)
+		%assign name = "can%<canNum>_buf0_3_isr"
+	%elseif(chNum < 8)
+		%assign name = "can%<canNum>_buf4_7_isr"
+	%elseif (chNum < 12)
+		%assign name = "can%<canNum>_buf8_11_isr"
+	%elseif (chNum < 16)
+		%assign name = "can%<canNum>_buf12_15_isr"
+	%else
+		%assign name = "can%<canNum>_buf16_31_isr"
+	%endif
+	
+	%return name
+%endfunction
+	
+%function getISRMask(chNum)
+
+	%assign value = 0
+
+	%if (chNum < 4)
+		%assign value = "0x0000000F"
+	%elseif(chNum < 8)
+		%assign value = "0x000000F0"
+	%elseif (chNum < 12)
+		%assign value = "0x00000F00"
+	%elseif (chNum < 16)
+		%assign value = "0x0000F000"
+	%else
+		%assign value = "0xFFFF0000"
+	%endif
+	
+	%return value
+%endfunction
+
+;
+

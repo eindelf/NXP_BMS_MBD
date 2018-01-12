@@ -1,0 +1,89 @@
+%implements eTimer_564xl_interrupt "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign modNum =  CAST("Number",Parameter[0].Value[0])
+  %assign chanNum =  CAST("Number",Parameter[1].Value[0])
+
+  %<LibCacheIncludes("#include \"eTimer%<modNum>_ch%<chanNum>_EOC_isr.h\"" + "\n")>
+  
+  %if !EXISTS("ETIMER_564xL_INCLUDED")
+    %assign ::ETIMER_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"eTimer_564xL_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign modNum =  CAST("Number",Parameter[0].Value[0])
+  %assign chanNum =  CAST("Number",Parameter[1].Value[0])
+
+%openfile isr_c = "eTimer%<modNum>_ch%<chanNum>_EOC_isr.c"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+void eTimer%<modNum>_ch%<chanNum>_EOC_ISR(void)
+{
+%<LibBlockOutputSignal(1, "", "", 0)> = mcTIMER%<modNum>.CHANNEL[%<chanNum>].STS.R;
+     
+%foreach fcnCallIdx = NumSFcnSysOutputCalls
+%% call the downstream system
+  %with SFcnSystemOutputCall[fcnCallIdx]
+%% skip unconnected function call outputs
+    %if ISEQUAL(BlockToCall, "unconnected")
+      %continue
+    %endif
+    %assign sysIdx = BlockToCall[0]
+    %assign blkIdx = BlockToCall[1]
+    %assign ssBlock = System[sysIdx].Block[blkIdx]
+    %<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+         ParamSettings.SampleTimesToSet[0][1])>\
+  %endwith
+%endforeach
+
+mcTIMER%<modNum>.CHANNEL[%<chanNum>].STS.R = 0x00FF;   //clear flags
+}
+
+%closefile isr_c
+
+%openfile isr_h = "eTimer%<modNum>_ch%<chanNum>_EOC_isr.h"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+extern void eTimer%<modNum>_ch%<chanNum>_EOC_ISR(void);
+
+%closefile isr_h
+
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+;

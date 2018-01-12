@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>FlexPWM ISR Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">FlexPWM ISR Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">The main functionality of the block is to process FlexPWM ISRs</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="PWM_ISR_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>Function-call</li>
+		<li>Status register (STS) value (uint16) (if "Interrupt source" is set to "Compare interrupt")</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="110">Names</td>
+			<th width="100">Selection Types</td>
+			<th width="140">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Interrupt Source</td>
+			<td>Pop-up</td>
+			<td>Compare interrupt<br>
+				Reload interrupt<br>
+				Reload Error interrupt<br>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Module</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 1</td>
+			<td>FlexPWM module</td>
+		</tr>
+		<tr>
+			<td>Submodule</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 3</td>
+			<td>FlexPWM channel</td>
+		</tr>
+		<tr>
+			<td>VAL<i>x</i><br>
+				<i>x</i> is 0 – 5
+			</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td>If counter match to respective VAL<i>x</i> register causes interrupt request.<br>
+				applicable for Compare interrupt only
+			</td>
+		</tr>
+		<tr>
+			<td>Priority</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 15</td>
+			<td>Interrupt priority level</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="PWM_ISR_files/image_param.jpg">
+	<h3>Block Dependency</h3>
+	<div>Please do the following:
+		<ol>
+			<li>Configure respective FlexPWM submodule via Simple PWM Output, Complementary PWM Output or 
+				Three-phase PWM Output Block
+			</li>
+		</ol>
+	</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>None</div>
+</body>
+</html>

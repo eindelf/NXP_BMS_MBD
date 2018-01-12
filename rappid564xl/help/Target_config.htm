@@ -1,0 +1,375 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta content="text/html; charset=ISO-8859-1"  http-equiv="content-type">
+	<title>Target Configuration Block</title>
+	<style type="text/css">
+		table { text-align:left;width:600px;border:1px solid black; }
+		td,th { border:1px solid black; }
+		th { height:46px; font-weight: bold; }
+		.shifted { margin-left: 40px; }
+		div { width:560px; }
+	</style>
+</head>
+<body>
+	<h3>Block Name</h3>
+	<div class="shifted">Target Configuration Block</div>
+	<h3>Block Description</h3>
+	<div class="shifted">The main functionality of the block is to configure MPC5643L target.</div>
+	<h3>Block Image</h3>
+	<img vspace="0" src="Target_config_files/image_block.jpg">
+	<h3>Inputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Outputs:</h3>
+	<ul>
+		<li>None</li>
+	</ul>
+	<h3>Block Dialog and Parameters:</h3>
+	<div class="shifted">The block dialog consists of the following tabs:</div>
+	<ul class="shifted">
+		<li><a href="#Clock_tab">Clock Parameters</a></li>
+		<li><a href="#Target_tab">Target Parameters</a></li>
+		<li><a href="#Freemaster_tab">FreemasterSetup</a></li>
+		<li><a href="#CCP_tab">CCPSetup</a></li>
+		<li><a href="#PilBam_tab">PIL/BAM Setup</a></li>
+		<li><a href="#Diagnostics_tab">Diagnostics</a></li>
+	</ul>
+	<ul>
+		<a name="Clock_tab">	
+			<li>The Clock Parameters tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="170">Names</td>
+			<th width="110">Selection Types</td>
+			<th width="110">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Select System Clock Mhz</td>
+			<td>Pop-up</td>
+			<td>60, 80, 120</td>
+			<td>System Clock Value</td>
+		</tr>
+		<tr>
+			<td>External Crystal Value (8 or 40 Mhz)</td>
+			<td>Pop-up</td>
+			<td>8, 16, 40 Mhz</td>
+			<td>External Crystal clock</td>
+		</tr>
+		<tr>
+			<td>Motor control clock, MHz</td>
+			<td>Pop-up</td>
+			<td>System clock divided by 1..16</td>
+			<td>Motor control clock</td>
+		</tr>
+		<tr>
+			<td>SWG clock, MHz</td>
+			<td>Pop-up</td>
+			<td>System clock divided by 1..16 in range 12-20 MHz</td>
+			<td>SWG clock</td>
+		</tr>
+		<tr>
+			<td>Global Interrupt Priority (0-15)</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 15</td>
+			<td>Global Minimum Interrupt Priority</td>
+		</tr>
+		<tr>
+			<td>Base System Tick Priority (0-15)</td>
+			<td>Pop-up</td>
+			<td>0 &ndash; 15</td>
+			<td>Priority level of PIT 0 interrupt</td>
+		</tr>
+		<tr>
+			<td>Suppress System Task</td>
+			<td>Check-box</td>
+			<td>Enable/Disable</td>
+			<td></td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Target_config_files/image_param_1.jpg">
+	<ul>
+		<a name="Target_tab">	
+			<li>The Target Parameters tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="180">Names</td>
+			<th width="110">Selection Types</td>
+			<th width="150">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Select Compiler</td>
+			<td>Pop-up</td>
+			<td>CodeWarrior<br>Diab<br>GreenHills</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Select Target Execution</td>
+			<td>Pop-up</td>
+			<td>RAM<br>FLASH</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Select Part</td>
+			<td>Pop-up</td>
+			<td>MPC5643L</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Select Package</td>
+			<td>Pop-up</td>
+			<td>144 LQFP<br>257 MAPBGA</td>
+			<td></td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Target_config_files/image_param_2.jpg">
+	<ul>
+		<a name="Freemaster_tab">	
+			<li>The FreemasterSetup tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="160">Names</td>
+			<th width="110">Selection Types</td>
+			<th width="100">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Freemaster Interface</td>
+			<td>Pop-up</td>
+			<td>None<br>Serial 0<br>Serial 1<br>FlexCAN 0<br>FlexCAN 1</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Freemaster Interface Rate</td>
+			<td>Pop-up</td>
+			<td>19200 &ndash; 230400</td>
+			<td>applicable for Serial interface only</td>
+		</tr>
+		<tr>
+			<td>Tx Pin</td>
+			<td>Pop-up</td>
+			<td>The list of available pins</td>
+			<td>applicable for Serial interface only</td>
+		</tr>
+		<tr>
+			<td>Rx Pin</td>
+			<td>Pop-up</td>
+			<td>The list of available pins</td>
+			<td>applicable for Serial interface only</td>
+		</tr>
+		<tr>
+			<td>Channel</td>
+			<td>Pop-up</td>
+			<td>1CH</td>
+			<td>applicable for CAN interface only</td>
+		</tr>
+		<tr>
+			<td>Speed</td>
+			<td>Pop-up</td>
+			<td>500K</td>
+			<td>applicable for CAN interface only</td>
+		</tr>
+		<tr>
+			<td>Message ID</td>
+			<td>Pop-up</td>
+			<td>0x7AA</td>
+			<td>applicable for CAN interface only</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Target_config_files/image_param_3_1.jpg">
+	<br>
+	<img vspace="15" src="Target_config_files/image_param_3_2.jpg">
+	<ul>
+		<a name="CCP_tab">	
+			<li>The CCP Setup tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="160">Names</td>
+			<th width="80">Selection Types</td>
+			<th width="120">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>CCP Interface</td>
+			<td>Pop-up</td>
+			<td>None<br>FlexCAN 0<br>FlexCAN 1</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Channel</td>
+			<td>Pop-up</td>
+			<td>CH1 (MB 0 - 1)<br>CH1 (MB 2 - 3)<br>CH3 (MB 4 - 5)<br>CH4 (MB 6 - 7)<br>
+			CH5 (MB 8 - 9)<br>CH6 (MB 10 - 11)<br>CH7 (MB 12 - 13)<br>CH8 (MB 14 - 15)</td>
+			<td>FlexCAN mailbox used for send/receive CCP messages</td>
+		</tr>
+		<tr>
+			<td>Speed</td>
+			<td>Pop-up</td>
+			<td>500K</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>CRO ID (dec value)</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>Income message ID</td>
+		</tr>
+		<tr>
+			<td>DTO ID (dec value)</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>Outgoing message ID</td>
+		</tr>
+		<tr>
+			<td>DeviceId</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>Device ID</td>
+		</tr>
+		<tr>
+			<td>Devica Address (dec value)</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>Devica Address</td>
+		</tr>
+		<tr>
+			<td>Max ODT (dec value)</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>Max measurable values in Object description table</td>
+		</tr>
+		<tr>
+			<td>Max DAQ (dec value)</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>Max number of Object description tables in the DAQ list</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Target_config_files/image_param_4.jpg">
+	<ul>
+		<a name="PilBam_tab">	
+			<li>The PIL/BAM Setup tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="160">Names</td>
+			<th width="100">Selection Types</td>
+			<th width="100">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>Processor-In-Loop support</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>If PIL simulation mode should be supported.</td>
+		</tr>
+		<tr>
+			<td>Download Code after build</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>If application code should be downloaded into target after build</td>
+		</tr>
+		<tr>
+			<td>COM port number (1,2 …)</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>COM port for PIL and BootLoader communication</td>
+		</tr>
+		<tr>
+			<td>PIL Baud rate</td>
+			<td>Pop-up</td>
+			<td>19200, 38400, 57600, 115200, 230400</td>
+			<td>Baud rate for PIL communication</td>
+		</tr>
+		<tr>
+			<td>BAM Default Password</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>BAM Password</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>applicable when “BAM Default Password” option is disabled only</td>
+		</tr>
+		<tr>
+			<td>BAM Manual Start Address and Code Size</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>BAM Start Address</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>applicable when “BAM Manual Start Address and Code Size” option is enabled only</td>
+		</tr>
+		<tr>
+			<td>BAM Code Size</td>
+			<td>Text-box</td>
+			<td></td>
+			<td>applicable when “BAM Manual Start Address and Code Size” option is enabled only</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Target_config_files/image_param_5.jpg">
+	<ul>
+		<a name="Diagnostics_tab">	
+			<li>The Diagnostics tab contains the following parameters:</li>
+		</a>
+	</ul>
+	<table rules="all" cellpadding="2" cellspacing="2">
+	<tbody>
+		<tr>
+			<th width="160">Names</td>
+			<th width="100">Selection Types</td>
+			<th width="100">Range</td>
+			<th>Description</td>
+		</tr>
+		<tr>
+			<td>DSPI<br>
+			    CAN<br>
+				ADC<br>
+				PWM<br>
+				CTU<br>
+				SWG<br>
+				eTimer<br>
+				FreeMaster<br>
+			</td>
+			<td>Check-box</td>
+			<td>On/Off</td>
+			<td>Enable/disable cross-module PCR assignment</td>
+		</tr>
+	</tbody>
+	</table>
+	<img vspace="15" src="Target_config_files/image_param_6.jpg">
+	<h3>Block Dependency</h3>
+	<div>None</div>
+	<h3>Block Miscellaneous Details:</h3>
+	<div>Target Configuration Block must be included into the model. The model can contain only one 
+		Target Configuration Block.
+	</div>
+</body>
+</html>

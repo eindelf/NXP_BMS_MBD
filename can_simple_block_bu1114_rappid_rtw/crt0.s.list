@@ -1,0 +1,331 @@
+                             #**************************************************************************/
+                             #* FILE NAME: ctr0_VLE_Flash.s             COPYRIGHT (c) Freescale 2008   */
+                             #*                                                All Rights Reserved     */
+                             #* DESCRIPTION:                                                           */
+                             #* This is a generic base template for init of a VLE Flash Project        */
+                             #=========================================================================*/
+                             #*                                                                        */
+                             #*========================================================================*/
+                             #* REV      AUTHOR        DATE        DESCRIPTION OF CHANGE               */
+                             #* ---   -----------    ----------    ---------------------               */
+                             #* 0.3    S. OBrien      02/26/2010    Updated for BookE
+                             #* 0.2    M.Ruthenbeck   12/03/2009    Updated for Leopard Lock Step Mode */
+                             #* 0.1    R. Moran       10/12/2008    Initial Version                    */
+                             #**************************************************************************/
+                             ##------- BEFORE USING ------------------------------------------------------   
+                             # Ensure in the linker file that the correct SRAM size is selected
+                             ##---------------------------------------------------------------------------
+                             ##------- Reset Configuration Half Word -------------------------------------   
+                                                .section     .init            
+
+                                                                              #.LONG 0x005A005A        # MPC5643 - Leopard - VLE OFF, Valid Bood Identifier 0x5A    
+0x00000000: 015a015a                            .long        0x015A015A       # MPC5643 - Leopard - VLE ON, Valid Bood Identifier 0x5A
+                                                .globl       _start           
+
+                                                .extern      main             
+                                                .extern      __SP_INIT        
+                                                .extern      _SDA_BASE_       
+                                                .extern      _SDA2_BASE_      
+
+                                                .extern      __BSS_START      
+                                                .extern      __BSS_SIZE       
+
+0x40000000:                  _BIUCR_RAM_ADDR    .equ         0x40000000       
+                             ##---------------------------------------------------------------------------       
+                                                .align       4                
+                             ##---------------------------------------------------------------------------
+                             ## Initialise GPR's for LockStep Mode 
+                             ## This REALLY IS A MUST!
+                             ##---------------------------------------------------------------------------
+                             # Set the MSR[SPE] bit so code can use "evmergelo" instruction.
+0x02000000:                  MSR_Mask           .equ         0x02000000       
+
+
+                                                .section     .text_vle,text_vle ; The "text" generates symbols for debug
+
+                             _start                                           
+0x00000000: 70a00000                            e_li         r5, 0            
+0x00000004: 7ca000a6                            mfmsr        r5               
+0x00000008: 70c0e200                            e_lis        r6, MSR_Mask@h   
+0x0000000c: 70c0c000                            e_or2i       r6, MSR_Mask@l   
+0x00000010: 4465                                se_or        r5,r6            
+0x00000012: 7ca00124                            mtmsr        r5               
+0x00000016: 0001                                se_isync                      
+                             ;# 1.  32 64-bit GPR0-31
+0x00000018: 7020e000                            e_lis        r1, 0            ;# Initialize the lower 32-bits of GPR1 to 0
+
+0x0000001c: 10010a2d                            evmergelo    r0,r1,r1         # Initialize the 64-bits of GPR0 to 0
+0x00000020: 1020022d                            evmergelo    r1,r0,r0         # Continue initializing the other 64-bit GPRs
+0x00000024: 1040022d                            evmergelo    r2,r0,r0         # ...
+0x00000028: 1060022d                            evmergelo    r3,r0,r0         #
+0x0000002c: 1080022d                            evmergelo    r4,r0,r0         #
+0x00000030: 10a0022d                            evmergelo    r5,r0,r0         #
+0x00000034: 10c0022d                            evmergelo    r6,r0,r0         #
+0x00000038: 10e0022d                            evmergelo    r7,r0,r0         #
+0x0000003c: 1100022d                            evmergelo    r8,r0,r0         #
+0x00000040: 1120022d                            evmergelo    r9,r0,r0         #
+0x00000044: 1140022d                            evmergelo    r10,r0,r0        #
+0x00000048: 1160022d                            evmergelo    r11,r0,r0        #
+0x0000004c: 1180022d                            evmergelo    r12,r0,r0        #
+0x00000050: 11a0022d                            evmergelo    r13,r0,r0        #
+0x00000054: 11c0022d                            evmergelo    r14,r0,r0        #
+0x00000058: 11e0022d                            evmergelo    r15,r0,r0        #
+0x0000005c: 1200022d                            evmergelo    r16,r0,r0        #
+0x00000060: 1220022d                            evmergelo    r17,r0,r0        #
+0x00000064: 1240022d                            evmergelo    r18,r0,r0        #
+0x00000068: 1260022d                            evmergelo    r19,r0,r0        #
+0x0000006c: 1280022d                            evmergelo    r20,r0,r0        #
+0x00000070: 12a0022d                            evmergelo    r21,r0,r0        #
+0x00000074: 12c0022d                            evmergelo    r22,r0,r0        #
+0x00000078: 12e0022d                            evmergelo    r23,r0,r0        #
+0x0000007c: 1300022d                            evmergelo    r24,r0,r0        #
+0x00000080: 1320022d                            evmergelo    r25,r0,r0        #
+0x00000084: 1340022d                            evmergelo    r26,r0,r0        #
+0x00000088: 1360022d                            evmergelo    r27,r0,r0        #
+0x0000008c: 1380022d                            evmergelo    r28,r0,r0        #
+0x00000090: 13a0022d                            evmergelo    r29,r0,r0        #
+0x00000094: 13c0022d                            evmergelo    r30,r0,r0        #
+0x00000098: 13e0022d                            evmergelo    r31,r0,r0        # Initialize the 64-bit GPR31 to 0
+                             # 2.  32-bit DEAR (spr 61)
+                             # mtspr 61,r31         #DEAR
+                             # 3.  32-bit SPRG0-9 (spr 272-279, 604 & 605)
+0x0000009c: 7ff043a6                            mtspr        272,r31          #SPRG0-7
+0x000000a0: 7ff143a6                            mtspr        273,r31          
+0x000000a4: 7ff243a6                            mtspr        274,r31          
+0x000000a8: 7ff343a6                            mtspr        275,r31          
+0x000000ac: 7ff443a6                            mtspr        276,r31          
+0x000000b0: 7ff543a6                            mtspr        277,r31          
+0x000000b4: 7ff643a6                            mtspr        278,r31          
+0x000000b8: 7ff743a6                            mtspr        279,r31          
+
+0x000000bc: 7ffc93a6                            mtspr        604,r31          #SPRG8-9
+0x000000c0: 7ffd93a6                            mtspr        605,r31          
+                             # 4.  32-bit USPRG0 (spr 256)
+0x000000c4: 7fe043a6                            mtspr        256,r31          #USPRG0
+                             # 5.  32-bit SRR0 (spr 26), SRR1 (spr 27), CSRR0 (spr58), CSRR1 (spr59),
+                             #    DSRR0 (spr 574), DSRR1 (spr 575), MCSRR0 (spr570), MCSRR1 (spr571)
+0x000000c8: 7ffa03a6                            mtspr        26,r31           #SRR0-1
+0x000000cc: 7ffb03a6                            mtspr        27,r31           
+0x000000d0: 7ffa0ba6                            mtspr        58,r31           #CSRR0-1
+0x000000d4: 7ffb0ba6                            mtspr        59,r31           
+0x000000d8: 7ffa8ba6                            mtspr        570,r31          #MCSRR0-1
+0x000000dc: 7ffb8ba6                            mtspr        571,r31          
+0x000000e0: 7ffe8ba6                            mtspr        574,r31          #DSSRR0-1
+0x000000e4: 7fff8ba6                            mtspr        575,r31          
+
+                             # 6.  32-bit IVPR (spr 63)
+0x000000e8: 7fff0ba6                            mtspr        63,r31           #IVPR
+0x000000ec: 7ffe0ba6                            mtspr        62,r31           #ESR
+0x000000f0: 7ff453a6                            mtspr        340,r31          #TCR
+0x000000f4: 7fe083a6                            mtspr        512,r31          #SPEFSCR
+0x000000f8: 7fe103a6                            mtspr        1,r31            #XER
+0x000000fc: 7fe043a6                            mtspr        256,r31          #USPRG0
+
+                             # 7.  32-bit IVOR0-15 (spr 400 - 415), IVOR 32-35 (spr 528 - 531)
+0x00000100: 7ff063a6                            mtspr        400,r31          #IVOR0-15
+0x00000104: 7ff163a6                            mtspr        401,r31          
+0x00000108: 7ff263a6                            mtspr        402,r31          
+0x0000010c: 7ff363a6                            mtspr        403,r31          
+0x00000110: 7ff463a6                            mtspr        404,r31          
+0x00000114: 7ff563a6                            mtspr        405,r31          
+0x00000118: 7ff663a6                            mtspr        406,r31          
+0x0000011c: 7ff763a6                            mtspr        407,r31          
+0x00000120: 7ff863a6                            mtspr        408,r31          
+0x00000124: 7ff963a6                            mtspr        409,r31          
+0x00000128: 7ffa63a6                            mtspr        410,r31          
+0x0000012c: 7ffb63a6                            mtspr        411,r31          
+0x00000130: 7ffc63a6                            mtspr        412,r31          
+0x00000134: 7ffd63a6                            mtspr        413,r31          
+0x00000138: 7ffe63a6                            mtspr        414,r31          
+0x0000013c: 7fff63a6                            mtspr        415,r31          
+0x00000140: 7ff083a6                            mtspr        528,r31          #IVOR32-35
+0x00000144: 7ff183a6                            mtspr        529,r31          
+0x00000148: 7ff283a6                            mtspr        530,r31          
+
+                             # Executing this instruction crashes the part. August 11, 2010
+                             # mtspr 531,r31         # does IVOR 35 exist? Not in e200z4 RM ?
+                             # 8.  32-bit MCAR (spr 573)
+0x0000014c: 7ffd8ba6                            mtspr        573,r31          #MCAR
+
+                             # 9. 32-bit TBL, TBU (spr 284, 285)
+0x00000150: 7ffc43a6                            mtspr        284,r31          #TBL
+0x00000154: 7ffd43a6                            mtspr        285,r31          #TBU
+
+                             # 10. 32-bit DEC, DECAR (spr 22, 54)
+0x00000158: 7ff603a6                            mtspr        22,r31           #DEC
+0x0000015c: 7ff60ba6                            mtspr        54,r31           #DECAR
+                             # 11. 64-bit DVC1, DVC2 (spr 318, 319)
+                             # Note most debug registers are reset by POR so initialization is not required.
+0x00000160: 7ffe4ba6                            mtspr        318,r31          #DVC1
+0x00000164: 7fff4ba6                            mtspr        319,r31          #DVC2
+                             # 12. 32-bit DBCNT (spr 562)
+0x00000168: 7ff28ba6                            mtspr        562,r31          #DBCNT
+                             # 16. SPE ACC register. 
+
+0x0000016c: 103f04c4                            evmra        r1,r31           # Initialize the 64-bit SPE ACC to 0
+0x00000170: 103f04c4                            evmra        r1,r31           # It was required to use the "evmra" command twice in
+                                                                              # simulation. Verify on silicon ??????                
+                             # 17. Condition Registers  
+
+0x00000174: 7feff120                            mtcrf        0xFF,r31         
+
+                             # 18. Counter/Decrementer/Link Register
+0x00000178: 7fe903a6                            mtspr        9,r31            #CTR
+0x0000017c: 7fe803a6                            mtspr        8,r31            #LR
+                             ##------- Disable Watchdog  -----------------------------------------------
+                             # Included for reference
+                             # Not needed because Watchdog is off in the shadow block.
+0x00000180: 70dfe7f3                            e_lis        r6,0xfff3        
+0x00000184: 70d0c010                            e_or2i       r6, 0x8010       
+0x00000188: 70f80520                            e_li         r7,0xC520        
+0x0000018c: 54e60000                            e_stw        r7,0x0(r6)       
+0x00000190: 70fb0128                            e_li         r7,0xD928        
+0x00000194: 54e60000                            e_stw        r7,0x0(r6)       # Disengage soft-lock
+0x00000198: 70dfe7f3                            e_lis        r6,0xfff3        
+0x0000019c: 70d0c000                            e_or2i       r6, 0x8000       
+0x000001a0: 70ffe700                            e_lis        r7,0xff00        
+0x000001a4: 70e0c10a                            e_or2i       r7, 0x10A        
+0x000001a8: 54e60000                            e_stw        r7,0x0(r6)       # WEN = 0
+                             ##------- End of Disable Watchdog  -----------------------------------------
+                             ##---------------------------------------------------------------------------       
+                             ## Linker variables
+                             ##---------------------------------------------------------------------------       
+0x000001ac: 7020e000                            e_lis        r1, __SP_INIT@h  # Initialize stack pointer r1 to
+0x000001b0: 7020c000                            e_or2i       r1,  __SP_INIT@l # value in linker command file.
+
+0x000001b4: 71a0e000                            e_lis        r13, _SDA_BASE_@h # Initialize r13 to sdata base
+0x000001b8: 71a0c000                            e_or2i       r13,  _SDA_BASE_@l # (provided by linker).
+
+0x000001bc: 7040e000                            e_lis        r2, _SDA2_BASE_@h # Initialize r2 to sdata2 base
+0x000001c0: 7040c000                            e_or2i       r2,  _SDA2_BASE_@l # (provided by linker).
+
+0x000001c4: 18008000                            e_addi       r0, r0, 0        
+0x000001c8: 18010680                            e_stwu       r0,-128(r1)      # Terminate stack.  This seems to be required for main()
+                             ##---------------------------------------------------------------------------       
+                             ## MMU Stuff
+                             ##---------------------------------------------------------------------------       
+                             ##---------------------------------------------------------------------------   
+                             #    
+                             #    
+                             #    
+                             #    
+                             #    
+0x000001cc: 7062e001                            e_lis        r3, 0x1001       
+0x000001d0: 7c709ba6                            mtmas0       r3               
+0x000001d4: 7098e000                            e_lis        r4, 0xC000       
+0x000001d8: 7080c380                            e_or2i       r4, 0x0380       
+0x000001dc: 7c919ba6                            mtmas1       r4               
+0x000001e0: 70a8e000                            e_lis        r5, 0x4000       
+0x000001e4: 70a0c028                            e_or2i       r5, 0x0028       
+0x000001e8: 7cb29ba6                            mtmas2       r5               
+0x000001ec: 70c8e000                            e_lis        r6, 0x4000       
+0x000001f0: 70c0c03f                            e_or2i       r6, 0x003f       
+0x000001f4: 7cd39ba6                            mtmas3       r6               
+0x000001f8: 7c0004ac                            msync                         
+0x000001fc: 7c0007a4                            tlbwe                         
+0x00000200: 0001                                se_isync                      
+                             #    
+                             #    
+                             #    
+                             #    
+                             #    
+                             #    
+0x00000202: 7062e000                            e_lis        r3, 0x1000       
+0x00000206: 7c709ba6                            mtmas0       r3               
+0x0000020a: 7098e000                            e_lis        r4, 0xC000       
+0x0000020e: 7080c500                            e_or2i       r4, 0x0500       
+0x00000212: 7c919ba6                            mtmas1       r4               
+0x00000216: 70a0e000                            e_lis        r5, 0x0000       
+0x0000021a: 70a0c000                            e_or2i       r5, 0x0000       
+0x0000021e: 7cb29ba6                            mtmas2       r5               
+0x00000222: 70c0e000                            e_lis        r6, 0x0000       
+0x00000226: 70c0c03f                            e_or2i       r6, 0x003f       
+0x0000022a: 7cd39ba6                            mtmas3       r6               
+
+                             #    
+                             #    
+                             #    
+                             #    
+                             #    
+                             #    
+0x0000022e: 7062e002                            e_lis        r3, 0x1002       
+0x00000232: 7c709ba6                            mtmas0       r3               
+0x00000236: 7098e000                            e_lis        r4, 0xC000       
+0x0000023a: 7080c500                            e_or2i       r4, 0x0500       
+0x0000023e: 7c919ba6                            mtmas1       r4               
+0x00000242: 70b8e3f0                            e_lis        r5, 0xC3F0       
+0x00000246: 70a0c00a                            e_or2i       r5, 0x000A       
+0x0000024a: 7cb29ba6                            mtmas2       r5               
+0x0000024e: 70d8e3f0                            e_lis        r6, 0xC3F0       
+0x00000252: 70c0c03f                            e_or2i       r6, 0x003F       
+0x00000256: 7cd39ba6                            mtmas3       r6               
+0x0000025a: 7c0004ac                            msync                         
+0x0000025e: 7c0007a4                            tlbwe                         
+0x00000262: 0001                                se_isync                      
+                             #    
+                             #    
+                             #    
+                             #    
+                             #    
+0x00000264: 7062e003                            e_lis        r3, 0x1003       
+0x00000268: 7c709ba6                            mtmas0       r3               
+
+0x0000026c: 7098e000                            e_lis        r4, 0xC000       
+0x00000270: 7080c580                            e_or2i       r4, 0x0580       
+0x00000274: 7c919ba6                            mtmas1       r4               
+
+0x00000278: 70bfe7e0                            e_lis        r5, 0xFFE0       
+0x0000027c: 70a0c008                            e_or2i       r5, 0x0008       
+0x00000280: 7cb29ba6                            mtmas2       r5               
+
+0x00000284: 70dfe7e0                            e_lis        r6, 0xFFE0       
+0x00000288: 70c0c03f                            e_or2i       r6, 0x003F       
+0x0000028c: 7cd39ba6                            mtmas3       r6               
+
+0x00000290: 7c0004ac                            msync                         
+0x00000294: 7c0007a4                            tlbwe                         
+0x00000298: 0001                                se_isync                      
+
+                             #
+                             #
+                             #
+                             #
+                             #
+0x0000029a: 7062e004                            e_lis        r3, 0x1004       
+0x0000029e: 7c709ba6                            mtmas0       r3               
+
+0x000002a2: 7098e000                            e_lis        r4, 0xC000       
+0x000002a6: 7080c200                            e_or2i       r4, 0x0200       
+0x000002aa: 7c919ba6                            mtmas1       r4               
+
+0x000002ae: 70a0e0f0                            e_lis        r5, 0x00F0       
+0x000002b2: 70a0c008                            e_or2i       r5, 0x0008       
+0x000002b6: 7cb29ba6                            mtmas2       r5               
+
+0x000002ba: 70c0e0f0                            e_lis        r6, 0x00F0       
+0x000002be: 70c0c003                            e_or2i       r6, 0x0003       
+0x000002c2: 7cd39ba6                            mtmas3       r6               
+
+0x000002c6: 7c0004ac                            msync                         
+0x000002ca: 7c0007a4                            tlbwe                         
+0x000002ce: 0001                                se_isync                      
+
+                             ##--------- Initialize BSS section ------------------------------------------
+                             bss_Init                                         
+0x000002d0: 7120e000                            e_lis        r9, __BSS_SIZE@h # Load upper BSS load size (# of bytes) into R9
+0x000002d4: 7120c000                            e_or2i       r9, __BSS_SIZE@l # Load lower BSS load size into R9 and compare to zero
+0x000002d8: 70099800                            e_cmp16i     r9,0             
+0x000002dc: 7a120020                            e_beq        bss_Init_end     # Exit if size is zero (no data to initialise)
+0x000002e0: 7d2903a6                            mtctr        r9               # Store no. of bytes to be moved in counter
+0x000002e4: 70a0e000                            e_lis        r5, __BSS_START@h # Load upper BSS address into R5 (from linker file)
+0x000002e8: 70a0c000                            e_or2i       r5,  __BSS_START@l # Load lower BSS address into R5 (from linker file)
+0x000002ec: 18a584ff                            e_subi       r5, r5, 1        # Decrement address to prepare for bss_Init_loop
+0x000002f0: 7080e000                            e_lis        r4, 0x0          
+                             bss_Init_loop                                    
+0x000002f4: 18850401                            e_stbu       r4, 1(r5)        # Store zero byte into BSS at R5 and update BSS address
+0x000002f8: 7a20fffc                            e_bdnz       bss_Init_loop    # Branch if more bytes to load
+
+                             bss_Init_end                                     
+                             ##--------- Start of Main Code-----------------------------------------------
+0x000002fc: 78000001                            e_bl         main             
+                             ##---------------------------------------------------------------------------    

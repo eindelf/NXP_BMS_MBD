@@ -1,0 +1,74 @@
+%implements can_564xl_transmit "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %if !EXISTS("FLEXCAN_564xL_INCLUDED")
+    %assign ::FLEXCAN_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"flexcan_564xl_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+ %assign node		= CAST("Number", Parameter[0].Value[0])
+ %assign bufNum		= CAST("Number", Parameter[1].Value[0])
+ %assign msgID		= CAST("Number", Parameter[2].Value[0])
+ %%assign msgPrio     = CAST("Number", Parameter[3].Value[0])
+
+{
+
+    FLEXCAN_MsgBufferStructure *ptr_FLEXCAN_MsgBufferStructure;
+	FLEXCAN_MsgBufferStructure str_FLEXCAN_MsgBufferStructure;
+    
+    uint8_t i = 0U;
+    uint8_t* data = %<LibBlockInputSignalAddr(0, "", "", 0)>;
+    uint8_t datalen  = %<LibBlockInputSignal(1, "", "", 0)>;
+
+    ptr_FLEXCAN_MsgBufferStructure = &(str_FLEXCAN_MsgBufferStructure);
+    memset(ptr_FLEXCAN_MsgBufferStructure,0,sizeof(*ptr_FLEXCAN_MsgBufferStructure));
+
+    ptr_FLEXCAN_MsgBufferStructure->length = datalen;
+    if (%<msgID>&0xFFFF800)
+        ptr_FLEXCAN_MsgBufferStructure->ext = 1;
+
+    ptr_FLEXCAN_MsgBufferStructure->id = %<msgID>;
+
+    for(i=0;i<datalen;i++)
+    {
+        ptr_FLEXCAN_MsgBufferStructure->data[i] = *(data++);
+    }
+	
+	ptr_FLEXCAN_MsgBufferStructure->code = CAN_TX_MSG;
+    
+    flexcan_564xl_buffer_transmit(ptr_FLEXCAN_MsgBufferStructure,%<bufNum-1>,%<node-1>);
+	flexcan_564xl_release_mb_lock(%<node-1>);
+	flexcan_564xl_clear_mask(%<node-1>, %<bufNum-1>);
+}
+%endif 
+
+%endfunction

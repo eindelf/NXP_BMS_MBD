@@ -1,0 +1,150 @@
+%implements adc_564xl_wdg "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign adcNum =  CAST("Number",Parameter[0].Value[0])
+  
+  %<LibCacheIncludes("#include \"adc%<adcNum>_WDG_isr.h\"" + "\n")>
+  
+  %if !EXISTS("ADC_564xL_INCLUDED")
+    %assign ::ADC_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"adc_564xl_library.h\"" + "\n")>
+  %endif 
+%endif 
+  
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+%assign adcNum 		= CAST("Number",Parameter[0].Value[0])
+%assign chNum 		= CAST("Number",Parameter[0].Value[1])
+%assign upValue 	= CAST("Number",Parameter[0].Value[2])
+%assign lowvalue 	= CAST("Number",Parameter[0].Value[3])
+%assign maskUp 		= CAST("Number",Parameter[0].Value[4])
+%assign maskLow 	= CAST("Number",Parameter[0].Value[5])
+
+%%assign adcNum 		= adcNum - 1
+
+%assign lowMask 	= 1<<chNum*2
+%assign highMask 	= 2<<chNum*2
+
+adc_wdg_init( %<adcNum>, %<chNum>, %<upValue>, %<lowvalue>);
+
+%if (maskUp == 0)
+	ADC_%<adcNum>.WTIMR.R &= ~(%<highMask>);
+%endif
+%if (maskLow == 0)
+	ADC_%<adcNum>.WTIMR.R &= ~(%<lowMask>);
+%endif
+
+
+
+
+%openfile isr_h = "adc%<adcNum>_WDG_isr.h"
+	#include "%<CompiledModel.Name + ".h">"
+	#include "%<CompiledModel.Name + "_private.h">"
+
+	extern void ADC%<adcNum>_WDG_ISR(void);
+
+
+%closefile isr_h
+
+%assign fname = LibCreateSourceFile("Source", "Custom", "adc%<adcNum>_WDG_isr")
+	
+		%if !EXISTS("ADC_564xL_WDG_START_%<adcNum>")
+			%assign ::ADC_564xL_WDG_START_%<adcNum> = 1
+
+			%openfile tmpFcnBuf
+				#include "%<CompiledModel.Name + ".h">"
+				#include "%<CompiledModel.Name + "_private.h">"
+				void ADC%<adcNum>_WDG_ISR(void)
+				{
+					uint32_t mask = 0U;
+					uint32_t flag = ADC_%<adcNum>.WTISR.R;
+					uint32_t imask = ADC_%<adcNum>.WTIMR.R;
+			%closefile tmpFcnBuf
+			
+			%<LibSetSourceFileSection(fname , "UserTop", tmpFcnBuf)>   
+		%endif
+	
+	%openfile tmpFcnBuf 
+
+	%foreach fcnCallIdx = NumSFcnSysOutputCalls
+		
+%% call the downstream system
+		%with SFcnSystemOutputCall[fcnCallIdx]
+		
+%% skip unconnected function call outputs
+			%if ISEQUAL(BlockToCall, "unconnected")
+				%continue
+			%endif
+    
+			%assign sysIdx = BlockToCall[0]
+			%assign blkIdx = BlockToCall[1]
+			%assign ssBlock = System[sysIdx].Block[blkIdx]
+			
+			%assign temp = 3<<chNum*2
+			mask = %<temp>;
+						
+			if ( (flag&mask&imask)>0 )
+			{
+						
+				%<LibExecuteFcnCall(ssBlock, FcnPortElement, ...
+				ParamSettings.SampleTimesToSet[0][1])>\
+			
+				ADC_%<adcNum>.WTISR.R = mask;
+			
+			}
+
+
+			
+		%endwith
+	%endforeach
+	
+	%closefile tmpFcnBuf 
+	
+	%<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)>   
+	
+		%if !EXISTS("ADC_564XL_WDG_END_%<adcNum>")
+			%assign ::ADC_564XL_WDG_END_%<adcNum> = 1
+			
+			%openfile tmpFcnBuf
+				}
+			%closefile tmpFcnBuf
+			
+			%<LibSetSourceFileSection(fname , "UserBottom", tmpFcnBuf)>   
+		%endif
+
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+
+;
+

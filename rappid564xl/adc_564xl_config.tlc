@@ -1,0 +1,118 @@
+%implements adc_564xl_config "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign adcNum =  CAST("Number",Parameter[0].Value[0])
+  %assign adcNum = adcNum - 1
+
+  %<LibCacheIncludes("#include \"adc%<adcNum>_config.h\"" + "\n")>
+  
+  %if !EXISTS("ADC_564xL_INCLUDED")
+    %assign ::ADC_564xL_INCLUDED = 1
+    %<LibCacheIncludes("#include \"adc_564xl_library.h\"" + "\n")>
+   %endif 
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+  %assign adcNum 		=  CAST("Number",Parameter[0].Value[0])
+  %assign adcCtu 		=  CAST("Number",Parameter[1].Value[0])
+  %assign adcOwr 		=  CAST("Number",Parameter[2].Value[0])
+  %assign adcWls 		=  CAST("Number",Parameter[3].Value[0])
+  %assign adcClk 		=  CAST("Number",Parameter[4].Value[0])
+  %assign adcAck 		=  CAST("Number",Parameter[5].Value[0])
+  %assign adcCTR0Inp 	=  CAST("Number",Parameter[6].Value[0])
+  %assign adcCTR0Shft 	=  CAST("Number",Parameter[7].Value[0])
+  %assign adcCTR0Cmp 	=  CAST("Number",Parameter[8].Value[0])
+  %assign adcCTR0Sam 	=  CAST("Number",Parameter[9].Value[0])
+  %assign adcCTR1Inp	=  CAST("Number",Parameter[10].Value[0])
+  %assign adcCTR1Cmp	=  CAST("Number",Parameter[11].Value[0])
+  %assign adcCTR1Sam	=  CAST("Number",Parameter[12].Value[0])
+  %assign adcCTR1tsens	=  CAST("Number",Parameter[13].Value[0])
+  %assign adcPSCRPreval =  CAST("Number",Parameter[14].Value[0])
+  %assign adcPSCRPrecon =  CAST("Number",Parameter[15].Value[0])
+   
+  %assign adcNum = adcNum - 1  
+
+%openfile conf_c = "adc%<adcNum>_config.c"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+void adc%<adcNum>_config(void)
+{
+
+	ADC_%<adcNum>.MCR.B.OWREN = %<adcOwr>;
+	
+	ADC_%<adcNum>.MCR.B.WLSIDE = %<adcWls-1>;
+	
+	ADC_%<adcNum>.MCR.B.ADCLKSEL = %<adcClk>;
+	
+	ADC_%<adcNum>.MCR.B.ACKO = %<adcAck>;
+	
+	ADC_%<adcNum>.CTR0.B.INPLATCH = %<adcCTR0Inp>;
+	
+	ADC_%<adcNum>.CTR0.B.OFFSHIFT = %<adcCTR0Shft-1>;
+	
+	ADC_%<adcNum>.CTR0.B.INPCMP = %<adcCTR0Cmp-1>;
+	
+	ADC_%<adcNum>.CTR0.B.INSAMP = %<adcCTR0Sam>;
+	
+	ADC_%<adcNum>.MCR.B.CTUEN = %<adcCtu>;
+	
+	ADC_%<adcNum>.CTR1.B.INPLATCH = %<adcCTR1Inp>;
+	
+	ADC_%<adcNum>.CTR1.B.INPCMP = %<adcCTR1Cmp-1>;
+	
+	ADC_%<adcNum>.CTR1.B.INSAMP = %<adcCTR1Sam>;
+	
+	ADC_%<adcNum>.CTR1.B.TSENS = %<adcCTR1tsens>;
+	
+	ADC_%<adcNum>.PSCR.B.PREVAL0 = %<adcPSCRPreval>;
+	
+	ADC_%<adcNum>.PSCR.B.PRECONV = %<adcPSCRPrecon>;
+	
+	return;	
+}
+
+%closefile conf_c
+
+%openfile conf_h = "adc%<adcNum>_config.h"
+#include "%<CompiledModel.Name + ".h">"
+#include "%<CompiledModel.Name + "_private.h">"
+
+extern void adc%<adcNum>_config(void);
+
+%closefile conf_h
+%endif 
+
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%endfunction
+;

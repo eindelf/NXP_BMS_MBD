@@ -1,0 +1,118 @@
+%%
+%% Abstract: profile_564xl_fcn
+%%
+%% Copyright 2010 
+%% Freescale Semiconductor Inc
+%% All Rights Reserved 
+%%
+%%
+%%
+%%
+%implements profile_564xl_fcn "C"
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+%%  %<LibBlockSetIsExpressionCompliant(block)>
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+ %if !EXISTS("RAPPID_PROFILE_SETUP")
+  %assign ::RAPPID_PROFILE_SETUP = 1
+ %<LibBlockSetIsExpressionCompliant(block)> 
+    %openfile hdrBuffer
+     #include "gt_pf.h"
+     #include "profile_buffer.h"
+    %closefile hdrBuffer
+    %<LibCacheIncludes(hdrBuffer)>
+  %endif
+%endif
+ 
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%function Start(block, system) Output
+
+%assign indexVal = CAST("Number",Parameter[0].Value[0]-1)
+%assign StartProfile  = FEVAL("rappid_564xl_profile_code", indexVal,"1")
+%assign EndProfile    = FEVAL("rappid_564xl_profile_code", indexVal,"2")
+%assign indices = FEVAL("rappid_564xl_get_profile_count")
+%assign indxC =  CAST("Number", %<indices>)
+%assign ind = FEVAL("rappid_564xl_get_profile_indices")       
+%assign showOutput = CAST("Number",Parameter[1].Value[0])
+%assign indexVal = CAST("Number",Parameter[0].Value[0]-1)
+
+%if (CompiledModel.ConfigSet.SystemTargetFile == "rappid564xl.tlc")
+%if !EXISTS("RAPPID_PROFILE_BUFFER_SETUP")
+  %assign ::RAPPID_PROFILE_BUFFER_SETUP = 1
+
+%assign fname = LibCreateSourceFile("Source", "Custom", "profile_buffer")
+%openfile tmpFcnBuf 
+ #include "gt_pf.h"
+
+        vuint32_t profile_buffer[%<indxC>];
+        vuint8_t indx = 0;
+        vuint8_t max_indx = %<indxC>;
+        vuint8_t index_array[] = %<ind>;
+ %closefile tmpFcnBuf
+      %<LibSetSourceFileSection(fname , "Functions", tmpFcnBuf)>
+%endif
+
+%if !EXISTS("RAPPID_PROFILE_BUFFER_H_SETUP")
+  %assign ::RAPPID_PROFILE_BUFFER_H_SETUP = 1
+
+%assign fname = LibCreateSourceFile("Header", "Custom", "profile_buffer")
+%openfile tmpFcnBuf 
+
+#ifndef _PROFILE_BUFFER_H_
+#define _PROFILE_BUFFER_H_
+
+#include "gt_pf.h"
+
+extern vuint32_t profile_buffer[%<indxC>];
+extern vuint8_t indx;
+extern vuint8_t max_indx;
+extern vuint8_t index_array[200]; /* %<indxC> */
+
+#endif
+
+%closefile tmpFcnBuf
+      %<LibSetSourceFileSection(fname , "Defines", tmpFcnBuf)>
+
+%endif
+
+      %<LibAddToSystemField(system,"OutputBody",StartProfile)>
+      %<LibAddToSystemField(system,"OutputTrailer",EndProfile)>
+      
+%openfile tmpbuffer
+%if showOutput != 0
+	%<LibBlockOutputSignal(0, "", "", 0)> = profile_buffer[%<indexVal>];
+%endif
+%closefile tmpbuffer
+    %<LibAddToSystemField(system,"OutputTrailer",tmpbuffer)>
+
+%if !EXISTS("RAPPID_PROFILE_BUFFER_INIT")
+  %assign ::RAPPID_PROFILE_BUFFER_INIT = 1      
+%endif
+
+%endif
+
+%endfunction
+%% Start
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+%assign showOutput = CAST("Number",Parameter[1].Value[0])
+%if showOutput != 0
+	%<LibBlockOutputSignal(0, "", "", 0)>;
+%endif
+
+%endfunction

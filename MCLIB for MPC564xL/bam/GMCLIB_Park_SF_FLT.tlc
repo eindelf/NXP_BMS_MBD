@@ -1,0 +1,60 @@
+
+%implements GMCLIB_Park_SF_FLT "C"
+
+
+%% Function: BlockTypeSetup ===================================================
+%% Abstract:
+%%   Declare external variables and functions
+%%
+%function BlockTypeSetup(block, system) void
+
+   %if !EXISTS("GMCLIB_INCLUDED")
+      %assign ::GMCLIB_INCLUDED = 1
+      %<LibCacheIncludes("#include \"gmclib.h\"" + "\n")>
+   %endif 
+
+%endfunction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Start Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%function Start(block, system) Output 
+
+   
+%endfunction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Outputs Function of S-Function 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Function: Outputs ==========================================================
+%% Abstract:
+%%
+%function Outputs(block, system) Output
+
+  %assign alpha = LibBlockInputSignal(0, "", "", 0)
+  %assign beta  = LibBlockInputSignal(1, "", "", 0)
+  %assign sin   = LibBlockInputSignal(2, "", "", 0)
+  %assign cos   = LibBlockInputSignal(3, "", "", 0)
+  %assign d     = LibBlockOutputSignal(0, "", "", 0)
+  %assign q     = LibBlockOutputSignal(1, "", "", 0)
+  
+  {  
+    SWLIBS_2Syst Out;
+	SWLIBS_2Syst In;
+	SWLIBS_2Syst InAngle;
+	const SWLIBS_2Syst *const pIn = &In;
+	const SWLIBS_2Syst *const pInAngle = &InAngle;
+	
+	In.s32Arg1 = %<alpha>;
+	In.s32Arg2 = %<beta>; 
+    InAngle.s32Arg1 = %<sin>;
+    InAngle.s32Arg2 = %<cos>;
+    GMCLIB_Park (&Out, pInAngle, pIn);
+	%<d> = Out.s32Arg1;
+	%<q> = Out.s32Arg2;
+  }
+
+%endfunction
